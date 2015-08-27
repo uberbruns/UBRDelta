@@ -9,41 +9,24 @@
 import Foundation
 
 
-@objc public enum ComparisonLevel : Int {
+public enum ComparisonLevel : Int {
     case NoEquality, PerfectEquality, IdentifierEquality
 }
 
 
-@objc public protocol Comparable {
+public protocol Comparable {
     var identifier: Int { get }
-    var hashValue: Int { get }
     func compareTo(other: Comparable) -> ComparisonLevel
 }
 
 
-struct ComparisonResult<T: Comparable> {
-    
-    let insertionSet: NSIndexSet
-    let deletionSet: NSIndexSet
-    let reloadSet: NSIndexSet
-    let sameSet: NSIndexSet
-    let moveSet: [Int:Int]
-    let unmovedItems: [T]
-    
-    init(insertionSet: NSIndexSet, deletionSet: NSIndexSet, reloadSet: NSIndexSet, sameSet: NSIndexSet, moveSet: [Int:Int], unmovedItems: [T])
-    {
-        self.insertionSet = insertionSet
-        self.deletionSet = deletionSet
-        self.reloadSet = reloadSet
-        self.sameSet = sameSet
-        self.moveSet = moveSet
-        self.unmovedItems = unmovedItems
-    }
-    
+protocol ComparableSection :  Comparable {
+    var items: [Comparable] { get }
 }
 
 
-struct ComparisonResult2 {
+
+struct ComparisonResult {
     
     let insertionSet: NSIndexSet
     let deletionSet: NSIndexSet

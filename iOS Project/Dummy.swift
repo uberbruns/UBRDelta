@@ -12,7 +12,7 @@ import Foundation
 class Mummy : NSObject, Comparable, ComparableSection
 {
     var children: [Dummy] = []
-    var items: [Comparable] { return children }
+    var items: [Comparable] { return children.map({ $0 as Comparable }) }
     
     let i: Int
     let name: String

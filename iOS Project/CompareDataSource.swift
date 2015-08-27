@@ -9,55 +9,60 @@
 import Foundation
 
 
-@objc protocol ComparableSection :  Comparable {
-    var items: [Comparable] { get }
-}
 
 
 struct CompareDataSource {
     
-    typealias SectionUpdate = (diff: ComparisonResult2) -> ()
-    typealias SectionReorder = (diff: ComparisonResult2) -> ()
-    typealias ItemUpdate = (section: Int, diff: ComparisonResult2) -> ()
-    typealias ItemReorder = (section: Int, diff: ComparisonResult2) -> ()
+    typealias ItemUpdate = (items: [Comparable], section: Int, insertIndexPaths: [NSIndexPath], reloadIndexPaths: [NSIndexPath], deleteIndexPaths: [NSIndexPath]) -> ()
+    typealias ItemReorder = (items: [Comparable], section: Int, reorderMap: [Int:Int]) -> ()
+    typealias SectionUpdate = (sections: [ComparableSection], insertIndexSet: NSIndexSet, reloadIndexSet: NSIndexSet, deleteIndexSet: NSIndexSet) -> ()
+    typealias SectionReorder = (sections: [ComparableSection], reorderMap: [Int:Int]) -> ()
+    typealias CompletionHandler = () -> ()
     
-    static func diff(oldSections oldSections: [ComparableSection], newSections: [ComparableSection], itemUpdate: ItemUpdate, itemReorder: ItemReorder, sectionUpdate: SectionUpdate, sectionReorder: SectionReorder)
+    static func diff(oldSections oldSections: [ComparableSection], newSections: [ComparableSection], itemUpdate: ItemUpdate, itemReorder: ItemReorder, sectionUpdate: SectionUpdate, sectionReorder: SectionReorder, completionHandler: CompletionHandler? = nil)
     {
-        var itemDiffs = [Int: ComparisonResult2]()
+        let mainQueue = dispatch_get_main_queue()
+        let backgroundQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)
         
-        for (oldSectionIndex, oldSection) in oldSections.enumerate() {
+        dispatch_async(backgroundQueue) {
             
-            let newIndex = newSections.indexOf({ newSection -> Bool in
-                let equalityLevel = newSection.compareTo(oldSection)
-                return equalityLevel == .PerfectEquality || equalityLevel == .IdentifierEquality
-            })
-
-            if let newIndex = newIndex {
-                // Diffing
-                let oldItems = oldSection.items
-                let newItems = newSections[newIndex].items
-                let itemDiff = ComparisonTool.diff2(old: oldItems, new: newItems)
-                itemDiffs[oldSectionIndex] = itemDiff
+            var itemDiffs = [Int: ComparisonResult]()
+            
+            for (oldSectionIndex, oldSection) in oldSections.enumerate() {
                 
-                itemUpdate(section: oldSectionIndex, diff: itemDiff)
-                itemReorder(section: oldSectionIndex, diff: itemDiff)
+                let newIndex = newSections.indexOf({ newSection -> Bool in
+                    let equalityLevel = newSection.compareTo(oldSection)
+                    return equalityLevel == .PerfectEquality || equalityLevel == .IdentifierEquality
+                })
+                
+                if let newIndex = newIndex {
+                    // Diffing
+                    let oldItems = oldSection.items
+                    let newItems = newSections[newIndex].items
+                    let itemDiff = ComparisonTool.diff(old: oldItems, new: newItems)
+                    itemDiffs[oldSectionIndex] = itemDiff
+                }
+                
             }
             
+            dispatch_async(mainQueue) {
+                
+                for (oldSectionIndex, itemDiff) in itemDiffs.sort({ $0.0 < $1.0 }) {
+                    let insertIndexPaths = itemDiff.insertionSet.map({ index in NSIndexPath(forRow: index, inSection: oldSectionIndex)})
+                    let reloadIndexPaths = itemDiff.reloadSet.map({ index in NSIndexPath(forRow: index, inSection: oldSectionIndex)})
+                    let deleteIndexPaths = itemDiff.deletionSet.map({ index in NSIndexPath(forRow: index, inSection: oldSectionIndex)})
+                    itemUpdate(items: itemDiff.unmovedItems, section: oldSectionIndex, insertIndexPaths: insertIndexPaths, reloadIndexPaths: reloadIndexPaths, deleteIndexPaths: deleteIndexPaths)
+                    itemReorder(items: itemDiff.newItems, section: oldSectionIndex, reorderMap: itemDiff.moveSet)
+                }
+                
+                let sectionDiff = ComparisonTool.diff(old: oldSections.map({$0}), new: newSections.map({$0}))
+                sectionUpdate(sections: sectionDiff.unmovedItems.flatMap({ $0 as? ComparableSection }), insertIndexSet: sectionDiff.insertionSet, reloadIndexSet: sectionDiff.reloadSet, deleteIndexSet: sectionDiff.deletionSet)
+                sectionReorder(sections: sectionDiff.newItems.flatMap({ $0 as? ComparableSection }), reorderMap: sectionDiff.moveSet)
+                
+                completionHandler?()
+            }
             
         }
-        
-        
-//        for (oldSectionIndex, itemDiff) in itemDiffs.sort({ $0.0 < $1.0 }) {
-//        }
-        
-        
-        let sectionDiff = ComparisonTool.diff2(old: oldSections, new: newSections)
-        sectionUpdate(diff: sectionDiff)
-        sectionReorder(diff: sectionDiff)
-//
-//        if let oldSections = (oldSections as Any) as? [ComparableSection],
-//            let newSections = (newSections as Any) as? [ComparableSection] {
-//        }
         
     }
     
