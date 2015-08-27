@@ -42,7 +42,7 @@ class ViewController: UITableViewController {
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        sections = (0..<3).map({ num in self.newSection() })
+        sections = (0..<100).map({ num in self.newSection() })
 
         let shufflebutton = UIBarButtonItem(title: "Shuffle", style: .Plain, target: self, action: Selector("shuffleAction:"))
         navigationItem.rightBarButtonItem = shufflebutton
@@ -152,6 +152,8 @@ class ViewController: UITableViewController {
         // 3. Update current section data with new section data
         // 4. Move sections around
 
+        NSLog("Start")
+
         
         for section in self.sections {
 
@@ -214,7 +216,7 @@ class ViewController: UITableViewController {
         }
         tableView.endUpdates()
 
-
+        NSLog("End")
         
         testAction(self)
     }
@@ -246,7 +248,7 @@ class ViewController: UITableViewController {
     }
     
     func newSection() -> Mummy {
-        let c = (0..<50).map({ num in self.newItem() })
+        let c = (0..<10).map({ num in self.newItem() })
 
         lastIdentity += 1
         let result = Mummy(i: lastIdentity, name: "Section")

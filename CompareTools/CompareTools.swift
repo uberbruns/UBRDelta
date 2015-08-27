@@ -51,23 +51,28 @@ struct ComparisonTool {
     
     static func diff<T: Comparable where T : Hashable>(old oldItems: [T], new newItems: [T]) -> ComparisonResult<T>
     {
-        NSLog("Start")
-        
-        // Function Cache
-        var compareCache = [T:[T:ComparisonLevel]]()
-        func compare(oldItem oldItem: T, newItem: T) -> (ComparisonLevel) {
-            if let memorized = compareCache[oldItem]?[newItem] {
-                return memorized
-            } else {
-                let level = newItem.compareTo(oldItem)
-                var newItems = compareCache[oldItem] ?? [:]
-                newItems[newItem] = level
-                compareCache[oldItem] = newItems
-                return level
-            }
+        // Internal Functions
+        func twoIntHash(a:Int, _ b:Int) -> Int {
+            // See http://stackoverflow.com/a/13871379
+            return a >= b ? a * a + a + b : a + b * b
         }
         
         
+        // Comparison Cache
+        var compareCache = [Int:ComparisonLevel]()
+        func compare(oldItem oldItem: T, newItem: T) -> ComparisonLevel {
+            let hash = twoIntHash(oldItem.hashValue, newItem.hashValue)
+            if let memorized = compareCache[hash] {
+                return memorized
+            } else {
+                let level = newItem.compareTo(oldItem)
+                compareCache[hash] = level
+                return level
+            }
+        }
+
+        
+        // Init vars
         let insertionSet = NSMutableIndexSet()
         let deletionSet = NSMutableIndexSet()
         let reloadSet = NSMutableIndexSet()
@@ -158,8 +163,6 @@ struct ComparisonTool {
             moveSet: moveSet,
             unmovedItems: unmovedItems
         )
-        
-        NSLog("End")
         
         return diffResult
     }
