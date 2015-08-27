@@ -51,6 +51,7 @@ struct ComparisonTool {
     
     static func diff<T: Comparable>(old oldItems: [T], new newItems: [T]) -> ComparisonResult<T>
     {
+        NSLog("Start")
         let insertionSet = NSMutableIndexSet()
         let deletionSet = NSMutableIndexSet()
         let reloadSet = NSMutableIndexSet()
@@ -138,7 +139,8 @@ struct ComparisonTool {
             moveSet: moveSet,
             unmovedItems: unmovedItems
         )
-        
+        NSLog("End")
+
         return diffResult
     }
     

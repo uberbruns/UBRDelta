@@ -246,7 +246,7 @@ class ViewController: UITableViewController {
     }
     
     func newSection() -> Mummy {
-        let c = (0..<5).map({ num in self.newItem() })
+        let c = (0..<50).map({ num in self.newItem() })
 
         lastIdentity += 1
         let result = Mummy(i: lastIdentity, name: "Section")
