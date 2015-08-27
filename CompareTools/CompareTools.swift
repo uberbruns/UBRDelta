@@ -27,14 +27,14 @@ import Foundation
 
 struct ComparisonResult<T: Comparable> {
     
-    let insertionSet: NSMutableIndexSet
-    let deletionSet: NSMutableIndexSet
-    let reloadSet: NSMutableIndexSet
-    let sameSet: NSMutableIndexSet
+    let insertionSet: NSIndexSet
+    let deletionSet: NSIndexSet
+    let reloadSet: NSIndexSet
+    let sameSet: NSIndexSet
     let moveSet: [Int:Int]
     let unmovedItems: [T]
     
-    init(insertionSet: NSMutableIndexSet, deletionSet: NSMutableIndexSet, reloadSet: NSMutableIndexSet, sameSet: NSMutableIndexSet, moveSet: [Int:Int], unmovedItems: [T])
+    init(insertionSet: NSIndexSet, deletionSet: NSIndexSet, reloadSet: NSIndexSet, sameSet: NSIndexSet, moveSet: [Int:Int], unmovedItems: [T])
     {
         self.insertionSet = insertionSet
         self.deletionSet = deletionSet
@@ -49,42 +49,65 @@ struct ComparisonResult<T: Comparable> {
 
 struct ComparisonTool {
     
-    static func diff<T: Comparable>(old oldItems: [T], new newItems: [T]) -> ComparisonResult<T>
+    static func diff<T: Comparable where T : Hashable>(old oldItems: [T], new newItems: [T]) -> ComparisonResult<T>
     {
+        NSLog("Start")
+        
+        // Function Cache
+        var compareCache = [T:[T:ComparisonLevel]]()
+        func compare(oldItem oldItem: T, newItem: T) -> (ComparisonLevel) {
+            if let memorized = compareCache[oldItem]?[newItem] {
+                return memorized
+            } else {
+                let level = newItem.compareTo(oldItem)
+                var newItems = compareCache[oldItem] ?? [:]
+                newItems[newItem] = level
+                compareCache[oldItem] = newItems
+                return level
+            }
+        }
+        
+        
         let insertionSet = NSMutableIndexSet()
         let deletionSet = NSMutableIndexSet()
         let reloadSet = NSMutableIndexSet()
         let sameSet = NSMutableIndexSet()
         var moveSet = [Int:Int]()
         
-        
+        // Table views require that Insert/Delete/Update are done sperately from moving
+        // So first we need an array of items that has the same content like 'newItems'
+        // but is keeping the same order like 'oldItems'
         var unmovedItems = [T]()
 
         
-        // Delete
+        // Iterating over 'oldItems' to fill 'unmoved' items
+        // and to determine indexes that can be deleted
         for (oldIndex, oldItem) in oldItems.enumerate() {
             
             let newIndex = newItems.indexOf({ newItem -> Bool in
-                let equalityLevel = newItem.compareTo(oldItem)
+                let equalityLevel = compare(oldItem: oldItem, newItem: newItem)
                 return equalityLevel == .PerfectEquality || equalityLevel == .IdentifierEquality
             })
             
-            // Delete
-            if newIndex == nil {
-                deletionSet.addIndex(oldIndex)
+            if let newIndex = newIndex {
+                // Update 'unmoved'
+                unmovedItems.append(newItems[newIndex])
             } else {
-                unmovedItems.append(newItems[newIndex!])
+                // Delete
+                deletionSet.addIndex(oldIndex)
             }
             
         }
         
-        // Insert, Reload
+        
+        // Iterating over 'newItems' to insert new items into 'unmovedItems'
+        // and to determine indexes that need to be insertet and updated
         for (newIndex, newItem) in newItems.enumerate() {
             
             var equalityLevel = ComparisonLevel.NoEquality
             
             let oldIndex = oldItems.indexOf({ oldItem -> Bool in
-                equalityLevel = oldItem.compareTo(newItem)
+                equalityLevel = compare(oldItem: oldItem, newItem: newItem)
                 return equalityLevel == .PerfectEquality || equalityLevel == .IdentifierEquality
             })
 
@@ -115,21 +138,18 @@ struct ComparisonTool {
         }
         
         
-        // Move
+        // Iterating over 'newItems' and 'unmovedItems'
+        // to determine the movement of items
         for (newIndex, newItem) in newItems.enumerate() {
-            
-            let intIndex = unmovedItems.indexOf({ oldItem -> Bool in
-                let equalityLevel = oldItem.compareTo(newItem)
-                return equalityLevel == .PerfectEquality
-            })
-            
+            let intIndex = unmovedItems.indexOf(newItem)
             if let intIndex = intIndex where newIndex != intIndex {
                 // Move
                 moveSet[intIndex] = newIndex
             }
-            
         }
         
+        
+        // Bundle result
         let diffResult = ComparisonResult(
             insertionSet: insertionSet,
             deletionSet: deletionSet,
@@ -138,6 +158,8 @@ struct ComparisonTool {
             moveSet: moveSet,
             unmovedItems: unmovedItems
         )
+        
+        NSLog("End")
         
         return diffResult
     }
