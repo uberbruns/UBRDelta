@@ -9,29 +9,6 @@
 import UIKit
 
 
-extension Array {
-    
-    mutating func extractRandomElements(count count: Int) -> [Element] {
-        var elements = [Element]()
-        for _ in 0..<(min(count,self.count)) {
-            let index = Int(arc4random_uniform(UInt32(self.count)))
-            elements.append(self[index])
-            self.removeAtIndex(index)
-        }
-        return elements
-    }
-    
-    mutating func insertAtRandomIndex(newElements: [Element]) {
-        for newElement in newElements {
-            let index = Int(arc4random_uniform(UInt32(self.count)))
-            self.insert(newElement, atIndex: index)
-        }
-    }
-    
-    
-}
-
-
 class ViewController: UITableViewController {
     
     
@@ -39,9 +16,13 @@ class ViewController: UITableViewController {
     var sections: [Mummy] = []
     
     
+    // MARK: - View -
+    // MARK: Life-Cycle
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        
         sections = (0..<5).map({ num in self.newSection() })
         
         let shufflebutton = UIBarButtonItem(title: "Shuffle", style: .Plain, target: self, action: Selector("shuffleAction2:"))
@@ -56,93 +37,8 @@ class ViewController: UITableViewController {
     }
     
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return sections.count
-    }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return sections[section].children.count
-    }
-    
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell")! as UITableViewCell
-        let item = sections[indexPath.section].children[indexPath.row]
-        
-        cell.textLabel?.text = "\(item.v)"
-        cell.detailTextLabel?.text = "Identity: \(item.i)"
-        
-        return cell
-    }
-    
-    
-    func shuffleItems(let items: [Dummy]) -> [Dummy] {
-        
-        var newItems = items.map({ Dummy(v: $0.v, i: $0.i)})
-        
-        // Move
-        let elements = newItems.extractRandomElements(count: 2)
-        newItems.insertAtRandomIndex(elements)
-        
-        // Remove
-        let maxD = UInt32(min(2,max(0,newItems.count-1)))
-        let delete: Int = Int(arc4random_uniform(maxD))
-        let _ = newItems.extractRandomElements(count: delete)
-        
-        // Insert
-        let maxI = UInt32(min(2,max(0,10-newItems.count)))
-        let insert: Int = Int(arc4random_uniform(maxI))
-        let newElements = (0..<insert).map({ _ in self.newItem() })
-        newItems.insertAtRandomIndex(newElements)
-        
-        // Change
-        let change: Int = Int(arc4random_uniform(2))
-        for _ in 0..<(min(change,newItems.count)) {
-            let index = Int(arc4random_uniform(UInt32(newItems.count)))
-            let v = Int(arc4random_uniform(255))
-            let oldItem = newItems[index]
-            let newItem = Dummy(v: v, i: oldItem.i)
-            newItems[index] = newItem
-        }
-        
-        return newItems
-    }
-    
-    
-    func shuffleSection(sections: [Mummy]) -> [Mummy] {
-        
-        var newSections: [Mummy] = sections.map({ aSection in
-            let m = Mummy(i: aSection.i, name: aSection.name)
-            m.children = aSection.children
-            return m
-        })
-        
-        // Move
-        let elements = newSections.extractRandomElements(count: 1)
-        newSections.insertAtRandomIndex(elements)
-        
-        // Remove
-        let delete: Int = Int(arc4random_uniform(4))
-        if newSections.count > 1 && delete == 2 {
-            print("delete section")
-            let _ = newSections.extractRandomElements(count: 1)
-        }
-        
-        // Insert
-        let insert: Int = Int(arc4random_uniform(4))
-        if insert == 2 {
-            print("insert section")
-            newSections.insertAtRandomIndex([self.newSection()])
-        }
-        
-        // Change
-        for section in newSections {
-            section.children = shuffleItems(section.children)
-        }
-        
-        return newSections
-    }
-    
+    // MARK: Actions
     
     var isDiffing: Bool = false
     
@@ -222,6 +118,32 @@ class ViewController: UITableViewController {
         print("Test ended (cells tested: \(cellsTested))")
     }
     
+    
+    // MARK: - Protocols -
+    // MARK: UITableViewDataSource
+    
+    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return sections.count
+    }
+    
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return sections[section].children.count
+    }
+    
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
+        let cell = tableView.dequeueReusableCellWithIdentifier("Cell")! as UITableViewCell
+        let item = sections[indexPath.section].children[indexPath.row]
+        
+        cell.textLabel?.text = "\(item.v)"
+        cell.detailTextLabel?.text = "Identity: \(item.i)"
+        
+        return cell
+    }
+
+    
+    // MARK: - Helper -
+    
     func newItem() -> Dummy {
         lastIdentity += 1
         let v: Int = Int(arc4random_uniform(255))
@@ -237,6 +159,78 @@ class ViewController: UITableViewController {
         result.children = c
         return result
     }
+    
+    
+    func shuffleItems(let items: [Dummy]) -> [Dummy] {
+        
+        var newItems = items.map({ Dummy(v: $0.v, i: $0.i)})
+        
+        // Move
+        let elements = newItems.extractRandomElements(count: 2)
+        newItems.insertAtRandomIndex(elements)
+        
+        // Remove
+        let maxD = UInt32(min(2,max(0,newItems.count-1)))
+        let delete: Int = Int(arc4random_uniform(maxD))
+        let _ = newItems.extractRandomElements(count: delete)
+        
+        // Insert
+        let maxI = UInt32(min(2,max(0,10-newItems.count)))
+        let insert: Int = Int(arc4random_uniform(maxI))
+        let newElements = (0..<insert).map({ _ in self.newItem() })
+        newItems.insertAtRandomIndex(newElements)
+        
+        // Change
+        let change: Int = Int(arc4random_uniform(2))
+        for _ in 0..<(min(change,newItems.count)) {
+            let index = Int(arc4random_uniform(UInt32(newItems.count)))
+            let v = Int(arc4random_uniform(255))
+            let oldItem = newItems[index]
+            let newItem = Dummy(v: v, i: oldItem.i)
+            newItems[index] = newItem
+        }
+        
+        return newItems
+    }
+    
+    
+    func shuffleSection(sections: [Mummy]) -> [Mummy] {
+        
+        var newSections: [Mummy] = sections.map({ aSection in
+            let m = Mummy(i: aSection.i, name: aSection.name)
+            m.children = aSection.children
+            return m
+        })
+        
+        // Move
+        let doMove: Int = Int(arc4random_uniform(6))
+        if doMove == 2 {
+            let elements = newSections.extractRandomElements(count: 1)
+            newSections.insertAtRandomIndex(elements)
+        }
+        
+        // Remove
+        let doDelete: Int = Int(arc4random_uniform(6))
+        if newSections.count > 1 && doDelete == 2 {
+            print("delete section")
+            let _ = newSections.extractRandomElements(count: 1)
+        }
+        
+        // Insert
+        let doInsernsert: Int = Int(arc4random_uniform(6))
+        if doInsernsert == 2 {
+            print("insert section")
+            newSections.insertAtRandomIndex([self.newSection()])
+        }
+        
+        // Change
+        for section in newSections {
+            section.children = shuffleItems(section.children)
+        }
+        
+        return newSections
+    }
+
     
 }
 
