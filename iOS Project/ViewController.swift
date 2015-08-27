@@ -42,9 +42,9 @@ class ViewController: UITableViewController {
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        sections = (0..<100).map({ num in self.newSection() })
+        sections = (0..<3).map({ num in self.newSection() })
 
-        let shufflebutton = UIBarButtonItem(title: "Shuffle", style: .Plain, target: self, action: Selector("shuffleAction:"))
+        let shufflebutton = UIBarButtonItem(title: "Shuffle", style: .Plain, target: self, action: Selector("shuffleAction2:"))
         navigationItem.rightBarButtonItem = shufflebutton
         
         let testbutton = UIBarButtonItem(title: "Test", style: .Plain, target: self, action: Selector("testAction:"))
@@ -118,16 +118,18 @@ class ViewController: UITableViewController {
         // Move
         let elements = newSections.extractRandomElements(count: 1)
         newSections.insertAtRandomIndex(elements)
-        
+
         // Remove
         let delete: Int = Int(arc4random_uniform(4))
         if delete == 2 {
+            print("delete section")
             let _ = newSections.extractRandomElements(count: 1)
         }
         
         // Insert
         let insert: Int = Int(arc4random_uniform(4))
         if insert == 2 {
+            print("insert section")
             newSections.insertAtRandomIndex([self.newSection()])
         }
 
@@ -138,6 +140,68 @@ class ViewController: UITableViewController {
         
         return newSections
     }
+    
+    
+    func shuffleAction2(sender: AnyObject) {
+
+        let oldSections = self.sections
+        let newSections = shuffleSection(oldSections)
+
+        CompareDataSource.diff(oldSections: oldSections, newSections: newSections,
+            itemUpdate: { (section, diff) -> () in
+
+                let insertIndexPaths = diff.insertionSet.map({ index in NSIndexPath(forRow: index, inSection: section)})
+                let reloadIndexPaths = diff.reloadSet.map({ index in NSIndexPath(forRow: index, inSection: section)})
+                let deleteIndexPaths = diff.deletionSet.map({ index in NSIndexPath(forRow: index, inSection: section)})
+                
+                self.sections[section].children = diff.unmovedItems as! [Dummy]
+                self.tableView.beginUpdates()
+                self.tableView.deleteRowsAtIndexPaths(deleteIndexPaths, withRowAnimation: .Middle)
+                self.tableView.reloadRowsAtIndexPaths(reloadIndexPaths, withRowAnimation: .None)
+                self.tableView.insertRowsAtIndexPaths(insertIndexPaths, withRowAnimation: .Middle)
+                self.tableView.endUpdates()
+                
+            }, itemReorder: { (section, diff) -> () in
+                
+                print("Sec: ", section)
+                print("Old: ", (diff.oldItems as! [Dummy]).map({ "\($0.i): \($0.v)" }))
+                print("Unm: ", (diff.unmovedItems as! [Dummy]).map({ "\($0.i): \($0.v)" }))
+                print("Mov: ", diff.moveSet)
+                print("New: ", (diff.newItems as! [Dummy]).map({ "\($0.i): \($0.v)" }))
+                
+                self.sections[section].children = diff.newItems as! [Dummy]
+                self.tableView.beginUpdates()
+                for (from, to) in diff.moveSet {
+                    let fromIndexPath = NSIndexPath(forRow: from, inSection: section)
+                    let toIndexPath = NSIndexPath(forRow: to, inSection: section)
+                    self.tableView.moveRowAtIndexPath(fromIndexPath, toIndexPath: toIndexPath)
+                }
+                self.tableView.endUpdates()
+
+            }, sectionUpdate: { (diff) -> () in
+                
+                self.sections = diff.unmovedItems as! [Mummy]
+                self.tableView.beginUpdates()
+                self.tableView.deleteSections(diff.deletionSet, withRowAnimation: .Middle)
+                self.tableView.reloadSections(diff.reloadSet, withRowAnimation: .None)
+                self.tableView.insertSections(diff.insertionSet, withRowAnimation: .Middle)
+                self.tableView.endUpdates()
+
+            }, sectionReorder: { (diff) -> () in
+                
+                self.sections = diff.newItems as! [Mummy]
+                self.tableView.beginUpdates()
+                for (from, to) in diff.moveSet {
+                    self.tableView.moveSection(from, toSection: to)
+                }
+                self.tableView.endUpdates()
+                
+        })
+        
+        
+        testAction(self)
+    }
+    
     
     
     func shuffleAction(sender: AnyObject) {
@@ -152,22 +216,24 @@ class ViewController: UITableViewController {
         // 3. Update current section data with new section data
         // 4. Move sections around
 
-        NSLog("Start")
-
         
-        for section in self.sections {
+        for (oldSectionIndex, oldSection) in oldSections.enumerate() {
 
             // Guarding
-            let oldItems = section.children
-            guard let newIndex: Int = newSections.indexOf(section) else { continue }
-            guard let currentIndex: Int = self.sections.indexOf(section) else { continue }
+            guard let newIndex = newSections.indexOf({ newSection in
+                let comparison = newSection.compareTo(oldSection)
+                return comparison == .PerfectEquality || comparison == .IdentifierEquality
+            }) else {
+                continue
+            }
             
             // Diffing
+            let oldItems = oldSection.children
             let newItems = newSections[newIndex].children
             let itemDiff = ComparisonTool.diff(old: oldItems, new: newItems)
-            let insertIndexPaths = itemDiff.insertionSet.map({ index in NSIndexPath(forRow: index, inSection: currentIndex)})
-            let reloadIndexPaths = itemDiff.reloadSet.map({ index in NSIndexPath(forRow: index, inSection: currentIndex)})
-            let deleteIndexPaths = itemDiff.deletionSet.map({ index in NSIndexPath(forRow: index, inSection: currentIndex)})
+            let insertIndexPaths = itemDiff.insertionSet.map({ index in NSIndexPath(forRow: index, inSection: oldSectionIndex)})
+            let reloadIndexPaths = itemDiff.reloadSet.map({ index in NSIndexPath(forRow: index, inSection: oldSectionIndex)})
+            let deleteIndexPaths = itemDiff.deletionSet.map({ index in NSIndexPath(forRow: index, inSection: oldSectionIndex)})
             
 //            print(" ")
 //            print("Old: ", oldItems.map({ "\($0.i): \($0.v)" }))
@@ -175,7 +241,7 @@ class ViewController: UITableViewController {
 //            print("New: ", newItems.map({ "\($0.i): \($0.v)" }))
 
             // 1
-            self.sections[currentIndex].children = itemDiff.unmovedItems
+            self.sections[oldSectionIndex].children = itemDiff.unmovedItems
             tableView.beginUpdates()
             tableView.deleteRowsAtIndexPaths(deleteIndexPaths, withRowAnimation: .Middle)
             tableView.reloadRowsAtIndexPaths(reloadIndexPaths, withRowAnimation: .None)
@@ -183,12 +249,11 @@ class ViewController: UITableViewController {
             tableView.endUpdates()
             
             // 2
-            self.sections[currentIndex].children = newItems
+            self.sections[oldSectionIndex].children = newItems
             tableView.beginUpdates()
-            for from in Array(itemDiff.moveSet.keys) {
-                let to = itemDiff.moveSet[from]!
-                let fromIndexPath = NSIndexPath(forRow: from, inSection: currentIndex)
-                let toIndexPath = NSIndexPath(forRow: to, inSection: currentIndex)
+            for (from, to) in itemDiff.moveSet {
+                let fromIndexPath = NSIndexPath(forRow: from, inSection: oldSectionIndex)
+                let toIndexPath = NSIndexPath(forRow: to, inSection: oldSectionIndex)
                 tableView.moveRowAtIndexPath(fromIndexPath, toIndexPath: toIndexPath)
             }
             tableView.endUpdates()
@@ -216,7 +281,6 @@ class ViewController: UITableViewController {
         }
         tableView.endUpdates()
 
-        NSLog("End")
         
         testAction(self)
     }
@@ -231,13 +295,12 @@ class ViewController: UITableViewController {
             let shouldValue = self.sections[indexPath.section].children[indexPath.row].v
             let hasValue = Int((cell.textLabel?.text)!)!
             if shouldValue != hasValue {
-                print("UNALLOWED DIFF:", shouldValue, hasValue)
-                return
+                print("Is:", hasValue, "Should:", shouldValue)
             }
             cellsTested++
         }
     
-        print("Test passed (cells tested: \(cellsTested))")
+        print("Test ended (cells tested: \(cellsTested))")
     }
     
     func newItem() -> Dummy {
@@ -248,7 +311,7 @@ class ViewController: UITableViewController {
     }
     
     func newSection() -> Mummy {
-        let c = (0..<10).map({ num in self.newItem() })
+        let c = (0..<3).map({ num in self.newItem() })
 
         lastIdentity += 1
         let result = Mummy(i: lastIdentity, name: "Section")

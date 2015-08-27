@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9B0904051B8F2C4100A403C6 /* CompareToolsTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0904041B8F2C4100A403C6 /* CompareToolsTypes.swift */; settings = {ASSET_TAGS = (); }; };
+		9B0904071B8F2C7D00A403C6 /* CompareDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0904061B8F2C7D00A403C6 /* CompareDataSource.swift */; settings = {ASSET_TAGS = (); }; };
 		9B1B5C071B8DFB6C00C8EC07 /* Dummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B1B5C061B8DFB6C00C8EC07 /* Dummy.swift */; settings = {ASSET_TAGS = (); }; };
 		9B3171DD1B3461E800C75870 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3171DC1B3461E800C75870 /* AppDelegate.swift */; };
 		9B3171DF1B3461E800C75870 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3171DE1B3461E800C75870 /* ViewController.swift */; };
@@ -28,6 +30,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9B0904041B8F2C4100A403C6 /* CompareToolsTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompareToolsTypes.swift; sourceTree = "<group>"; };
+		9B0904061B8F2C7D00A403C6 /* CompareDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompareDataSource.swift; sourceTree = "<group>"; };
 		9B1B5C061B8DFB6C00C8EC07 /* Dummy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dummy.swift; sourceTree = "<group>"; };
 		9B3171D71B3461E800C75870 /* iOS Project.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iOS Project.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B3171DB1B3461E800C75870 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -118,6 +122,8 @@
 			isa = PBXGroup;
 			children = (
 				9BF1B3DE1B8F0A63003B55F8 /* CompareTools.swift */,
+				9B0904041B8F2C4100A403C6 /* CompareToolsTypes.swift */,
+				9B0904061B8F2C7D00A403C6 /* CompareDataSource.swift */,
 			);
 			name = CompareTools;
 			sourceTree = "<group>";
@@ -247,6 +253,8 @@
 				9B3171DF1B3461E800C75870 /* ViewController.swift in Sources */,
 				9BF1B3DF1B8F0A63003B55F8 /* CompareTools.swift in Sources */,
 				9B1B5C071B8DFB6C00C8EC07 /* Dummy.swift in Sources */,
+				9B0904051B8F2C4100A403C6 /* CompareToolsTypes.swift in Sources */,
+				9B0904071B8F2C7D00A403C6 /* CompareDataSource.swift in Sources */,
 				9B3171DD1B3461E800C75870 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

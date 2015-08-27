@@ -9,13 +9,15 @@
 import Foundation
 
 
-class Mummy : Hashable, Equatable, Comparable
+class Mummy : NSObject, Comparable, ComparableSection
 {
     var children: [Dummy] = []
+    var items: [Comparable] { return children }
+    
     let i: Int
     let name: String
     
-    @objc var identifier: Int { return i }
+    var identifier: Int { return i }
     
     init(i: Int, name: String) {
         self.i = i
@@ -23,7 +25,7 @@ class Mummy : Hashable, Equatable, Comparable
     }
     
     
-    @objc func compareTo(other: Comparable) -> ComparisonLevel
+    func compareTo(other: Comparable) -> ComparisonLevel
     {
         guard let other = other as? Mummy else { return .NoEquality }
         
@@ -38,7 +40,7 @@ class Mummy : Hashable, Equatable, Comparable
         }
     }
     
-    var hashValue: Int {
+    override var hashValue: Int {
         return i
     }
 }
@@ -50,12 +52,12 @@ func ==(lhs: Mummy, rhs: Mummy) -> Bool
 }
 
 
-class Dummy : Hashable, Equatable, Comparable
+class Dummy : NSObject, Comparable
 {
     let v: Int
     let i: Int
     
-    @objc var identifier: Int { return i }
+    var identifier: Int { return i }
     
     init(v: Int, i: Int) {
         self.v = v
@@ -63,7 +65,7 @@ class Dummy : Hashable, Equatable, Comparable
     }
     
     
-    @objc func compareTo(other: Comparable) -> ComparisonLevel
+    func compareTo(other: Comparable) -> ComparisonLevel
     {
         guard let other = other as? Dummy else { return .NoEquality }
         
@@ -78,9 +80,10 @@ class Dummy : Hashable, Equatable, Comparable
         }
     }
     
-    var hashValue: Int {
+    override var hashValue: Int {
         return i
     }
+    
 }
 
 
