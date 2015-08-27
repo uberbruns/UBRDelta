@@ -9,7 +9,7 @@
 import Foundation
 
 
-class Mummy : NSObject, Comparable, ComparableSection
+class Mummy : Comparable, ComparableSection
 {
     var children: [Dummy] = []
     var items: [Comparable] { return children.map({ $0 as Comparable }) }
@@ -17,7 +17,7 @@ class Mummy : NSObject, Comparable, ComparableSection
     let i: Int
     let name: String
     
-    var identifier: Int { return i }
+    var identifier: UInt32 { return UInt32(i) }
     
     init(i: Int, name: String) {
         self.i = i
@@ -40,9 +40,6 @@ class Mummy : NSObject, Comparable, ComparableSection
         }
     }
     
-    override var hashValue: Int {
-        return i
-    }
 }
 
 
@@ -52,12 +49,12 @@ func ==(lhs: Mummy, rhs: Mummy) -> Bool
 }
 
 
-class Dummy : NSObject, Comparable
+class Dummy : Comparable
 {
     let v: Int
     let i: Int
     
-    var identifier: Int { return i }
+    var identifier: UInt32 { return UInt32(i) }
     
     init(v: Int, i: Int) {
         self.v = v
@@ -78,10 +75,6 @@ class Dummy : NSObject, Comparable
         } else {
             return .NoEquality
         }
-    }
-    
-    override var hashValue: Int {
-        return i
     }
     
 }

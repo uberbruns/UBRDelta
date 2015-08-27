@@ -15,7 +15,7 @@ public enum ComparisonLevel : Int {
 
 
 public protocol Comparable {
-    var identifier: Int { get }
+    var identifier: UInt32 { get }
     func compareTo(other: Comparable) -> ComparisonLevel
 }
 

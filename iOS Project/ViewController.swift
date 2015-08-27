@@ -42,7 +42,7 @@ class ViewController: UITableViewController {
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        sections = (0..<100).map({ num in self.newSection() })
+        sections = (0..<5).map({ num in self.newSection() })
         
         let shufflebutton = UIBarButtonItem(title: "Shuffle", style: .Plain, target: self, action: Selector("shuffleAction2:"))
         navigationItem.rightBarButtonItem = shufflebutton

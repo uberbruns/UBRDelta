@@ -14,15 +14,16 @@ struct ComparisonTool {
     static func diff(old oldItems: [Comparable], new newItems: [Comparable]) -> ComparisonResult
     {
         // Internal Functions
-        func twoIntHash(a:Int, _ b:Int) -> Int {
-            // See http://stackoverflow.com/a/13871379
-            return a >= b ? a * a + a + b : a + b * b
+        func twoIntHash(a:UInt32, _ b:UInt32) -> UInt64 {
+            let a = UInt64(a)
+            let b = UInt64(b)
+            return a<<32 | b
         }
         
         
         // Comparison Cache
-        var compareCache = [Int:ComparisonLevel]()
-        func compare(oldItem oldItem: Comparable, newItem: Comparable) -> ComparisonLevel {
+        var compareCache = [UInt64:ComparisonLevel]()
+        func compareItems(oldItem oldItem: Comparable, newItem: Comparable) -> ComparisonLevel {
             let hash = twoIntHash(oldItem.identifier, newItem.identifier)
             if let memorized = compareCache[hash] {
                 return memorized
@@ -41,6 +42,7 @@ struct ComparisonTool {
         let sameSet = NSMutableIndexSet()
         var moveSet = [Int:Int]()
         
+        
         // Table views require that Insert/Delete/Update are done sperately from moving
         // So first we need an array of items that has the same content like 'newItems'
         // but is keeping the same order like 'oldItems'
@@ -52,7 +54,7 @@ struct ComparisonTool {
         for (oldIndex, oldItem) in oldItems.enumerate() {
             
             let newIndex = newItems.indexOf({ newItem -> Bool in
-                let equalityLevel = compare(oldItem: oldItem, newItem: newItem)
+                let equalityLevel = compareItems(oldItem: oldItem, newItem: newItem)
                 return equalityLevel == .PerfectEquality || equalityLevel == .IdentifierEquality
             })
             
@@ -74,7 +76,7 @@ struct ComparisonTool {
             var equalityLevel = ComparisonLevel.NoEquality
             
             let oldIndex = oldItems.indexOf({ oldItem -> Bool in
-                equalityLevel = compare(oldItem: oldItem, newItem: newItem)
+                equalityLevel = compareItems(oldItem: oldItem, newItem: newItem)
                 return equalityLevel == .PerfectEquality || equalityLevel == .IdentifierEquality
             })
             
@@ -110,7 +112,7 @@ struct ComparisonTool {
         for (newIndex, newItem) in newItems.enumerate() {
             
             let intIndex = unmovedItems.indexOf({ unmItem -> Bool in
-                let equalityLevel = compare(oldItem: unmItem, newItem: newItem)
+                let equalityLevel = compareItems(oldItem: unmItem, newItem: newItem)
                 return equalityLevel == .PerfectEquality || equalityLevel == .IdentifierEquality
             })
             
