@@ -9,7 +9,7 @@
 import Foundation
 
 
-class Mummy : Comparable, ComparableSection
+struct Mummy : Comparable, ComparableSection
 {
     var children: [Dummy] = []
     var items: [Comparable] { return children.map({ $0 as Comparable }) }
@@ -49,7 +49,7 @@ func ==(lhs: Mummy, rhs: Mummy) -> Bool
 }
 
 
-class Dummy : Comparable
+struct Dummy : Comparable
 {
     let v: Int
     let i: Int

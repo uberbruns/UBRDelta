@@ -166,7 +166,7 @@ class ViewController: UITableViewController {
         let c = (0..<3).map({ num in self.newItem() })
         
         lastIdentity += 1
-        let result = Mummy(i: lastIdentity, name: "Section \(lastIdentity)")
+        var result = Mummy(i: lastIdentity, name: "Section \(lastIdentity)")
         result.children = c
         return result
     }
@@ -174,7 +174,7 @@ class ViewController: UITableViewController {
     
     func shuffleItems(let items: [Dummy]) -> [Dummy]
     {
-        var newItems = items.map({ Dummy(v: $0.v, i: $0.i)})
+        var newItems = items
         
         // Move
         let elements = newItems.extractRandomElements(count: 2)
@@ -207,11 +207,7 @@ class ViewController: UITableViewController {
     
     func shuffleSection(sections: [Mummy]) -> [Mummy]
     {
-        var newSections: [Mummy] = sections.map({ aSection in
-            let m = Mummy(i: aSection.i, name: aSection.name)
-            m.children = aSection.children
-            return m
-        })
+        var newSections = sections
         
         // Move
         let doMove: Int = Int(arc4random_uniform(6))
@@ -223,20 +219,20 @@ class ViewController: UITableViewController {
         // Remove
         let doDelete: Int = Int(arc4random_uniform(6))
         if newSections.count > 1 && doDelete == 2 {
-            print("delete section")
             let _ = newSections.extractRandomElements(count: 1)
         }
         
         // Insert
         let doInsernsert: Int = Int(arc4random_uniform(6))
         if doInsernsert == 2 {
-            print("insert section")
             newSections.insertAtRandomIndex([self.newSection()])
         }
         
         // Change
-        for section in newSections {
-            section.children = shuffleItems(section.children)
+        for (index, section) in newSections.enumerate() {
+            var newSection = section
+            newSection.children = shuffleItems(section.children)
+            newSections[index] = newSection
         }
         
         return newSections
