@@ -33,22 +33,20 @@ class ViewController: UITableViewController {
     }
     
     
-    override func viewDidAppear(animated: Bool) {
-    }
-    
-
     // MARK: Update
 
-    func updateTableView(sections: [Mummy]) {
-        
+    func updateTableView(sections: [Mummy])
+    {
         guard isDiffing == false else { return }
         isDiffing = true
     
         let oldSections = self.sections.map({ $0 as ComparableSection })
         let newSections = sections.map({ $0 as ComparableSection })
         
-        CompareDataSource.diff(oldSections: oldSections, newSections: newSections,
-            itemUpdate: { (items, section, insertIndexPaths, reloadIndexPaths, deleteIndexPaths) -> () in
+        let compareDataSource = CompareDataSource(oldSections: oldSections, newSections: newSections)
+
+        compareDataSource.diff(
+            itemUpdate: { (items, section, insertIndexPaths, reloadIndexPaths, deleteIndexPaths) in
                 
                 self.sections[section].children = items.flatMap({ $0 as? Dummy })
                 self.tableView.beginUpdates()
@@ -57,7 +55,7 @@ class ViewController: UITableViewController {
                 self.tableView.insertRowsAtIndexPaths(insertIndexPaths, withRowAnimation: .Middle)
                 self.tableView.endUpdates()
                 
-            }, itemReorder: { (items, section, reorderMap) -> () in
+            }, itemReorder: { (items, section, reorderMap) in
                 
                 self.sections[section].children = items.flatMap({ $0 as? Dummy })
                 self.tableView.beginUpdates()
@@ -68,7 +66,7 @@ class ViewController: UITableViewController {
                 }
                 self.tableView.endUpdates()
                 
-            }, sectionUpdate: { (sections, insertIndexPaths, reloadIndexPaths, deleteIndexPaths) -> () in
+            }, sectionUpdate: { (sections, insertIndexPaths, reloadIndexPaths, deleteIndexPaths) in
                 
                 self.sections = sections.flatMap({ $0 as? Mummy })
                 self.tableView.beginUpdates()
@@ -77,7 +75,7 @@ class ViewController: UITableViewController {
                 self.tableView.insertSections(insertIndexPaths, withRowAnimation: .Middle)
                 self.tableView.endUpdates()
                 
-            }, sectionReorder: { (sections, reorderMap) -> () in
+            }, sectionReorder: { (sections, reorderMap) in
                 
                 self.sections = sections.flatMap({ $0 as? Mummy })
                 self.tableView.beginUpdates()
@@ -100,16 +98,14 @@ class ViewController: UITableViewController {
     
     var isDiffing: Bool = false
     
-    func shuffleAction(sender: AnyObject) {
-        
+    func shuffleAction(sender: AnyObject)
+    {
         updateTableView(shuffleSection(self.sections))
-        
     }
     
     
-    
-    func testAction(sender: AnyObject) {
-        
+    func testAction(sender: AnyObject)
+    {
         var cellsTested = 0
         
         for cell in tableView.visibleCells {
@@ -129,15 +125,20 @@ class ViewController: UITableViewController {
     // MARK: - Protocols -
     // MARK: UITableViewDataSource
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSectionsInTableView(tableView: UITableView) -> Int
+    {
         return sections.count
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+    {
         return sections[section].children.count
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+    {
         
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell")! as UITableViewCell
         let item = sections[indexPath.section].children[indexPath.row]
@@ -164,6 +165,7 @@ class ViewController: UITableViewController {
         
     }
     
+    
     func newSection() -> Mummy {
         let c = (0..<3).map({ num in self.newItem() })
         
@@ -174,8 +176,8 @@ class ViewController: UITableViewController {
     }
     
     
-    func shuffleItems(let items: [Dummy]) -> [Dummy] {
-        
+    func shuffleItems(let items: [Dummy]) -> [Dummy]
+    {
         var newItems = items.map({ Dummy(v: $0.v, i: $0.i)})
         
         // Move
@@ -207,8 +209,8 @@ class ViewController: UITableViewController {
     }
     
     
-    func shuffleSection(sections: [Mummy]) -> [Mummy] {
-        
+    func shuffleSection(sections: [Mummy]) -> [Mummy]
+    {
         var newSections: [Mummy] = sections.map({ aSection in
             let m = Mummy(i: aSection.i, name: aSection.name)
             m.children = aSection.children

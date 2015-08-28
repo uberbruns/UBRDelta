@@ -9,8 +9,6 @@
 import Foundation
 
 
-
-
 struct CompareDataSource {
     
     typealias ItemUpdate = (items: [Comparable], section: Int, insertIndexPaths: [NSIndexPath], reloadIndexPaths: [NSIndexPath], deleteIndexPaths: [NSIndexPath]) -> ()
@@ -19,7 +17,18 @@ struct CompareDataSource {
     typealias SectionReorder = (sections: [ComparableSection], reorderMap: [Int:Int]) -> ()
     typealias CompletionHandler = () -> ()
     
-    static func diff(oldSections oldSections: [ComparableSection], newSections: [ComparableSection], itemUpdate: ItemUpdate, itemReorder: ItemReorder, sectionUpdate: SectionUpdate, sectionReorder: SectionReorder, completionHandler: CompletionHandler? = nil)
+    let oldSections: [ComparableSection]
+    let newSections: [ComparableSection]
+    
+    
+    init(oldSections: [ComparableSection], newSections: [ComparableSection])
+    {
+        self.oldSections = oldSections
+        self.newSections = newSections
+    }
+    
+    
+    func diff(itemUpdate itemUpdate: ItemUpdate, itemReorder: ItemReorder, sectionUpdate: SectionUpdate, sectionReorder: SectionReorder, completionHandler: CompletionHandler? = nil)
     {
         let mainQueue = dispatch_get_main_queue()
         let backgroundQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)
@@ -28,9 +37,9 @@ struct CompareDataSource {
             
             var itemDiffs = [Int: ComparisonResult]()
             
-            for (oldSectionIndex, oldSection) in oldSections.enumerate() {
+            for (oldSectionIndex, oldSection) in self.oldSections.enumerate() {
                 
-                let newIndex = newSections.indexOf({ newSection -> Bool in
+                let newIndex = self.newSections.indexOf({ newSection -> Bool in
                     let comparisonLevel = newSection.compareTo(oldSection)
                     return comparisonLevel.hasSameIdentifier
                 })
@@ -38,7 +47,7 @@ struct CompareDataSource {
                 if let newIndex = newIndex {
                     // Diffing
                     let oldItems = oldSection.items
-                    let newItems = newSections[newIndex].items
+                    let newItems = self.newSections[newIndex].items
                     let itemDiff = ComparisonTool.diff(old: oldItems, new: newItems)
                     itemDiffs[oldSectionIndex] = itemDiff
                 }
@@ -60,7 +69,7 @@ struct CompareDataSource {
                     
                 }
                 
-                let sectionDiff = ComparisonTool.diff(old: oldSections.map({$0}), new: newSections.map({$0}))
+                let sectionDiff = ComparisonTool.diff(old: self.oldSections.map({$0}), new: self.newSections.map({$0}))
                 
                 // Change type
                 let updateItems = sectionDiff.unmovedItems.flatMap({ $0 as? ComparableSection })
