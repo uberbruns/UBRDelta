@@ -1,6 +1,5 @@
 //
 //  Swift+Extensions.swift
-//  iOS Project
 //
 //  Created by Karsten Bruns on 28/08/15.
 //  Copyright © 2015 bruns.me. All rights reserved.

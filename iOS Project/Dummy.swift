@@ -1,6 +1,5 @@
 //
 //  Dummy.swift
-//  iOS Project
 //
 //  Created by Karsten Bruns on 26/08/15.
 //  Copyright © 2015 bruns.me. All rights reserved.

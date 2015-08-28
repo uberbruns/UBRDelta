@@ -1,6 +1,5 @@
 //
 //  DataSourceHandler.swift
-//  iOS Project
 //
 //  Created by Karsten Bruns on 27/08/15.
 //  Copyright © 2015 bruns.me. All rights reserved.
@@ -9,27 +8,27 @@
 import Foundation
 
 
-class DataSourceHandler {
+public class DataSourceHandler {
     
-    typealias ItemUpdateHandler = (items: [Comparable], section: Int, insertIndexPaths: [NSIndexPath], reloadIndexPaths: [NSIndexPath], deleteIndexPaths: [NSIndexPath]) -> ()
-    typealias ItemReorderHandler = (items: [Comparable], section: Int, reorderMap: [Int:Int]) -> ()
-    typealias SectionUpdateHandler = (sections: [ComparableSection], insertIndexSet: NSIndexSet, reloadIndexSet: NSIndexSet, deleteIndexSet: NSIndexSet) -> ()
-    typealias SectionReorderHandler = (sections: [ComparableSection], reorderMap: [Int:Int]) -> ()
-    typealias StartHandler = () -> ()
-    typealias CompletionHandler = () -> ()
+    public typealias ItemUpdateHandler = (items: [Comparable], section: Int, insertIndexPaths: [NSIndexPath], reloadIndexPaths: [NSIndexPath], deleteIndexPaths: [NSIndexPath]) -> ()
+    public typealias ItemReorderHandler = (items: [Comparable], section: Int, reorderMap: [Int:Int]) -> ()
+    public typealias SectionUpdateHandler = (sections: [ComparableSection], insertIndexSet: NSIndexSet, reloadIndexSet: NSIndexSet, deleteIndexSet: NSIndexSet) -> ()
+    public typealias SectionReorderHandler = (sections: [ComparableSection], reorderMap: [Int:Int]) -> ()
+    public typealias StartHandler = () -> ()
+    public typealias CompletionHandler = () -> ()
     
-    var itemUpdate: ItemUpdateHandler? = nil
-    var itemReorder: ItemReorderHandler? = nil
-    var sectionUpdate: SectionUpdateHandler? = nil
+    public var itemUpdate: ItemUpdateHandler? = nil
+    public var itemReorder: ItemReorderHandler? = nil
+    public var sectionUpdate: SectionUpdateHandler? = nil
     var sectionReorder: SectionReorderHandler? = nil
     
-    var start: StartHandler? = nil
-    var completion: CompletionHandler? = nil
+    public var start: StartHandler? = nil
+    public var completion: CompletionHandler? = nil
     
-    var isDiffing: Bool = false
+    private var isDiffing: Bool = false
     
     
-    func queueComparison(oldSections oldSections: [ComparableSection], newSections: [ComparableSection]) -> Bool
+    public func queueComparison(oldSections oldSections: [ComparableSection], newSections: [ComparableSection]) -> Bool
     {
         guard isDiffing == false else { return false }
         isDiffing = true
@@ -39,7 +38,7 @@ class DataSourceHandler {
     }
     
     
-    func diff(oldSections oldSections: [ComparableSection], newSections: [ComparableSection])
+    private func diff(oldSections oldSections: [ComparableSection], newSections: [ComparableSection])
     {
         let mainQueue = dispatch_get_main_queue()
         let backgroundQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)

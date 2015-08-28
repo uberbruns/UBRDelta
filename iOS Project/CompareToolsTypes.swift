@@ -1,6 +1,5 @@
 //
 //  CompareToolsTypes.swift
-//  iOS Project
 //
 //  Created by Karsten Bruns on 27/08/15.
 //  Copyright © 2015 bruns.me. All rights reserved.
@@ -13,7 +12,7 @@ public enum ComparisonLevel {
     
     case Different, Same, SameIdentifier
     
-    var hasSameIdentifier: Bool {
+    public var hasSameIdentifier: Bool {
         return self == .Same || self == .SameIdentifier
     }
 }
@@ -27,26 +26,26 @@ public protocol Comparable {
 }
 
 
-protocol ComparableSection : Comparable {
+public protocol ComparableSection : Comparable {
     
     var items: [Comparable] { get set }
     
 }
 
 
-struct ComparisonResult {
+public struct ComparisonResult {
     
-    let insertionSet: NSIndexSet
-    let deletionSet: NSIndexSet
-    let reloadSet: NSIndexSet
-    let sameSet: NSIndexSet
-    let moveSet: [Int:Int]
+    public let insertionSet: NSIndexSet
+    public let deletionSet: NSIndexSet
+    public let reloadSet: NSIndexSet
+    public let sameSet: NSIndexSet
+    public let moveSet: [Int:Int]
 
-    let oldItems: [Comparable]
-    let unmovedItems: [Comparable]
-    let newItems: [Comparable]
+    public let oldItems: [Comparable]
+    public let unmovedItems: [Comparable]
+    public let newItems: [Comparable]
     
-    init(insertionSet: NSIndexSet, deletionSet: NSIndexSet, reloadSet: NSIndexSet, sameSet: NSIndexSet, moveSet: [Int:Int], oldItems: [Comparable], unmovedItems: [Comparable], newItems: [Comparable])
+    public init(insertionSet: NSIndexSet, deletionSet: NSIndexSet, reloadSet: NSIndexSet, sameSet: NSIndexSet, moveSet: [Int:Int], oldItems: [Comparable], unmovedItems: [Comparable], newItems: [Comparable])
     {
         self.insertionSet = insertionSet
         self.deletionSet = deletionSet

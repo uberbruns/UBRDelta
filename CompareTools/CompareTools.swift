@@ -1,6 +1,5 @@
 //
 //  CompareTools.swift
-//  iOS Project
 //
 //  Created by Karsten Bruns on 26/08/15.
 //  Copyright © 2015 bruns.me. All rights reserved.
@@ -9,9 +8,9 @@
 import Foundation
 
 
-struct ComparisonTool {
+public struct ComparisonTool {
     
-    static func diff(old oldItems: [Comparable], new newItems: [Comparable]) -> ComparisonResult
+    public static func diff(old oldItems: [Comparable], new newItems: [Comparable]) -> ComparisonResult
     {
         // Internal Functions
         func twoIntHash(a:Int, _ b:Int) -> Int {

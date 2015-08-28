@@ -1,6 +1,5 @@
 //
 //  AppDelegate.swift
-//  iOS Project
 //
 //  Created by Karsten Bruns on 19/06/15.
 //  Copyright (c) 2015 bruns.me. All rights reserved.
