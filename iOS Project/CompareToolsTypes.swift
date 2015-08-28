@@ -10,7 +10,12 @@ import Foundation
 
 
 public enum ComparisonLevel {
+    
     case Different, Same, SameIdentifier
+    
+    var hasSameIdentifier: Bool {
+        return self == .Same || self == .SameIdentifier
+    }
 }
 
 
@@ -23,7 +28,6 @@ public protocol Comparable {
 protocol ComparableSection : Comparable {
     var items: [Comparable] { get }
 }
-
 
 
 struct ComparisonResult {

@@ -25,12 +25,12 @@ struct ComparisonTool {
         var compareCache = [UInt64:ComparisonLevel]()
         func compareItems(oldItem oldItem: Comparable, newItem: Comparable) -> ComparisonLevel {
             let hash = twoIntHash(oldItem.identifier, newItem.identifier)
-            if let memorized = compareCache[hash] {
-                return memorized
+            if let cachedResult = compareCache[hash] {
+                return cachedResult
             } else {
-                let level = newItem.compareTo(oldItem)
-                compareCache[hash] = level
-                return level
+                let result = newItem.compareTo(oldItem)
+                compareCache[hash] = result
+                return result
             }
         }
         
@@ -54,8 +54,8 @@ struct ComparisonTool {
         for (oldIndex, oldItem) in oldItems.enumerate() {
             
             let newIndex = newItems.indexOf({ newItem -> Bool in
-                let equalityLevel = compareItems(oldItem: oldItem, newItem: newItem)
-                return equalityLevel == .Same || equalityLevel == .SameIdentifier
+                let comparisonLevel = compareItems(oldItem: oldItem, newItem: newItem)
+                return comparisonLevel.hasSameIdentifier
             })
             
             if let newIndex = newIndex {
@@ -73,20 +73,19 @@ struct ComparisonTool {
         // and to determine indexes that need to be insertet and updated
         for (newIndex, newItem) in newItems.enumerate() {
             
-            var equalityLevel = ComparisonLevel.Different
+            var comparisonLevel = ComparisonLevel.Different
             
             let oldIndex = oldItems.indexOf({ oldItem -> Bool in
-                equalityLevel = compareItems(oldItem: oldItem, newItem: newItem)
-                return equalityLevel == .Same || equalityLevel == .SameIdentifier
+                comparisonLevel = compareItems(oldItem: oldItem, newItem: newItem)
+                return comparisonLevel.hasSameIdentifier
             })
             
             if let oldIndex = oldIndex {
                 
-                if equalityLevel == .SameIdentifier {
+                if comparisonLevel == .SameIdentifier {
                     // Reload
                     reloadSet.addIndex(oldIndex)
-                    
-                } else if equalityLevel == .Same && newIndex == oldIndex {
+                } else if comparisonLevel == .Same && newIndex == oldIndex {
                     // No Reload
                     sameSet.addIndex(newIndex)
                 }
@@ -112,8 +111,8 @@ struct ComparisonTool {
         for (newIndex, newItem) in newItems.enumerate() {
             
             let intIndex = unmovedItems.indexOf({ unmItem -> Bool in
-                let equalityLevel = compareItems(oldItem: unmItem, newItem: newItem)
-                return equalityLevel == .Same || equalityLevel == .SameIdentifier
+                let comparisonLevel = compareItems(oldItem: unmItem, newItem: newItem)
+                return comparisonLevel.hasSameIdentifier
             })
             
             if let intIndex = intIndex where newIndex != intIndex {

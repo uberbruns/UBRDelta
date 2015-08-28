@@ -31,8 +31,8 @@ struct CompareDataSource {
             for (oldSectionIndex, oldSection) in oldSections.enumerate() {
                 
                 let newIndex = newSections.indexOf({ newSection -> Bool in
-                    let equalityLevel = newSection.compareTo(oldSection)
-                    return equalityLevel == .Same || equalityLevel == .SameIdentifier
+                    let comparisonLevel = newSection.compareTo(oldSection)
+                    return comparisonLevel.hasSameIdentifier
                 })
                 
                 if let newIndex = newIndex {
