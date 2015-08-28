@@ -11,10 +11,9 @@ import UIKit
 
 class ViewController: UITableViewController {
     
-    
     var lastIdentity = 0
     var sections: [Mummy] = []
-    let compareDataSource = DataSourceHandler()
+    let dataSourceHandler = DataSourceHandler()
     
     
     // MARK: - View -
@@ -24,8 +23,6 @@ class ViewController: UITableViewController {
     {
         super.viewDidLoad()
         setupDataSourceHandler()
-        
-        
         
         sections = (0..<5).map({ num in self.newSection() })
         
@@ -41,7 +38,7 @@ class ViewController: UITableViewController {
 
     func setupDataSourceHandler()
     {
-        compareDataSource.itemUpdate = { (items, section, insertIndexPaths, reloadIndexPaths, deleteIndexPaths) in
+        dataSourceHandler.itemUpdate = { (items, section, insertIndexPaths, reloadIndexPaths, deleteIndexPaths) in
             self.sections[section].children = items.flatMap({ $0 as? Dummy })
             self.tableView.beginUpdates()
             self.tableView.deleteRowsAtIndexPaths(deleteIndexPaths, withRowAnimation: .Middle)
@@ -50,7 +47,7 @@ class ViewController: UITableViewController {
             self.tableView.endUpdates()
         }
         
-        compareDataSource.itemReorder = { (items, section, reorderMap) in
+        dataSourceHandler.itemReorder = { (items, section, reorderMap) in
             self.sections[section].children = items.flatMap({ $0 as? Dummy })
             self.tableView.beginUpdates()
             for (from, to) in reorderMap {
@@ -61,7 +58,7 @@ class ViewController: UITableViewController {
             self.tableView.endUpdates()
         }
         
-        compareDataSource.sectionUpdate = { (sections, insertIndexPaths, reloadIndexPaths, deleteIndexPaths) in
+        dataSourceHandler.sectionUpdate = { (sections, insertIndexPaths, reloadIndexPaths, deleteIndexPaths) in
             self.sections = sections.flatMap({ $0 as? Mummy })
             self.tableView.beginUpdates()
             self.tableView.deleteSections(deleteIndexPaths, withRowAnimation: .Middle)
@@ -70,7 +67,7 @@ class ViewController: UITableViewController {
             self.tableView.endUpdates()
         }
 
-        compareDataSource.sectionReorder = { (sections, reorderMap) in
+        dataSourceHandler.sectionReorder = { (sections, reorderMap) in
             self.sections = sections.flatMap({ $0 as? Mummy })
             self.tableView.beginUpdates()
             for (from, to) in reorderMap {
@@ -79,7 +76,7 @@ class ViewController: UITableViewController {
             self.tableView.endUpdates()
         }
         
-        compareDataSource.completion = {
+        dataSourceHandler.completion = {
             self.testAction(self)
         }
         
@@ -91,12 +88,11 @@ class ViewController: UITableViewController {
         let oldSections = self.sections.map({ $0 as ComparableSection })
         let newSections = sections.map({ $0 as ComparableSection })
         
-        compareDataSource.queueComparison(oldSections: oldSections, newSections: newSections)
+        dataSourceHandler.queueComparison(oldSections: oldSections, newSections: newSections)
     }
     
     
     // MARK: Actions
-    
     
     func shuffleAction(sender: AnyObject)
     {
@@ -248,5 +244,3 @@ class ViewController: UITableViewController {
 
     
 }
-
-

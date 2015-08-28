@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9B0904051B8F2C4100A403C6 /* CompareToolsTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0904041B8F2C4100A403C6 /* CompareToolsTypes.swift */; settings = {ASSET_TAGS = (); }; };
-		9B0904071B8F2C7D00A403C6 /* CompareDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0904061B8F2C7D00A403C6 /* CompareDataSource.swift */; settings = {ASSET_TAGS = (); }; };
+		9B0904071B8F2C7D00A403C6 /* DataSourceHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0904061B8F2C7D00A403C6 /* DataSourceHandler.swift */; settings = {ASSET_TAGS = (); }; };
 		9B0904091B8FCB3E00A403C6 /* Swift+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0904081B8FCB3E00A403C6 /* Swift+Extensions.swift */; settings = {ASSET_TAGS = (); }; };
 		9B1B5C071B8DFB6C00C8EC07 /* Dummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B1B5C061B8DFB6C00C8EC07 /* Dummy.swift */; settings = {ASSET_TAGS = (); }; };
 		9B3171DD1B3461E800C75870 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3171DC1B3461E800C75870 /* AppDelegate.swift */; };
@@ -32,7 +32,7 @@
 
 /* Begin PBXFileReference section */
 		9B0904041B8F2C4100A403C6 /* CompareToolsTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompareToolsTypes.swift; sourceTree = "<group>"; };
-		9B0904061B8F2C7D00A403C6 /* CompareDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompareDataSource.swift; sourceTree = "<group>"; };
+		9B0904061B8F2C7D00A403C6 /* DataSourceHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSourceHandler.swift; sourceTree = "<group>"; };
 		9B0904081B8FCB3E00A403C6 /* Swift+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Swift+Extensions.swift"; sourceTree = "<group>"; };
 		9B1B5C061B8DFB6C00C8EC07 /* Dummy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dummy.swift; sourceTree = "<group>"; };
 		9B3171D71B3461E800C75870 /* iOS Project.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iOS Project.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -135,7 +135,7 @@
 			children = (
 				9BF1B3DE1B8F0A63003B55F8 /* CompareTools.swift */,
 				9B0904041B8F2C4100A403C6 /* CompareToolsTypes.swift */,
-				9B0904061B8F2C7D00A403C6 /* CompareDataSource.swift */,
+				9B0904061B8F2C7D00A403C6 /* DataSourceHandler.swift */,
 			);
 			name = CompareTools;
 			sourceTree = "<group>";
@@ -266,7 +266,7 @@
 				9BF1B3DF1B8F0A63003B55F8 /* CompareTools.swift in Sources */,
 				9B1B5C071B8DFB6C00C8EC07 /* Dummy.swift in Sources */,
 				9B0904051B8F2C4100A403C6 /* CompareToolsTypes.swift in Sources */,
-				9B0904071B8F2C7D00A403C6 /* CompareDataSource.swift in Sources */,
+				9B0904071B8F2C7D00A403C6 /* DataSourceHandler.swift in Sources */,
 				9B3171DD1B3461E800C75870 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
