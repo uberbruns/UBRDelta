@@ -12,6 +12,7 @@ class ViewController: UITableViewController {
     
     var lastIdentity = 0
     var sections: [ComparableSection] = []
+    var latestData: [DataSourceSection] = []
     let dataSourceHandler = DataSourceHandler()
     
     
@@ -95,8 +96,9 @@ class ViewController: UITableViewController {
     
     func shuffleAction(sender: AnyObject)
     {
-        let mummies = self.sections.flatMap({ $0 as? DataSourceSection })
-        updateTableView(shuffleMummies(mummies))
+        let oldData = self.sections.flatMap({ $0 as? DataSourceSection })
+        self.latestData = shuffleSections(oldData)
+        updateTableView(self.latestData)
     }
     
     
@@ -107,7 +109,7 @@ class ViewController: UITableViewController {
         for cell in tableView.visibleCells {
             guard let indexPath = tableView.indexPathForCell(cell) else { continue }
             
-            if let shouldValue = (self.sections[indexPath.section].items[indexPath.row] as? Dummy)?.v,
+            if let shouldValue = (self.latestData[indexPath.section].items[indexPath.row] as? Dummy)?.v,
                 let text = cell.textLabel?.text,
                 let hasValue = Int(text) {
                     if shouldValue != hasValue {
@@ -179,7 +181,7 @@ class ViewController: UITableViewController {
         let c = (0..<3).map({ num in self.newItem() })
         
         lastIdentity += 1
-        var result = DataSourceSection(i: lastIdentity, title: "DataSourceSection \(lastIdentity)")
+        var result = DataSourceSection(i: lastIdentity, title: "Section \(lastIdentity)")
         result.items = c.map({ $0 as Comparable })
         return result
     }
@@ -218,7 +220,7 @@ class ViewController: UITableViewController {
     }
     
     
-    func shuffleMummies(sections: [DataSourceSection]) -> [DataSourceSection]
+    func shuffleSections(sections: [DataSourceSection]) -> [DataSourceSection]
     {
         var newSections = sections
         

@@ -13,7 +13,7 @@ public struct ComparisonTool {
     public static func diff(old oldItems: [Comparable], new newItems: [Comparable]) -> ComparisonResult
     {
         // Internal Functions
-        func twoIntHash(a:Int, _ b:Int) -> Int {
+        func hash<T: Hashable>(a:T, _ b:T) -> Int {
             return (31 &* a.hashValue) &+ b.hashValue
         }
         
@@ -21,7 +21,7 @@ public struct ComparisonTool {
         // Comparison Cache
         var compareCache = [Int:ComparisonLevel]()
         func compareItems(oldItem oldItem: Comparable, newItem: Comparable) -> ComparisonLevel {
-            let hash = twoIntHash(oldItem.uniqueIdentifier, newItem.uniqueIdentifier)
+            let hash = hash(oldItem.uniqueIdentifier, newItem.uniqueIdentifier)
             if let cachedResult = compareCache[hash] {
                 return cachedResult
             } else {
