@@ -25,7 +25,7 @@ class ViewController: UITableViewController {
         
         sections = (0..<5).map({ num in self.newSection() })
         
-        let shufflebutton = UIBarButtonItem(title: "Shuffle", style: .Plain, target: self, action: Selector("shuffleAction2:"))
+        let shufflebutton = UIBarButtonItem(title: "Shuffle", style: .Plain, target: self, action: Selector("shuffleAction:"))
         navigationItem.rightBarButtonItem = shufflebutton
         
         let testbutton = UIBarButtonItem(title: "Test", style: .Plain, target: self, action: Selector("testAction:"))
@@ -36,19 +36,16 @@ class ViewController: UITableViewController {
     override func viewDidAppear(animated: Bool) {
     }
     
-    
-    
-    // MARK: Actions
-    
-    var isDiffing: Bool = false
-    
-    func shuffleAction2(sender: AnyObject) {
+
+    // MARK: Update
+
+    func updateTableView(sections: [Mummy]) {
         
         guard isDiffing == false else { return }
         isDiffing = true
-        
+    
         let oldSections = self.sections.map({ $0 as ComparableSection })
-        let newSections = shuffleSection(self.sections).map({ $0 as ComparableSection })
+        let newSections = sections.map({ $0 as ComparableSection })
         
         CompareDataSource.diff(oldSections: oldSections, newSections: newSections,
             itemUpdate: { (items, section, insertIndexPaths, reloadIndexPaths, deleteIndexPaths) -> () in
@@ -90,12 +87,22 @@ class ViewController: UITableViewController {
                 self.tableView.endUpdates()
                 
             }, completionHandler: {
-
+                
                 self.isDiffing = false
                 self.testAction(self)
-
+                
         })
+
+    }
+    
+    
+    // MARK: Actions
+    
+    var isDiffing: Bool = false
+    
+    func shuffleAction(sender: AnyObject) {
         
+        updateTableView(shuffleSection(self.sections))
         
     }
     
@@ -140,6 +147,12 @@ class ViewController: UITableViewController {
         
         return cell
     }
+    
+    
+    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String?
+    {
+        return sections[section].name
+    }
 
     
     // MARK: - Helper -
@@ -155,7 +168,7 @@ class ViewController: UITableViewController {
         let c = (0..<3).map({ num in self.newItem() })
         
         lastIdentity += 1
-        let result = Mummy(i: lastIdentity, name: "Section")
+        let result = Mummy(i: lastIdentity, name: "Section \(lastIdentity)")
         result.children = c
         return result
     }

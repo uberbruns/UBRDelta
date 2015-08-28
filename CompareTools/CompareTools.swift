@@ -55,7 +55,7 @@ struct ComparisonTool {
             
             let newIndex = newItems.indexOf({ newItem -> Bool in
                 let equalityLevel = compareItems(oldItem: oldItem, newItem: newItem)
-                return equalityLevel == .PerfectEquality || equalityLevel == .IdentifierEquality
+                return equalityLevel == .Same || equalityLevel == .SameIdentifier
             })
             
             if let newIndex = newIndex {
@@ -73,20 +73,20 @@ struct ComparisonTool {
         // and to determine indexes that need to be insertet and updated
         for (newIndex, newItem) in newItems.enumerate() {
             
-            var equalityLevel = ComparisonLevel.NoEquality
+            var equalityLevel = ComparisonLevel.Different
             
             let oldIndex = oldItems.indexOf({ oldItem -> Bool in
                 equalityLevel = compareItems(oldItem: oldItem, newItem: newItem)
-                return equalityLevel == .PerfectEquality || equalityLevel == .IdentifierEquality
+                return equalityLevel == .Same || equalityLevel == .SameIdentifier
             })
             
             if let oldIndex = oldIndex {
                 
-                if equalityLevel == .IdentifierEquality {
+                if equalityLevel == .SameIdentifier {
                     // Reload
                     reloadSet.addIndex(oldIndex)
                     
-                } else if equalityLevel == .PerfectEquality && newIndex == oldIndex {
+                } else if equalityLevel == .Same && newIndex == oldIndex {
                     // No Reload
                     sameSet.addIndex(newIndex)
                 }
@@ -113,7 +113,7 @@ struct ComparisonTool {
             
             let intIndex = unmovedItems.indexOf({ unmItem -> Bool in
                 let equalityLevel = compareItems(oldItem: unmItem, newItem: newItem)
-                return equalityLevel == .PerfectEquality || equalityLevel == .IdentifierEquality
+                return equalityLevel == .Same || equalityLevel == .SameIdentifier
             })
             
             if let intIndex = intIndex where newIndex != intIndex {

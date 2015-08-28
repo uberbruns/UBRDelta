@@ -32,7 +32,7 @@ struct CompareDataSource {
                 
                 let newIndex = newSections.indexOf({ newSection -> Bool in
                     let equalityLevel = newSection.compareTo(oldSection)
-                    return equalityLevel == .PerfectEquality || equalityLevel == .IdentifierEquality
+                    return equalityLevel == .Same || equalityLevel == .SameIdentifier
                 })
                 
                 if let newIndex = newIndex {
@@ -48,16 +48,27 @@ struct CompareDataSource {
             dispatch_async(mainQueue) {
                 
                 for (oldSectionIndex, itemDiff) in itemDiffs.sort({ $0.0 < $1.0 }) {
+                    
+                    // Create index paths
                     let insertIndexPaths = itemDiff.insertionSet.map({ index in NSIndexPath(forRow: index, inSection: oldSectionIndex)})
                     let reloadIndexPaths = itemDiff.reloadSet.map({ index in NSIndexPath(forRow: index, inSection: oldSectionIndex)})
                     let deleteIndexPaths = itemDiff.deletionSet.map({ index in NSIndexPath(forRow: index, inSection: oldSectionIndex)})
+                    
+                    // Call item handler functions
                     itemUpdate(items: itemDiff.unmovedItems, section: oldSectionIndex, insertIndexPaths: insertIndexPaths, reloadIndexPaths: reloadIndexPaths, deleteIndexPaths: deleteIndexPaths)
                     itemReorder(items: itemDiff.newItems, section: oldSectionIndex, reorderMap: itemDiff.moveSet)
+                    
                 }
                 
                 let sectionDiff = ComparisonTool.diff(old: oldSections.map({$0}), new: newSections.map({$0}))
-                sectionUpdate(sections: sectionDiff.unmovedItems.flatMap({ $0 as? ComparableSection }), insertIndexSet: sectionDiff.insertionSet, reloadIndexSet: sectionDiff.reloadSet, deleteIndexSet: sectionDiff.deletionSet)
-                sectionReorder(sections: sectionDiff.newItems.flatMap({ $0 as? ComparableSection }), reorderMap: sectionDiff.moveSet)
+                
+                // Change type
+                let updateItems = sectionDiff.unmovedItems.flatMap({ $0 as? ComparableSection })
+                let reorderItems = sectionDiff.newItems.flatMap({ $0 as? ComparableSection })
+                
+                // Call section handler functions
+                sectionUpdate(sections: updateItems, insertIndexSet: sectionDiff.insertionSet, reloadIndexSet: sectionDiff.reloadSet, deleteIndexSet: sectionDiff.deletionSet)
+                sectionReorder(sections: reorderItems, reorderMap: sectionDiff.moveSet)
                 
                 completionHandler?()
             }

@@ -9,8 +9,8 @@
 import Foundation
 
 
-public enum ComparisonLevel : Int {
-    case NoEquality, PerfectEquality, IdentifierEquality
+public enum ComparisonLevel {
+    case Different, Same, SameIdentifier
 }
 
 
@@ -20,7 +20,7 @@ public protocol Comparable {
 }
 
 
-protocol ComparableSection :  Comparable {
+protocol ComparableSection : Comparable {
     var items: [Comparable] { get }
 }
 

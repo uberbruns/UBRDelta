@@ -27,16 +27,16 @@ class Mummy : Comparable, ComparableSection
     
     func compareTo(other: Comparable) -> ComparisonLevel
     {
-        guard let other = other as? Mummy else { return .NoEquality }
+        guard let other = other as? Mummy else { return .Different }
         
         if other.i == self.i {
             if other.name == self.name {
-                return .PerfectEquality
+                return .Same
             } else {
-                return .IdentifierEquality
+                return .SameIdentifier
             }
         } else {
-            return .NoEquality
+            return .Different
         }
     }
     
@@ -64,16 +64,16 @@ class Dummy : Comparable
     
     func compareTo(other: Comparable) -> ComparisonLevel
     {
-        guard let other = other as? Dummy else { return .NoEquality }
+        guard let other = other as? Dummy else { return .Different }
         
         if other.i == self.i {
             if other.v == self.v {
-                return .PerfectEquality
+                return .Same
             } else {
-                return .IdentifierEquality
+                return .SameIdentifier
             }
         } else {
-            return .NoEquality
+            return .Different
         }
     }
     
