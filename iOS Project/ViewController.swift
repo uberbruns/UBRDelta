@@ -14,6 +14,7 @@ class ViewController: UITableViewController {
     
     var lastIdentity = 0
     var sections: [Mummy] = []
+    let compareDataSource = DataSourceHandler()
     
     
     // MARK: - View -
@@ -22,6 +23,9 @@ class ViewController: UITableViewController {
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        setupDataSourceHandler()
+        
+        
         
         sections = (0..<5).map({ num in self.newSection() })
         
@@ -33,70 +37,66 @@ class ViewController: UITableViewController {
     }
     
     
-    // MARK: Update
+    // MARK: Setup & Update
+
+    func setupDataSourceHandler()
+    {
+        compareDataSource.itemUpdate = { (items, section, insertIndexPaths, reloadIndexPaths, deleteIndexPaths) in
+            self.sections[section].children = items.flatMap({ $0 as? Dummy })
+            self.tableView.beginUpdates()
+            self.tableView.deleteRowsAtIndexPaths(deleteIndexPaths, withRowAnimation: .Middle)
+            self.tableView.reloadRowsAtIndexPaths(reloadIndexPaths, withRowAnimation: .None)
+            self.tableView.insertRowsAtIndexPaths(insertIndexPaths, withRowAnimation: .Middle)
+            self.tableView.endUpdates()
+        }
+        
+        compareDataSource.itemReorder = { (items, section, reorderMap) in
+            self.sections[section].children = items.flatMap({ $0 as? Dummy })
+            self.tableView.beginUpdates()
+            for (from, to) in reorderMap {
+                let fromIndexPath = NSIndexPath(forRow: from, inSection: section)
+                let toIndexPath = NSIndexPath(forRow: to, inSection: section)
+                self.tableView.moveRowAtIndexPath(fromIndexPath, toIndexPath: toIndexPath)
+            }
+            self.tableView.endUpdates()
+        }
+        
+        compareDataSource.sectionUpdate = { (sections, insertIndexPaths, reloadIndexPaths, deleteIndexPaths) in
+            self.sections = sections.flatMap({ $0 as? Mummy })
+            self.tableView.beginUpdates()
+            self.tableView.deleteSections(deleteIndexPaths, withRowAnimation: .Middle)
+            self.tableView.reloadSections(reloadIndexPaths, withRowAnimation: .None)
+            self.tableView.insertSections(insertIndexPaths, withRowAnimation: .Middle)
+            self.tableView.endUpdates()
+        }
+
+        compareDataSource.sectionReorder = { (sections, reorderMap) in
+            self.sections = sections.flatMap({ $0 as? Mummy })
+            self.tableView.beginUpdates()
+            for (from, to) in reorderMap {
+                self.tableView.moveSection(from, toSection: to)
+            }
+            self.tableView.endUpdates()
+        }
+        
+        compareDataSource.completion = {
+            self.testAction(self)
+        }
+        
+    }
+
 
     func updateTableView(sections: [Mummy])
     {
-        guard isDiffing == false else { return }
-        isDiffing = true
-    
         let oldSections = self.sections.map({ $0 as ComparableSection })
         let newSections = sections.map({ $0 as ComparableSection })
         
-        let compareDataSource = CompareDataSource(oldSections: oldSections, newSections: newSections)
-
-        compareDataSource.diff(
-            itemUpdate: { (items, section, insertIndexPaths, reloadIndexPaths, deleteIndexPaths) in
-                
-                self.sections[section].children = items.flatMap({ $0 as? Dummy })
-                self.tableView.beginUpdates()
-                self.tableView.deleteRowsAtIndexPaths(deleteIndexPaths, withRowAnimation: .Middle)
-                self.tableView.reloadRowsAtIndexPaths(reloadIndexPaths, withRowAnimation: .None)
-                self.tableView.insertRowsAtIndexPaths(insertIndexPaths, withRowAnimation: .Middle)
-                self.tableView.endUpdates()
-                
-            }, itemReorder: { (items, section, reorderMap) in
-                
-                self.sections[section].children = items.flatMap({ $0 as? Dummy })
-                self.tableView.beginUpdates()
-                for (from, to) in reorderMap {
-                    let fromIndexPath = NSIndexPath(forRow: from, inSection: section)
-                    let toIndexPath = NSIndexPath(forRow: to, inSection: section)
-                    self.tableView.moveRowAtIndexPath(fromIndexPath, toIndexPath: toIndexPath)
-                }
-                self.tableView.endUpdates()
-                
-            }, sectionUpdate: { (sections, insertIndexPaths, reloadIndexPaths, deleteIndexPaths) in
-                
-                self.sections = sections.flatMap({ $0 as? Mummy })
-                self.tableView.beginUpdates()
-                self.tableView.deleteSections(deleteIndexPaths, withRowAnimation: .Middle)
-                self.tableView.reloadSections(reloadIndexPaths, withRowAnimation: .None)
-                self.tableView.insertSections(insertIndexPaths, withRowAnimation: .Middle)
-                self.tableView.endUpdates()
-                
-            }, sectionReorder: { (sections, reorderMap) in
-                
-                self.sections = sections.flatMap({ $0 as? Mummy })
-                self.tableView.beginUpdates()
-                for (from, to) in reorderMap {
-                    self.tableView.moveSection(from, toSection: to)
-                }
-                self.tableView.endUpdates()
-                
-            }, completionHandler: {
-                
-                self.isDiffing = false
-                self.testAction(self)
-                
-        })
-
+        compareDataSource.queueComparison(oldSections: oldSections, newSections: newSections)
     }
     
     
     // MARK: Actions
     
-    var isDiffing: Bool = false
     
     func shuffleAction(sender: AnyObject)
     {
