@@ -12,7 +12,7 @@ import UIKit
 class ViewController: UITableViewController {
     
     var lastIdentity = 0
-    var sections: [Mummy] = []
+    var sections: [ComparableSection] = []
     let dataSourceHandler = DataSourceHandler()
     
     
@@ -35,11 +35,11 @@ class ViewController: UITableViewController {
     
     
     // MARK: Setup & Update
-
+    
     func setupDataSourceHandler()
     {
         dataSourceHandler.itemUpdate = { (items, section, insertIndexPaths, reloadIndexPaths, deleteIndexPaths) in
-            self.sections[section].children = items.flatMap({ $0 as? Dummy })
+            self.sections[section].items = items
             self.tableView.beginUpdates()
             self.tableView.deleteRowsAtIndexPaths(deleteIndexPaths, withRowAnimation: .Middle)
             self.tableView.reloadRowsAtIndexPaths(reloadIndexPaths, withRowAnimation: .None)
@@ -48,7 +48,7 @@ class ViewController: UITableViewController {
         }
         
         dataSourceHandler.itemReorder = { (items, section, reorderMap) in
-            self.sections[section].children = items.flatMap({ $0 as? Dummy })
+            self.sections[section].items = items
             self.tableView.beginUpdates()
             for (from, to) in reorderMap {
                 let fromIndexPath = NSIndexPath(forRow: from, inSection: section)
@@ -59,16 +59,16 @@ class ViewController: UITableViewController {
         }
         
         dataSourceHandler.sectionUpdate = { (sections, insertIndexPaths, reloadIndexPaths, deleteIndexPaths) in
-            self.sections = sections.flatMap({ $0 as? Mummy })
+            self.sections = sections.flatMap({ $0 as? DataSourceSection })
             self.tableView.beginUpdates()
             self.tableView.deleteSections(deleteIndexPaths, withRowAnimation: .Middle)
             self.tableView.reloadSections(reloadIndexPaths, withRowAnimation: .None)
             self.tableView.insertSections(insertIndexPaths, withRowAnimation: .Middle)
             self.tableView.endUpdates()
         }
-
+        
         dataSourceHandler.sectionReorder = { (sections, reorderMap) in
-            self.sections = sections.flatMap({ $0 as? Mummy })
+            self.sections = sections.flatMap({ $0 as? DataSourceSection })
             self.tableView.beginUpdates()
             for (from, to) in reorderMap {
                 self.tableView.moveSection(from, toSection: to)
@@ -81,9 +81,9 @@ class ViewController: UITableViewController {
         }
         
     }
-
-
-    func updateTableView(sections: [Mummy])
+    
+    
+    func updateTableView(sections: [DataSourceSection])
     {
         let oldSections = self.sections.map({ $0 as ComparableSection })
         let newSections = sections.map({ $0 as ComparableSection })
@@ -96,7 +96,8 @@ class ViewController: UITableViewController {
     
     func shuffleAction(sender: AnyObject)
     {
-        updateTableView(shuffleSection(self.sections))
+        let mummies = self.sections.flatMap({ $0 as? DataSourceSection })
+        updateTableView(shuffleMummies(mummies))
     }
     
     
@@ -106,10 +107,13 @@ class ViewController: UITableViewController {
         
         for cell in tableView.visibleCells {
             guard let indexPath = tableView.indexPathForCell(cell) else { continue }
-            let shouldValue = self.sections[indexPath.section].children[indexPath.row].v
-            let hasValue = Int((cell.textLabel?.text)!)!
-            if shouldValue != hasValue {
-                print("Is:", hasValue, "Should:", shouldValue)
+            
+            if let shouldValue = (self.sections[indexPath.section].items[indexPath.row] as? Dummy)?.v,
+                let text = cell.textLabel?.text,
+                let hasValue = Int(text) {
+                    if shouldValue != hasValue {
+                        print("Is:", hasValue, "Should:", shouldValue)
+                    }
             }
             cellsTested++
         }
@@ -129,28 +133,38 @@ class ViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
-        return sections[section].children.count
+        return sections[section].items.count
     }
     
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
     {
+        let item = sections[indexPath.section].items[indexPath.row]
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell")! as UITableViewCell
-        let item = sections[indexPath.section].children[indexPath.row]
+        if let dummy = item as? Dummy {
+            let cell = tableView.dequeueReusableCellWithIdentifier("Cell")! as UITableViewCell
+            cell.textLabel?.text = "\(dummy.v)"
+            cell.detailTextLabel?.text = "Identity: \(dummy.i)"
+            return cell
+        } else {
+            let cell = tableView.dequeueReusableCellWithIdentifier("Cell")! as UITableViewCell
+            cell.textLabel?.text = nil
+            cell.detailTextLabel?.text = nil
+            return cell
+        }
         
-        cell.textLabel?.text = "\(item.v)"
-        cell.detailTextLabel?.text = "Identity: \(item.i)"
-        
-        return cell
     }
     
     
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String?
     {
-        return sections[section].name
+        if let mummy = sections[section] as? DataSourceSection {
+            return mummy.title
+        } else {
+            return nil
+        }
     }
-
+    
     
     // MARK: - Helper -
     
@@ -162,12 +176,12 @@ class ViewController: UITableViewController {
     }
     
     
-    func newSection() -> Mummy {
+    func newSection() -> DataSourceSection {
         let c = (0..<3).map({ num in self.newItem() })
         
         lastIdentity += 1
-        var result = Mummy(i: lastIdentity, name: "Section \(lastIdentity)")
-        result.children = c
+        var result = DataSourceSection(i: lastIdentity, title: "DataSourceSection \(lastIdentity)")
+        result.items = c.map({ $0 as Comparable })
         return result
     }
     
@@ -205,7 +219,7 @@ class ViewController: UITableViewController {
     }
     
     
-    func shuffleSection(sections: [Mummy]) -> [Mummy]
+    func shuffleMummies(sections: [DataSourceSection]) -> [DataSourceSection]
     {
         var newSections = sections
         
@@ -231,12 +245,12 @@ class ViewController: UITableViewController {
         // Change
         for (index, section) in newSections.enumerate() {
             var newSection = section
-            newSection.children = shuffleItems(section.children)
+            newSection.items = shuffleItems(section.items.flatMap({ $0 as? Dummy})).map({ $0 as Comparable })
             newSections[index] = newSection
         }
         
         return newSections
     }
-
+    
     
 }

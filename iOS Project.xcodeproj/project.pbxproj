@@ -17,6 +17,7 @@
 		9B3171E41B3461E800C75870 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9B3171E31B3461E800C75870 /* Images.xcassets */; };
 		9B3171E71B3461E800C75870 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9B3171E51B3461E800C75870 /* LaunchScreen.xib */; };
 		9B3171F31B3461E800C75870 /* iOS_ProjectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3171F21B3461E800C75870 /* iOS_ProjectTests.swift */; };
+		9BA09BD11B909C2600736886 /* DataSourceSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA09BD01B909C2600736886 /* DataSourceSection.swift */; settings = {ASSET_TAGS = (); }; };
 		9BF1B3DF1B8F0A63003B55F8 /* CompareTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF1B3DE1B8F0A63003B55F8 /* CompareTools.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
@@ -45,6 +46,7 @@
 		9B3171EC1B3461E800C75870 /* iOS ProjectTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "iOS ProjectTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B3171F11B3461E800C75870 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9B3171F21B3461E800C75870 /* iOS_ProjectTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOS_ProjectTests.swift; sourceTree = "<group>"; };
+		9BA09BD01B909C2600736886 /* DataSourceSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataSourceSection.swift; sourceTree = "<group>"; };
 		9BF1B3DE1B8F0A63003B55F8 /* CompareTools.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CompareTools.swift; path = CompareTools/CompareTools.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -136,6 +138,7 @@
 				9BF1B3DE1B8F0A63003B55F8 /* CompareTools.swift */,
 				9B0904041B8F2C4100A403C6 /* CompareToolsTypes.swift */,
 				9B0904061B8F2C7D00A403C6 /* DataSourceHandler.swift */,
+				9BA09BD01B909C2600736886 /* DataSourceSection.swift */,
 			);
 			name = CompareTools;
 			sourceTree = "<group>";
@@ -263,6 +266,7 @@
 			files = (
 				9B3171DF1B3461E800C75870 /* ViewController.swift in Sources */,
 				9B0904091B8FCB3E00A403C6 /* Swift+Extensions.swift in Sources */,
+				9BA09BD11B909C2600736886 /* DataSourceSection.swift in Sources */,
 				9BF1B3DF1B8F0A63003B55F8 /* CompareTools.swift in Sources */,
 				9B1B5C071B8DFB6C00C8EC07 /* Dummy.swift in Sources */,
 				9B0904051B8F2C4100A403C6 /* CompareToolsTypes.swift in Sources */,

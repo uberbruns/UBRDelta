@@ -14,17 +14,15 @@ struct ComparisonTool {
     static func diff(old oldItems: [Comparable], new newItems: [Comparable]) -> ComparisonResult
     {
         // Internal Functions
-        func twoIntHash(a:UInt32, _ b:UInt32) -> UInt64 {
-            let a = UInt64(a)
-            let b = UInt64(b)
-            return a<<32 | b
+        func twoIntHash(a:Int, _ b:Int) -> Int {
+            return (31 &* a.hashValue) &+ b.hashValue
         }
         
         
         // Comparison Cache
-        var compareCache = [UInt64:ComparisonLevel]()
+        var compareCache = [Int:ComparisonLevel]()
         func compareItems(oldItem oldItem: Comparable, newItem: Comparable) -> ComparisonLevel {
-            let hash = twoIntHash(oldItem.identifier, newItem.identifier)
+            let hash = twoIntHash(oldItem.uniqueIdentifier, newItem.uniqueIdentifier)
             if let cachedResult = compareCache[hash] {
                 return cachedResult
             } else {

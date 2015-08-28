@@ -1,35 +1,34 @@
 //
-//  Dummy.swift
+//  DataSourceSection.swift
 //  iOS Project
 //
-//  Created by Karsten Bruns on 26/08/15.
+//  Created by Karsten Bruns on 28/08/15.
 //  Copyright © 2015 bruns.me. All rights reserved.
 //
 
 import Foundation
 
 
-
-
-struct Dummy : Comparable
+struct DataSourceSection : ComparableSection
 {
-    let v: Int
+    var items: [Comparable] = []
     let i: Int
+    let title: String
     
     var uniqueIdentifier: Int { return i }
     
-    init(v: Int, i: Int) {
-        self.v = v
+    init(i: Int, title: String) {
         self.i = i
+        self.title = title
     }
     
     
     func compareTo(other: Comparable) -> ComparisonLevel
     {
-        guard let other = other as? Dummy else { return .Different }
+        guard let other = other as? DataSourceSection else { return .Different }
         
         if other.i == self.i {
-            if other.v == self.v {
+            if other.title == self.title {
                 return .Same
             } else {
                 return .SameIdentifier
@@ -42,7 +41,7 @@ struct Dummy : Comparable
 }
 
 
-func ==(lhs: Dummy, rhs: Dummy) -> Bool
+func ==(lhs: DataSourceSection, rhs: DataSourceSection) -> Bool
 {
-    return lhs.i == rhs.i && lhs.v == rhs.v
+    return lhs.i == rhs.i && lhs.title == rhs.title
 }

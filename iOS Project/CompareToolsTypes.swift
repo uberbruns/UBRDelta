@@ -20,13 +20,17 @@ public enum ComparisonLevel {
 
 
 public protocol Comparable {
-    var identifier: UInt32 { get }
+    
+    var uniqueIdentifier: Int { get }
     func compareTo(other: Comparable) -> ComparisonLevel
+    
 }
 
 
 protocol ComparableSection : Comparable {
-    var items: [Comparable] { get }
+    
+    var items: [Comparable] { get set }
+    
 }
 
 
