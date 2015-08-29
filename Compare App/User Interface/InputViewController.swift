@@ -234,7 +234,7 @@ class InputViewController : UITableViewController
         
         if let tableViewItem = item as? TableViewItem {
             
-            let cell = tableView.dequeueReusableCellWithIdentifier(tableViewItem.reuseIdentifier)! as UITableViewCell
+            let cell = tableView.dequeueReusableCellWithIdentifier(tableViewItem.reuseIdentifier)!
             cell.selectionStyle = .None
             
             if let updateableCell = cell as? UpdateableTableViewCell {
@@ -245,7 +245,7 @@ class InputViewController : UITableViewController
             
         } else {
             
-            let cell = tableView.dequeueReusableCellWithIdentifier("Cell")! as UITableViewCell
+            let cell = tableView.dequeueReusableCellWithIdentifier("Cell")!
             cell.textLabel?.text = nil
             cell.detailTextLabel?.text = nil
             return cell
