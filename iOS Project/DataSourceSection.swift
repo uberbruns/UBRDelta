@@ -11,7 +11,7 @@ import Foundation
 public struct DataSourceSection : ComparableSection
 {
     public var uniqueIdentifier: Int { return i }
-    public var items: [Comparable] = []
+    public var items: [ComparableItem] = []
     
     public let i: Int
     public let title: String
@@ -22,7 +22,7 @@ public struct DataSourceSection : ComparableSection
     }
     
     
-    public func compareTo(other: Comparable) -> ComparisonLevel
+    public func compareTo(other: ComparableItem) -> ComparisonLevel
     {
         guard let other = other as? DataSourceSection else { return .Different }
         

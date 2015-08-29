@@ -10,7 +10,7 @@ import Foundation
 
 
 
-struct Dummy : Comparable
+struct Dummy : ComparableItem
 {
     let v: Int
     let i: Int
@@ -23,7 +23,7 @@ struct Dummy : Comparable
     }
     
     
-    func compareTo(other: Comparable) -> ComparisonLevel
+    func compareTo(other: ComparableItem) -> ComparisonLevel
     {
         guard let other = other as? Dummy else { return .Different }
         

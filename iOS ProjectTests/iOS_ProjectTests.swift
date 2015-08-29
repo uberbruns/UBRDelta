@@ -9,6 +9,23 @@
 import UIKit
 import XCTest
 
+
+
+extension Int : ComparableItem {
+    
+    public var uniqueIdentifier: Int { return self }
+    
+    public func compareTo(other: ComparableItem) -> ComparisonLevel {
+        if let otherInt = other  as? Int {
+            return otherInt == self ? .Same : .Different
+        }
+        return ComparisonLevel.Different
+    }
+    
+}
+
+
+
 class iOS_ProjectTests: XCTestCase {
     
     override func setUp() {
@@ -22,6 +39,29 @@ class iOS_ProjectTests: XCTestCase {
     }
     
     func testExample() {
+        
+        let old = [968, 979, 970, 969].map({ $0 as ComparableItem })
+        let new = [970, 1001, 979, 968, 969].map({ $0 as ComparableItem })
+        
+        let itemDiff = ComparisonTool.diff(old: old, new: new)
+        
+        let expectedCount = itemDiff.oldItems.count + itemDiff.insertionSet.count - itemDiff.deletionSet.count
+        let newCount = itemDiff.newItems.count
+
+        print("Old", itemDiff.oldItems.map({ $0.uniqueIdentifier }))
+        print("Unm", itemDiff.unmovedItems.map({ $0.uniqueIdentifier }))
+        print("New", itemDiff.newItems.map({ $0.uniqueIdentifier }))
+
+        if newCount != expectedCount {
+            print("Calculation mistake: 1")
+            XCTAssert(false, "Failed")
+        }
+        
+        if itemDiff.newItems.count != itemDiff.unmovedItems.count {
+            print("Calculation mistake: 2")
+            XCTAssert(false, "Failed")
+        }
+        
         // This is an example of a functional test case.
         XCTAssert(true, "Pass")
     }

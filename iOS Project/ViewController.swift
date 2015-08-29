@@ -27,11 +27,12 @@ class ViewController: UITableViewController {
         setupDataSourceHandler()
         
         sections = (0..<5).map({ num in self.newSection() })
+        latestData = sections.flatMap({ $0 as? DataSourceSection })
         
         let shufflebutton = UIBarButtonItem(title: "Shuffle", style: .Plain, target: self, action: Selector("shuffleAction:"))
         navigationItem.rightBarButtonItem = shufflebutton
         
-        let testbutton = UIBarButtonItem(title: "Test", style: .Plain, target: self, action: Selector("testAction:"))
+        let testbutton = UIBarButtonItem(title: "Run", style: .Plain, target: self, action: Selector("runAction:"))
         navigationItem.leftBarButtonItem = testbutton
         
     }
@@ -39,7 +40,6 @@ class ViewController: UITableViewController {
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        self.timer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: Selector("shuffleAction:"), userInfo: nil, repeats: true)
     }
     
     
@@ -94,8 +94,9 @@ class ViewController: UITableViewController {
     
     func updateTableView(sections: [DataSourceSection])
     {
-        let oldSections = self.sections.map({ $0 as ComparableSection })
+        let oldSections = latestData.map({ $0 as ComparableSection })
         let newSections = sections.map({ $0 as ComparableSection })
+        self.latestData = sections
         
         dataSourceHandler.queueComparison(oldSections: oldSections, newSections: newSections)
     }
@@ -105,9 +106,15 @@ class ViewController: UITableViewController {
     
     func shuffleAction(sender: AnyObject)
     {
-        let oldData = self.sections.flatMap({ $0 as? DataSourceSection })
-        let latestData = shuffleSections(oldData)
-        updateTableView(latestData)
+        // Murder Test
+//        for _ in 0..<10 {
+//            let newData = shuffleSections(self.latestData)
+//            updateTableView(newData)
+//        }
+
+        // Real Test
+        let newData = shuffleSections(self.latestData)
+        updateTableView(newData)
     }
     
     
@@ -121,7 +128,7 @@ class ViewController: UITableViewController {
         for cell in tableView.visibleCells {
             guard let indexPath = tableView.indexPathForCell(cell) else { continue }
             
-            if let shouldValue = (self.sections[indexPath.section].items[indexPath.row] as? Dummy)?.v,
+            if let shouldValue = (self.latestData[indexPath.section].items[indexPath.row] as? Dummy)?.v,
                 let text = cell.textLabel?.text,
                 let hasValue = Int(text) {
                     if shouldValue != hasValue {
@@ -132,6 +139,12 @@ class ViewController: UITableViewController {
         }
         
         print("Test \(testNumber) ended (cells tested: \(cellsTested))")
+    }
+    
+    
+    func runAction(sender: AnyObject)
+    {
+        self.timer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: Selector("shuffleAction:"), userInfo: nil, repeats: true)
     }
     
     
@@ -194,7 +207,7 @@ class ViewController: UITableViewController {
         
         lastIdentity += 1
         var result = DataSourceSection(i: lastIdentity, title: "Section \(lastIdentity)")
-        result.items = c.map({ $0 as Comparable })
+        result.items = c.map({ $0 as ComparableItem })
         return result
     }
     
@@ -206,27 +219,27 @@ class ViewController: UITableViewController {
         // Move
         let elements = newItems.extractRandomElements(count: 2)
         newItems.insertAtRandomIndex(elements)
-        if elements.count > 0 {
-            print("shuffleItems move")
-        }
+//        if elements.count > 0 {
+//            print("shuffleItems move")
+//        }
 
         
         // Remove
         let maxD = UInt32(min(2,max(0,newItems.count-1)))
         let delete: Int = Int(arc4random_uniform(maxD))
-        let deleted = newItems.extractRandomElements(count: delete)
-        if deleted.count > 0 {
-            print("shuffleItems remove")
-        }
+        let _ = newItems.extractRandomElements(count: delete)
+//        if deleted.count > 0 {
+//            print("shuffleItems remove")
+//        }
         
         // Insert
         let maxI = UInt32(min(2,max(0,10-newItems.count)))
         let insert: Int = Int(arc4random_uniform(maxI))
         let newElements = (0..<insert).map({ _ in self.newItem() })
         newItems.insertAtRandomIndex(newElements)
-        if newElements.count > 0 {
-            print("shuffleItems insert")
-        }
+//        if newElements.count > 0 {
+//            print("shuffleItems insert")
+//        }
         
         // Change
         let change: Int = Int(arc4random_uniform(2))
@@ -249,7 +262,7 @@ class ViewController: UITableViewController {
         // Move
         let doMove: Int = Int(arc4random_uniform(6))
         if doMove == 2 {
-            print("shuffleSections doMove")
+//            print("shuffleSections doMove")
             let elements = newSections.extractRandomElements(count: 1)
             newSections.insertAtRandomIndex(elements)
         }
@@ -257,21 +270,21 @@ class ViewController: UITableViewController {
         // Remove
         let doDelete: Int = Int(arc4random_uniform(6))
         if newSections.count > 1 && doDelete == 2 {
-            print("shuffleSections doDelete")
+//            print("shuffleSections doDelete")
             let _ = newSections.extractRandomElements(count: 1)
         }
         
         // Insert
         let doInsert: Int = Int(arc4random_uniform(6))
         if doInsert == 2 {
-            print("shuffleSections doInsert")
+//            print("shuffleSections doInsert")
             newSections.insertAtRandomIndex([self.newSection()])
         }
         
         // Change
         for (index, section) in newSections.enumerate() {
             var newSection = section
-            newSection.items = shuffleItems(section.items.flatMap({ $0 as? Dummy})).map({ $0 as Comparable })
+            newSection.items = shuffleItems(section.items.flatMap({ $0 as? Dummy})).map({ $0 as ComparableItem })
             newSections[index] = newSection
         }
         

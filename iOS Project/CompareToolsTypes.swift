@@ -18,19 +18,22 @@ public enum ComparisonLevel {
 }
 
 
-public protocol Comparable {
+
+public protocol ComparableItem {
     
     var uniqueIdentifier: Int { get }
-    func compareTo(other: Comparable) -> ComparisonLevel
+    func compareTo(other: ComparableItem) -> ComparisonLevel
     
 }
 
 
-public protocol ComparableSection : Comparable {
+
+public protocol ComparableSection : ComparableItem {
     
-    var items: [Comparable] { get set }
+    var items: [ComparableItem] { get set }
     
 }
+
 
 
 public struct ComparisonResult {
@@ -41,11 +44,11 @@ public struct ComparisonResult {
     public let sameSet: NSIndexSet
     public let moveSet: [Int:Int]
 
-    public let oldItems: [Comparable]
-    public let unmovedItems: [Comparable]
-    public let newItems: [Comparable]
+    public let oldItems: [ComparableItem]
+    public let unmovedItems: [ComparableItem]
+    public let newItems: [ComparableItem]
     
-    public init(insertionSet: NSIndexSet, deletionSet: NSIndexSet, reloadSet: NSIndexSet, sameSet: NSIndexSet, moveSet: [Int:Int], oldItems: [Comparable], unmovedItems: [Comparable], newItems: [Comparable])
+    public init(insertionSet: NSIndexSet, deletionSet: NSIndexSet, reloadSet: NSIndexSet, sameSet: NSIndexSet, moveSet: [Int:Int], oldItems: [ComparableItem], unmovedItems: [ComparableItem], newItems: [ComparableItem])
     {
         self.insertionSet = insertionSet
         self.deletionSet = deletionSet

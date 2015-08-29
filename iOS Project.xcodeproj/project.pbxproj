@@ -17,6 +17,10 @@
 		9B3171E41B3461E800C75870 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9B3171E31B3461E800C75870 /* Images.xcassets */; };
 		9B3171E71B3461E800C75870 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9B3171E51B3461E800C75870 /* LaunchScreen.xib */; };
 		9B3171F31B3461E800C75870 /* iOS_ProjectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3171F21B3461E800C75870 /* iOS_ProjectTests.swift */; };
+		9B3CC4561B91B4D6009E58BD /* CompareTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF1B3DE1B8F0A63003B55F8 /* CompareTools.swift */; settings = {ASSET_TAGS = (); }; };
+		9B3CC4571B91B4D9009E58BD /* CompareToolsTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0904041B8F2C4100A403C6 /* CompareToolsTypes.swift */; settings = {ASSET_TAGS = (); }; };
+		9B3CC4581B91B4DC009E58BD /* DataSourceHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0904061B8F2C7D00A403C6 /* DataSourceHandler.swift */; settings = {ASSET_TAGS = (); }; };
+		9B3CC4591B91B4DF009E58BD /* DataSourceSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA09BD01B909C2600736886 /* DataSourceSection.swift */; settings = {ASSET_TAGS = (); }; };
 		9BA09BD11B909C2600736886 /* DataSourceSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BA09BD01B909C2600736886 /* DataSourceSection.swift */; settings = {ASSET_TAGS = (); }; };
 		9BF1B3DF1B8F0A63003B55F8 /* CompareTools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF1B3DE1B8F0A63003B55F8 /* CompareTools.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
@@ -279,7 +283,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9B3CC4571B91B4D9009E58BD /* CompareToolsTypes.swift in Sources */,
 				9B3171F31B3461E800C75870 /* iOS_ProjectTests.swift in Sources */,
+				9B3CC4561B91B4D6009E58BD /* CompareTools.swift in Sources */,
+				9B3CC4591B91B4DF009E58BD /* DataSourceSection.swift in Sources */,
+				9B3CC4581B91B4DC009E58BD /* DataSourceHandler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

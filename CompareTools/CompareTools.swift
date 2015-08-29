@@ -9,19 +9,21 @@ import Foundation
 
 
 public struct ComparisonTool {
-    
-    public static func diff(old oldItems: [Comparable], new newItems: [Comparable]) -> ComparisonResult
+
+    private static func twoIntHash(a:Int, _ b:Int) -> UInt64
     {
-        // Internal Functions
-        func hash<T: Hashable>(a:T, _ b:T) -> Int {
-            return (31 &* a.hashValue) &+ b.hashValue
-        }
-        
-        
+        let a64 = UInt64(abs(a) % Int(UInt32.max))
+        let b64 = UInt64(abs(b) % Int(UInt32.max))
+        return a64 << 32 | b64
+    }
+
+    
+    public static func diff(old oldItems: [ComparableItem], new newItems: [ComparableItem]) -> ComparisonResult
+    {
         // Comparison Cache
-        var compareCache = [Int:ComparisonLevel]()
-        func compareItems(oldItem oldItem: Comparable, newItem: Comparable) -> ComparisonLevel {
-            let hash = hash(oldItem.uniqueIdentifier, newItem.uniqueIdentifier)
+        var compareCache = [UInt64:ComparisonLevel]()
+        func compareItems(oldItem oldItem: ComparableItem, newItem: ComparableItem) -> ComparisonLevel {
+            let hash = ComparisonTool.twoIntHash(oldItem.uniqueIdentifier, newItem.uniqueIdentifier)
             if let cachedResult = compareCache[hash] {
                 return cachedResult
             } else {
@@ -43,7 +45,7 @@ public struct ComparisonTool {
         // Table views require that Insert/Delete/Update are done sperately from moving
         // So first we need an array of items that has the same content like 'newItems'
         // but is keeping the same order like 'oldItems'
-        var unmovedItems = [Comparable]()
+        var unmovedItems = [ComparableItem]()
         
         
         // Iterating over 'oldItems' to fill 'unmoved' items
@@ -52,12 +54,16 @@ public struct ComparisonTool {
             
             let newIndex = newItems.indexOf({ newItem -> Bool in
                 let comparisonLevel = compareItems(oldItem: oldItem, newItem: newItem)
+                // print("comparisonLevel = compareItems(oldItem: \(oldItem), newItem: \(newItem)) -> ", comparisonLevel)
                 return comparisonLevel.hasSameIdentifier
             })
+            
+            // print("oldIndex", oldIndex, "newIndex", newIndex)
             
             if let newIndex = newIndex {
                 // Update 'unmoved'
                 unmovedItems.append(newItems[newIndex])
+                // print("unmovedItems.append(\(newItems[newIndex]))")
             } else {
                 // Delete
                 deletionSet.addIndex(oldIndex)
@@ -65,6 +71,7 @@ public struct ComparisonTool {
             
         }
         
+        // print("unmovedItems", unmovedItems)
         
         // Iterating over 'newItems' to insert new items into 'unmovedItems'
         // and to determine indexes that need to be insertet and updated
@@ -93,9 +100,9 @@ public struct ComparisonTool {
                 insertionSet.addIndex(newIndex)
                 
                 if newIndex < unmovedItems.count {
-                    unmovedItems.insert(newItems[newIndex], atIndex: newIndex)
+                    unmovedItems.insert(newItem, atIndex: newIndex)
                 } else {
-                    unmovedItems.append(newItems[newIndex])
+                    unmovedItems.append(newItem)
                 }
                 
             }
