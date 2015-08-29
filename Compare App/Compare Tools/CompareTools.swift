@@ -68,7 +68,7 @@ public struct ComparisonTool {
         }
         
         // Iterating over 'newItems' to insert new items into 'unmovedItems'
-        // and to determine indexes that need to be insertet and updated
+        // and to determine indexes that need to be inseret and updated
         for (newIndex, newItem) in newItems.enumerate() {
             
             var comparisonLevel = ComparisonLevel.Different

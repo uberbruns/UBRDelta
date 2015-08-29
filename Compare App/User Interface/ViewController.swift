@@ -219,28 +219,18 @@ class ViewController: UITableViewController {
         // Move
         let elements = newItems.extractRandomElements(count: 2)
         newItems.insertAtRandomIndex(elements)
-//        if elements.count > 0 {
-//            print("shuffleItems move")
-//        }
-
         
         // Remove
         let maxD = UInt32(min(2,max(0,newItems.count-1)))
         let delete: Int = Int(arc4random_uniform(maxD))
         let _ = newItems.extractRandomElements(count: delete)
-//        if deleted.count > 0 {
-//            print("shuffleItems remove")
-//        }
         
         // Insert
         let maxI = UInt32(min(2,max(0,10-newItems.count)))
         let insert: Int = Int(arc4random_uniform(maxI))
         let newElements = (0..<insert).map({ _ in self.newItem() })
         newItems.insertAtRandomIndex(newElements)
-//        if newElements.count > 0 {
-//            print("shuffleItems insert")
-//        }
-        
+
         // Change
         let change: Int = Int(arc4random_uniform(2))
         for _ in 0..<(min(change,newItems.count)) {
@@ -262,7 +252,6 @@ class ViewController: UITableViewController {
         // Move
         let doMove: Int = Int(arc4random_uniform(6))
         if doMove == 2 {
-//            print("shuffleSections doMove")
             let elements = newSections.extractRandomElements(count: 1)
             newSections.insertAtRandomIndex(elements)
         }
@@ -270,14 +259,12 @@ class ViewController: UITableViewController {
         // Remove
         let doDelete: Int = Int(arc4random_uniform(6))
         if newSections.count > 1 && doDelete == 2 {
-//            print("shuffleSections doDelete")
             let _ = newSections.extractRandomElements(count: 1)
         }
         
         // Insert
         let doInsert: Int = Int(arc4random_uniform(6))
         if doInsert == 2 {
-//            print("shuffleSections doInsert")
             newSections.insertAtRandomIndex([self.newSection()])
         }
         
