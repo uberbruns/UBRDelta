@@ -13,6 +13,8 @@ class ViewController: UITableViewController {
     var lastIdentity = 0
     var sections: [ComparableSection] = []
     var latestData: [DataSourceSection] = []
+    var timer: NSTimer? = nil
+    
     let dataSourceHandler = DataSourceHandler()
     
     
@@ -31,6 +33,13 @@ class ViewController: UITableViewController {
         
         let testbutton = UIBarButtonItem(title: "Test", style: .Plain, target: self, action: Selector("testAction:"))
         navigationItem.leftBarButtonItem = testbutton
+        
+    }
+
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        self.timer = NSTimer.scheduledTimerWithTimeInterval(0.1, target: self, selector: Selector("shuffleAction:"), userInfo: nil, repeats: true)
     }
     
     
@@ -97,19 +106,22 @@ class ViewController: UITableViewController {
     func shuffleAction(sender: AnyObject)
     {
         let oldData = self.sections.flatMap({ $0 as? DataSourceSection })
-        self.latestData = shuffleSections(oldData)
-        updateTableView(self.latestData)
+        let latestData = shuffleSections(oldData)
+        updateTableView(latestData)
     }
     
+    
+    var testNumber: Int = 0
     
     func testAction(sender: AnyObject)
     {
         var cellsTested = 0
+        testNumber++
         
         for cell in tableView.visibleCells {
             guard let indexPath = tableView.indexPathForCell(cell) else { continue }
             
-            if let shouldValue = (self.latestData[indexPath.section].items[indexPath.row] as? Dummy)?.v,
+            if let shouldValue = (self.sections[indexPath.section].items[indexPath.row] as? Dummy)?.v,
                 let text = cell.textLabel?.text,
                 let hasValue = Int(text) {
                     if shouldValue != hasValue {
@@ -119,7 +131,7 @@ class ViewController: UITableViewController {
             cellsTested++
         }
         
-        print("Test ended (cells tested: \(cellsTested))")
+        print("Test \(testNumber) ended (cells tested: \(cellsTested))")
     }
     
     
@@ -194,17 +206,27 @@ class ViewController: UITableViewController {
         // Move
         let elements = newItems.extractRandomElements(count: 2)
         newItems.insertAtRandomIndex(elements)
+        if elements.count > 0 {
+            print("shuffleItems move")
+        }
+
         
         // Remove
         let maxD = UInt32(min(2,max(0,newItems.count-1)))
         let delete: Int = Int(arc4random_uniform(maxD))
-        let _ = newItems.extractRandomElements(count: delete)
+        let deleted = newItems.extractRandomElements(count: delete)
+        if deleted.count > 0 {
+            print("shuffleItems remove")
+        }
         
         // Insert
         let maxI = UInt32(min(2,max(0,10-newItems.count)))
         let insert: Int = Int(arc4random_uniform(maxI))
         let newElements = (0..<insert).map({ _ in self.newItem() })
         newItems.insertAtRandomIndex(newElements)
+        if newElements.count > 0 {
+            print("shuffleItems insert")
+        }
         
         // Change
         let change: Int = Int(arc4random_uniform(2))
@@ -227,6 +249,7 @@ class ViewController: UITableViewController {
         // Move
         let doMove: Int = Int(arc4random_uniform(6))
         if doMove == 2 {
+            print("shuffleSections doMove")
             let elements = newSections.extractRandomElements(count: 1)
             newSections.insertAtRandomIndex(elements)
         }
@@ -234,12 +257,14 @@ class ViewController: UITableViewController {
         // Remove
         let doDelete: Int = Int(arc4random_uniform(6))
         if newSections.count > 1 && doDelete == 2 {
+            print("shuffleSections doDelete")
             let _ = newSections.extractRandomElements(count: 1)
         }
         
         // Insert
-        let doInsernsert: Int = Int(arc4random_uniform(6))
-        if doInsernsert == 2 {
+        let doInsert: Int = Int(arc4random_uniform(6))
+        if doInsert == 2 {
+            print("shuffleSections doInsert")
             newSections.insertAtRandomIndex([self.newSection()])
         }
         
