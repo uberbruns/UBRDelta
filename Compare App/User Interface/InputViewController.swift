@@ -17,6 +17,7 @@ class InputViewController : UITableViewController
     var showSectionB: Bool = false { didSet { updateTableView() } }
     var showSectionsExclusive: Bool = false { didSet { updateTableView() } }
     var toggle: Bool = false { didSet { updateTableView() } }
+    var expandCell: Bool = false { didSet { updateTableView() } }
     
     
     // MARK: - View -
@@ -41,7 +42,7 @@ class InputViewController : UITableViewController
         dataSourceHandler.itemUpdate = { (items, section, insertIndexPaths, reloadIndexPaths, deleteIndexPaths) in
             self.sections[section].items = items
             self.tableView.beginUpdates()
-            self.tableView.deleteRowsAtIndexPaths(deleteIndexPaths, withRowAnimation: .Fade)
+            self.tableView.deleteRowsAtIndexPaths(deleteIndexPaths, withRowAnimation: .Top)
             
             for indexPath in reloadIndexPaths {
                 if let updateableCell = self.tableView.cellForRowAtIndexPath(indexPath) as? UpdateableTableViewCell {
@@ -52,7 +53,7 @@ class InputViewController : UITableViewController
                 }
             }
             
-            self.tableView.insertRowsAtIndexPaths(insertIndexPaths, withRowAnimation: .Fade)
+            self.tableView.insertRowsAtIndexPaths(insertIndexPaths, withRowAnimation: .Top)
             self.tableView.endUpdates()
         }
         
@@ -70,22 +71,28 @@ class InputViewController : UITableViewController
         dataSourceHandler.sectionUpdate = { (sections, insertIndexSet, reloadIndexSet, deleteIndexSet) in
             // All section animations look broken
             UIView.setAnimationsEnabled(false)
+            
             self.sections = sections.flatMap({ $0 as? DataSourceSection })
             self.tableView.beginUpdates()
+            
             self.tableView.deleteSections(deleteIndexSet, withRowAnimation: .None)
             self.tableView.reloadSections(reloadIndexSet, withRowAnimation: .None)
             self.tableView.insertSections(insertIndexSet, withRowAnimation: .None)
+
             self.tableView.endUpdates()
-            UIView.setAnimationsEnabled(true)
         }
         
         dataSourceHandler.sectionReorder = { (sections, reorderMap) in
             self.sections = sections.flatMap({ $0 as? DataSourceSection })
-            self.tableView.beginUpdates()
-            for (from, to) in reorderMap {
-                self.tableView.moveSection(from, toSection: to)
+            if reorderMap.count > 0 {
+                self.tableView.beginUpdates()
+                for (from, to) in reorderMap {
+                    self.tableView.moveSection(from, toSection: to)
+                }
+                self.tableView.endUpdates()
             }
-            self.tableView.endUpdates()
+            UIView.setAnimationsEnabled(true)
+
         }
         
         dataSourceHandler.completion = {
@@ -148,7 +155,7 @@ class InputViewController : UITableViewController
             
         // Section A
         if showSectionA == true {
-            // Input Section
+
             var sectionA = DataSourceSection(i: 2, title: "Section A")
             var items: [ComparableItem] = []
             
@@ -162,17 +169,25 @@ class InputViewController : UITableViewController
         
         // Section B
         if showSectionB == true {
-            // Input Section
+
             var sectionB = DataSourceSection(i: 3, title: "Section B")
             var items: [ComparableItem] = []
             
-            let valueItemA = StaticValueItem(id: "valueB", title: "Hello", value: "Karsten!")
-            items.append(valueItemA)
+            let valueItemB = StaticValueItem(id: "valueB", title: "Hello", value: "Karsten")
+            items.append(valueItemB)
+
+            
+            let switchItemB = SwitchItem(id: "expandCell", title: "Expand Cell", value: expandCell) { (value) -> () in
+                self.expandCell = value
+            }
+            items.append(switchItemB)
             
             sectionB.items = items
             newSections.append(sectionB)
+            
         }
         
+
         
         if sections.count == 0 {
             sections = newSections
@@ -197,6 +212,19 @@ class InputViewController : UITableViewController
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
         return sections[section].items.count
+    }
+    
+    
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat
+    {
+        guard let item = sections[indexPath.section].items[indexPath.row] as? TableViewItem else { return 44.0 }
+        
+        if item.id == "valueB" && expandCell == true {
+            return 128.0
+        } else {
+            return 44.0
+        }
+        
     }
     
     

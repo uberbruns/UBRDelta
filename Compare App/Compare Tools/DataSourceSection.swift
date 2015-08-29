@@ -14,9 +14,9 @@ public struct DataSourceSection : ComparableSection
     public var items: [ComparableItem] = []
     
     public let i: Int
-    public let title: String
+    public let title: String?
     
-    public init(i: Int, title: String) {
+    public init(i: Int, title: String?) {
         self.i = i
         self.title = title
     }

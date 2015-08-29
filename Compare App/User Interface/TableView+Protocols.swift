@@ -11,6 +11,7 @@ import Foundation
 
 protocol TableViewItem {
     
+    var id: String { get }
     var reuseIdentifier: String { get }
     
 }
