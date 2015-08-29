@@ -17,7 +17,7 @@ public class DataSourceHandler {
     public typealias StartHandler = () -> ()
     public typealias CompletionHandler = () -> ()
     
-    public var userInterfaceUpdateTime: Double = 0.3
+    public var userInterfaceUpdateTime: Double = 0.2
     
     // Update handler
     public var itemUpdate: ItemUpdateHandler? = nil

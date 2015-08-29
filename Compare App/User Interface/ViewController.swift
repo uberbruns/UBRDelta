@@ -184,8 +184,8 @@ class ViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String?
     {
-        if let mummy = sections[section] as? DataSourceSection {
-            return mummy.title
+        if let section = sections[section] as? DataSourceSection {
+            return section.title
         } else {
             return nil
         }

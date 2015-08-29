@@ -12,8 +12,8 @@ public struct ComparisonTool {
 
     private static func twoIntHash(a:Int, _ b:Int) -> UInt64
     {
-        let a64 = UInt64(abs(a) % Int(UInt32.max))
-        let b64 = UInt64(abs(b) % Int(UInt32.max))
+        let a64 = UInt64(abs(a)) % UInt64(UInt32.max)
+        let b64 = UInt64(abs(b)) % UInt64(UInt32.max)
         return a64 << 32 | b64
     }
 
@@ -54,24 +54,18 @@ public struct ComparisonTool {
             
             let newIndex = newItems.indexOf({ newItem -> Bool in
                 let comparisonLevel = compareItems(oldItem: oldItem, newItem: newItem)
-                // print("comparisonLevel = compareItems(oldItem: \(oldItem), newItem: \(newItem)) -> ", comparisonLevel)
                 return comparisonLevel.hasSameIdentifier
             })
-            
-            // print("oldIndex", oldIndex, "newIndex", newIndex)
             
             if let newIndex = newIndex {
                 // Update 'unmoved'
                 unmovedItems.append(newItems[newIndex])
-                // print("unmovedItems.append(\(newItems[newIndex]))")
             } else {
                 // Delete
                 deletionSet.addIndex(oldIndex)
             }
             
         }
-        
-        // print("unmovedItems", unmovedItems)
         
         // Iterating over 'newItems' to insert new items into 'unmovedItems'
         // and to determine indexes that need to be insertet and updated
