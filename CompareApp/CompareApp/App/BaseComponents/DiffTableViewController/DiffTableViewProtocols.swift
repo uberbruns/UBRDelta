@@ -30,14 +30,3 @@ protocol UpdateableTableViewHeaderFooterView {
     func updateViewWithItem(item: ComparableItem, animated: Bool)
     
 }
-
-
-extension UITableViewHeaderFooterView : UpdateableTableViewHeaderFooterView {
-
-    func updateViewWithItem(item: ComparableItem, animated: Bool)
-    {
-        guard let sectionItem = item as? DiffTableViewSectionItem else { return }
-        textLabel?.text = sectionItem.title
-    }
-    
-}

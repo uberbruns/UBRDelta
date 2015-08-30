@@ -97,16 +97,14 @@ class DiffTableViewController: UITableViewController {
             
         }
         
-        dataSourceHandler.completion = {
-            print("Table View Updated")
-        }
+        dataSourceHandler.completion = {}
         
     }
     
     
     func updateTableView()
     {
-        let newSections: [DiffTableViewSectionItem] = generateSectionItems()
+        let newSections: [DiffTableViewSectionItem] = generateItems()
         
         if sections.count == 0 {
             sections = newSections
@@ -119,7 +117,7 @@ class DiffTableViewController: UITableViewController {
     }
     
     
-    func generateSectionItems() -> [DiffTableViewSectionItem]
+    func generateItems() -> [DiffTableViewSectionItem]
     {
         return []
     }

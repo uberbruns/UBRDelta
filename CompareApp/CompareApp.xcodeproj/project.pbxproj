@@ -173,6 +173,7 @@
 				<string>9B69F3751B93728600F459F1</string>
 				<string>9B0904091B8FCB3E00A403C6</string>
 				<string>9BA09BD11B909C2600736886</string>
+				<string>9B69F3A81B937B5900F459F1</string>
 				<string>9B1B5C071B8DFB6C00C8EC07</string>
 				<string>9B3CC4641B9232B3009E58BD</string>
 				<string>9B3CC4621B923070009E58BD</string>
@@ -276,8 +277,6 @@
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
-			<key>name</key>
-			<string>CompareApp</string>
 			<key>path</key>
 			<string>CompareApp</string>
 			<key>sourceTree</key>
@@ -291,8 +290,10 @@
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
+			<key>name</key>
+			<string>SupportingFiles</string>
 			<key>path</key>
-			<string>Supporting Files</string>
+			<string>SupportingFiles</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
@@ -534,8 +535,6 @@
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
-			<key>name</key>
-			<string>CompareAppTests</string>
 			<key>path</key>
 			<string>CompareAppTests</string>
 			<key>sourceTree</key>
@@ -761,7 +760,7 @@
 				<key>ASSETCATALOG_COMPILER_APPICON_NAME</key>
 				<string>AppIcon</string>
 				<key>INFOPLIST_FILE</key>
-				<string>CompareApp/Supporting Files/Info.plist</string>
+				<string>CompareApp/SupportingFiles/Info.plist</string>
 				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
 				<string>9.0</string>
 				<key>LD_RUNPATH_SEARCH_PATHS</key>
@@ -783,7 +782,7 @@
 				<key>ASSETCATALOG_COMPILER_APPICON_NAME</key>
 				<string>AppIcon</string>
 				<key>INFOPLIST_FILE</key>
-				<string>CompareApp/Supporting Files/Info.plist</string>
+				<string>CompareApp/SupportingFiles/Info.plist</string>
 				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
 				<string>9.0</string>
 				<key>LD_RUNPATH_SEARCH_PATHS</key>
@@ -894,6 +893,8 @@
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Items</string>
 			<key>path</key>
 			<string>Items</string>
 			<key>sourceTree</key>
@@ -983,7 +984,7 @@
 			<key>lastKnownFileType</key>
 			<string>sourcecode.swift</string>
 			<key>path</key>
-			<string>TableView+Protocols.swift</string>
+			<string>DiffTableViewProtocols.swift</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
@@ -1053,12 +1054,15 @@
 		<dict>
 			<key>children</key>
 			<array>
+				<string>9B69F3741B93728600F459F1</string>
 				<string>9B3CC4611B923070009E58BD</string>
 				<string>9BA09BD01B909C2600736886</string>
-				<string>9B69F3741B93728600F459F1</string>
+				<string>9B69F3A71B937B5900F459F1</string>
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
+			<key>name</key>
+			<string>DiffTableViewController</string>
 			<key>path</key>
 			<string>DiffTableViewController</string>
 			<key>sourceTree</key>
@@ -1093,7 +1097,6 @@
 		<dict>
 			<key>children</key>
 			<array>
-				<string>9B3CC45A1B920058009E58BD</string>
 				<string>9B3CC45D1B920908009E58BD</string>
 			</array>
 			<key>isa</key>
@@ -1107,7 +1110,6 @@
 		<dict>
 			<key>children</key>
 			<array>
-				<string>9BF1B3E11B8F0A81003B55F8</string>
 				<string>9B3171DE1B3461E800C75870</string>
 			</array>
 			<key>isa</key>
@@ -1134,6 +1136,8 @@
 		<dict>
 			<key>children</key>
 			<array>
+				<string>9BF1B3E11B8F0A81003B55F8</string>
+				<string>9B69F3A91B9380AF00F459F1</string>
 				<string>9BF1B3E21B8F0A87003B55F8</string>
 				<string>9B69F3781B9375AE00F459F1</string>
 				<string>9B3171DC1B3461E800C75870</string>
@@ -1173,8 +1177,51 @@
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Frameworks</string>
 			<key>path</key>
-			<string>Framework</string>
+			<string>Frameworks</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>9B69F3A71B937B5900F459F1</key>
+		<dict>
+			<key>fileEncoding</key>
+			<string>4</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.swift</string>
+			<key>path</key>
+			<string>UITableViewHeaderFooterView+Extensions.swift</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>9B69F3A81B937B5900F459F1</key>
+		<dict>
+			<key>fileRef</key>
+			<string>9B69F3A71B937B5900F459F1</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>ASSET_TAGS</key>
+				<array/>
+			</dict>
+		</dict>
+		<key>9B69F3A91B9380AF00F459F1</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>9B3CC45A1B920058009E58BD</string>
+				<string>9B69F3731B93725C00F459F1</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>BaseComponents</string>
+			<key>path</key>
+			<string>BaseComponents</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
@@ -1211,8 +1258,10 @@
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Model</string>
 			<key>path</key>
-			<string>Dummy Model</string>
+			<string>Model</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
@@ -1220,7 +1269,6 @@
 		<dict>
 			<key>children</key>
 			<array>
-				<string>9B69F3731B93725C00F459F1</string>
 				<string>9B69F3761B93757300F459F1</string>
 				<string>9B69F3771B93759300F459F1</string>
 			</array>

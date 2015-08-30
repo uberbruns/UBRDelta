@@ -10,8 +10,7 @@ import UIKit
 import CompareTools
 
 
-class InputViewController : DiffTableViewController
-{
+class InputViewController : DiffTableViewController {
 
     var showSectionA: Bool = false { didSet { updateTableView() } }
     var showSectionB: Bool = false { didSet { updateTableView() } }
@@ -20,9 +19,9 @@ class InputViewController : DiffTableViewController
     var expandCell: Bool = false { didSet { updateTableView() } }
     
     
-    override func generateSectionItems() -> [DiffTableViewSectionItem]
+    override func generateItems() -> [DiffTableViewSectionItem]
     {
-        var newSections: [DiffTableViewSectionItem] = []
+        var sectionItems: [DiffTableViewSectionItem] = []
         
         // Input Section
         var inputSection = DiffTableViewSectionItem(i: 1, title: "Inputs")
@@ -68,7 +67,7 @@ class InputViewController : DiffTableViewController
         }
         
         inputSection.items = inputItems
-        newSections.append(inputSection)
+        sectionItems.append(inputSection)
         
         
         // Section A
@@ -81,7 +80,7 @@ class InputViewController : DiffTableViewController
             items.append(valueItemA)
             
             sectionA.items = items
-            newSections.append(sectionA)
+            sectionItems.append(sectionA)
         }
         
         
@@ -101,11 +100,11 @@ class InputViewController : DiffTableViewController
             items.append(switchItemB)
             
             sectionB.items = items
-            newSections.append(sectionB)
+            sectionItems.append(sectionB)
             
         }
         
-        return newSections
+        return sectionItems
     }
     
     
