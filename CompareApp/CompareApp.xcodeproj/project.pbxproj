@@ -45,8 +45,6 @@
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Resources</string>
 			<key>path</key>
 			<string>Resources</string>
 			<key>sourceTree</key>
@@ -278,8 +276,10 @@
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
+			<key>name</key>
+			<string>CompareApp</string>
 			<key>path</key>
-			<string>Compare App</string>
+			<string>CompareApp</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
@@ -534,8 +534,10 @@
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
+			<key>name</key>
+			<string>CompareAppTests</string>
 			<key>path</key>
-			<string>Compare App Tests</string>
+			<string>CompareAppTests</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
@@ -759,7 +761,7 @@
 				<key>ASSETCATALOG_COMPILER_APPICON_NAME</key>
 				<string>AppIcon</string>
 				<key>INFOPLIST_FILE</key>
-				<string>Compare App/Supporting Files/Info.plist</string>
+				<string>CompareApp/Supporting Files/Info.plist</string>
 				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
 				<string>9.0</string>
 				<key>LD_RUNPATH_SEARCH_PATHS</key>
@@ -781,7 +783,7 @@
 				<key>ASSETCATALOG_COMPILER_APPICON_NAME</key>
 				<string>AppIcon</string>
 				<key>INFOPLIST_FILE</key>
-				<string>Compare App/Supporting Files/Info.plist</string>
+				<string>CompareApp/Supporting Files/Info.plist</string>
 				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
 				<string>9.0</string>
 				<key>LD_RUNPATH_SEARCH_PATHS</key>
@@ -827,7 +829,7 @@
 					<string>$(inherited)</string>
 				</array>
 				<key>INFOPLIST_FILE</key>
-				<string>Compare App Tests/Supporting Files/Info.plist</string>
+				<string>CompareAppTests/Supporting Files/Info.plist</string>
 				<key>LD_RUNPATH_SEARCH_PATHS</key>
 				<string>$(inherited) @executable_path/Frameworks @loader_path/Frameworks</string>
 				<key>PRODUCT_BUNDLE_IDENTIFIER</key>
@@ -854,7 +856,7 @@
 					<string>$(inherited)</string>
 				</array>
 				<key>INFOPLIST_FILE</key>
-				<string>Compare App Tests/Supporting Files/Info.plist</string>
+				<string>CompareAppTests/Supporting Files/Info.plist</string>
 				<key>LD_RUNPATH_SEARCH_PATHS</key>
 				<string>$(inherited) @executable_path/Frameworks @loader_path/Frameworks</string>
 				<key>PRODUCT_BUNDLE_IDENTIFIER</key>
@@ -892,8 +894,6 @@
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Items</string>
 			<key>path</key>
 			<string>Items</string>
 			<key>sourceTree</key>
@@ -1059,8 +1059,6 @@
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
-			<key>name</key>
-			<string>DiffTableViewController</string>
 			<key>path</key>
 			<string>DiffTableViewController</string>
 			<key>sourceTree</key>
@@ -1100,8 +1098,6 @@
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
-			<key>name</key>
-			<string>InputViewController</string>
 			<key>path</key>
 			<string>InputViewController</string>
 			<key>sourceTree</key>
@@ -1116,8 +1112,6 @@
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
-			<key>name</key>
-			<string>ShuffleViewController</string>
 			<key>path</key>
 			<string>ShuffleViewController</string>
 			<key>sourceTree</key>
@@ -1131,8 +1125,6 @@
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Helper</string>
 			<key>path</key>
 			<string>Helper</string>
 			<key>sourceTree</key>
@@ -1148,8 +1140,6 @@
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
-			<key>name</key>
-			<string>App</string>
 			<key>path</key>
 			<string>App</string>
 			<key>sourceTree</key>
@@ -1183,8 +1173,6 @@
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Framework</string>
 			<key>path</key>
 			<string>Framework</string>
 			<key>sourceTree</key>
@@ -1198,8 +1186,6 @@
 			<string>PBXFileReference</string>
 			<key>lastKnownFileType</key>
 			<string>sourcecode.swift</string>
-			<key>name</key>
-			<string>DiffTableViewSectionItem.swift</string>
 			<key>path</key>
 			<string>DiffTableViewSectionItem.swift</string>
 			<key>sourceTree</key>
@@ -1225,8 +1211,6 @@
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Dummy Model</string>
 			<key>path</key>
 			<string>Dummy Model</string>
 			<key>sourceTree</key>
@@ -1242,8 +1226,6 @@
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
-			<key>name</key>
-			<string>ViewController</string>
 			<key>path</key>
 			<string>ViewController</string>
 			<key>sourceTree</key>
