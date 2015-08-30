@@ -41,6 +41,9 @@ public class DataSourceHandler {
     private var newSections: [ComparableSectionItem]? = nil
     
     
+    public init() {}
+    
+    
     public func queueComparison(oldSections oldSections: [ComparableSectionItem], newSections: [ComparableSectionItem])
     {
         // Set Sections

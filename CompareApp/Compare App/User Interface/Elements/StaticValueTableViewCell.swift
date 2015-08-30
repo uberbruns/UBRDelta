@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import CompareTools
+
 
 class StaticValueTableViewCell: UITableViewCell {
     

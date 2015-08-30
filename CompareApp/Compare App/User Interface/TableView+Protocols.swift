@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CompareTools
 
 
 protocol TableViewItem {
@@ -31,12 +32,11 @@ protocol UpdateableTableViewHeaderFooterView {
 }
 
 
-
 extension UITableViewHeaderFooterView : UpdateableTableViewHeaderFooterView {
 
     func updateViewWithItem(item: ComparableItem, animated: Bool)
     {
-        guard let sectionItem = item as? DataSourceSectionItem else { return }
+        guard let sectionItem = item as? DiffTableViewSectionItem else { return }
         textLabel?.text = sectionItem.title
     }
     

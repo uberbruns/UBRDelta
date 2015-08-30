@@ -6,8 +6,7 @@
 //
 
 import Foundation
-
-
+import CompareTools
 
 
 struct Dummy : ComparableItem
