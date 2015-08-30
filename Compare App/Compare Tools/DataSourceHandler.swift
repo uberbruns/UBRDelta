@@ -12,8 +12,8 @@ public class DataSourceHandler {
     
     public typealias ItemUpdateHandler = (items: [ComparableItem], section: Int, insertIndexPaths: [NSIndexPath], reloadIndexPaths: [NSIndexPath], deleteIndexPaths: [NSIndexPath]) -> ()
     public typealias ItemReorderHandler = (items: [ComparableItem], section: Int, reorderMap: [Int:Int]) -> ()
-    public typealias SectionUpdateHandler = (sections: [ComparableSection], insertIndexSet: NSIndexSet, reloadIndexSet: NSIndexSet, deleteIndexSet: NSIndexSet) -> ()
-    public typealias SectionReorderHandler = (sections: [ComparableSection], reorderMap: [Int:Int]) -> ()
+    public typealias SectionUpdateHandler = (sections: [ComparableSectionItem], insertIndexSet: NSIndexSet, reloadIndexSet: NSIndexSet, deleteIndexSet: NSIndexSet) -> ()
+    public typealias SectionReorderHandler = (sections: [ComparableSectionItem], reorderMap: [Int:Int]) -> ()
     public typealias StartHandler = () -> ()
     public typealias CompletionHandler = () -> ()
     
@@ -37,21 +37,25 @@ public class DataSourceHandler {
     private var lastUpdateTime: NSDate = NSDate(timeIntervalSince1970: 0)
     
     // Section data
-    private var oldSections: [ComparableSection]? = nil
-    private var newSections: [ComparableSection]? = nil
+    private var oldSections: [ComparableSectionItem]? = nil
+    private var newSections: [ComparableSectionItem]? = nil
     
     
-    public func queueComparison(oldSections oldSections: [ComparableSection], newSections: [ComparableSection])
+    public func queueComparison(oldSections oldSections: [ComparableSectionItem], newSections: [ComparableSectionItem])
     {
         // Set Sections
         if self.oldSections == nil {
+            // Old section should change only when diff(completes)
             self.oldSections = oldSections
         }
         
+        // New section are always defined
         self.newSections = newSections
         
         // Guarding
         if isDiffing == true {
+            // We declare the current result as out of date because
+            // more recent 'newSections' are available
             self.resultIsOutOfDate = true
             return
         }
@@ -62,19 +66,23 @@ public class DataSourceHandler {
     
     private func diff()
     {
+        // Guarding
         guard let oldSections = self.oldSections else { return }
         guard let newSections = self.newSections else { return }
         
-        let mainQueue = dispatch_get_main_queue()
-        let backgroundQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)
-        
+        // Set State
         self.isDiffing = true
-        self.resultIsOutOfDate = false
         
+        // From now on the diff function considers 'newSections' not out-of-date
+        self.resultIsOutOfDate = false
+
+        // We do the diffing on a background thread
+        let backgroundQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)
+
         dispatch_async(backgroundQueue) {
             
+            // Diffing Items
             var itemDiffs = [Int: ComparisonResult]()
-            
             for (oldSectionIndex, oldSection) in oldSections.enumerate() {
                 
                 let newIndex = newSections.indexOf({ newSection -> Bool in
@@ -92,22 +100,39 @@ public class DataSourceHandler {
                 
             }
             
-            let sectionDiff = ComparisonTool.diff(old: oldSections.map({$0}), new: newSections.map({$0}))
+            // "Changing" type to 'ComparableItem'
+            // Like 'as' suggest this change in type always succeeds
+            // We do it to satisfy the argument requirements of ComparisonTool.diff()
+            let oldSectionAsItems = oldSections.map({ $0 as ComparableItem })
+            let newSectionsAsItems = newSections.map({ $0 as ComparableItem })
             
+            // Diffing Sections
+            let sectionDiff = ComparisonTool.diff(old: oldSectionAsItems, new: newSectionsAsItems)
+            
+            // Diffin is done
+            // We do the the UI updates on the main thread
+            let mainQueue = dispatch_get_main_queue()
             dispatch_async(mainQueue) {
                 
-                // Guarding
+                // A few guards...
+                
                 if self.resultIsOutOfDate == true {
+                    // In the meantime 'newResults' came in, this means
+                    // a new diff() and we are stopping the update
                     self.diff()
                     return
                 }
                 
                 if self.timeLockEnabled == true {
+                    // There is already a future diff() scheduled
+                    // we are stopping here
                     return
                 }
                 
                 let updateAllowedIn = self.lastUpdateTime.timeIntervalSinceNow + self.userInterfaceUpdateTime
                 if  updateAllowedIn > 0 {
+                    // updateAllowedIn > 0 means the allowed update time is in the future
+                    // so we schedule a new diff() for this point in time
                     self.timeLockEnabled = true
                     DataSourceHandler.executeDelayed(updateAllowedIn) {
                         self.timeLockEnabled = false
@@ -116,9 +141,11 @@ public class DataSourceHandler {
                     return
                 }
                 
-                // Start Updating
+                // Okay, we are passed the guards lets start by calling the start handler function
                 self.start?()
                 
+                // We do the item update for the old section order, because the sections
+                // are not moved yet
                 for (oldSectionIndex, itemDiff) in itemDiffs.sort({ $0.0 < $1.0 }) {
                     
                     // Create index paths
@@ -132,9 +159,11 @@ public class DataSourceHandler {
                     
                 }
                 
-                // Change type
-                let updateItems = sectionDiff.unmovedItems.flatMap({ $0 as? ComparableSection })
-                let reorderItems = sectionDiff.newItems.flatMap({ $0 as? ComparableSection })
+                // Change type from ComparableItem to ComparableSectionItem.
+                // Since this is expected to succeed and we could not recover,
+                // so a force unwrap is justified
+                let updateItems = sectionDiff.unmovedItems.map({ $0 as! ComparableSectionItem })
+                let reorderItems = sectionDiff.newItems.map({ $0 as! ComparableSectionItem })
                 
                 // Call section handler functions
                 self.sectionUpdate?(sections: updateItems, insertIndexSet: sectionDiff.insertionSet, reloadIndexSet: sectionDiff.reloadSet, deleteIndexSet: sectionDiff.deletionSet)

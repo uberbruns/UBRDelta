@@ -10,7 +10,7 @@ import UIKit
 
 class InputViewController : UITableViewController
 {
-    var sections: [DataSourceSection] = []
+    var sections: [DataSourceSectionItem] = []
     let dataSourceHandler = DataSourceHandler()
     
     var showSectionA: Bool = false { didSet { updateTableView() } }
@@ -72,18 +72,26 @@ class InputViewController : UITableViewController
             // All section animations look broken
             UIView.setAnimationsEnabled(false)
             
-            self.sections = sections.flatMap({ $0 as? DataSourceSection })
+            self.sections = sections.flatMap({ $0 as? DataSourceSectionItem })
             self.tableView.beginUpdates()
             
             self.tableView.deleteSections(deleteIndexSet, withRowAnimation: .None)
+            
+            for sectionIndex in reloadIndexSet {
+                if let headerView = self.tableView.headerViewForSection(sectionIndex) as? UpdateableTableViewHeaderFooterView {
+                    let sectionItem = sections[sectionIndex]
+                    headerView.updateViewWithItem(sectionItem, animated: true)
+                }
+            }
+            
             self.tableView.reloadSections(reloadIndexSet, withRowAnimation: .None)
             self.tableView.insertSections(insertIndexSet, withRowAnimation: .None)
-
+            
             self.tableView.endUpdates()
         }
         
         dataSourceHandler.sectionReorder = { (sections, reorderMap) in
-            self.sections = sections.flatMap({ $0 as? DataSourceSection })
+            self.sections = sections.flatMap({ $0 as? DataSourceSectionItem })
             if reorderMap.count > 0 {
                 self.tableView.beginUpdates()
                 for (from, to) in reorderMap {
@@ -92,7 +100,7 @@ class InputViewController : UITableViewController
                 self.tableView.endUpdates()
             }
             UIView.setAnimationsEnabled(true)
-
+            
         }
         
         dataSourceHandler.completion = {
@@ -104,10 +112,10 @@ class InputViewController : UITableViewController
     
     func updateTableView()
     {
-        var newSections: [DataSourceSection] = []
+        var newSections: [DataSourceSectionItem] = []
         
         // Input Section
-        var inputSection = DataSourceSection(i: 1, title: "Inputs")
+        var inputSection = DataSourceSectionItem(i: 1, title: "Inputs")
         var inputItems: [ComparableItem] = []
         
         let switchItemA = SwitchItem(id: "switchA", title: "Show Section A", value: showSectionA) { (value) -> () in
@@ -151,12 +159,12 @@ class InputViewController : UITableViewController
         
         inputSection.items = inputItems
         newSections.append(inputSection)
-            
-            
+        
+        
         // Section A
         if showSectionA == true {
-
-            var sectionA = DataSourceSection(i: 2, title: "Section A")
+            
+            var sectionA = DataSourceSectionItem(i: 2, title: "Section A (\(NSDate()))")
             var items: [ComparableItem] = []
             
             let valueItemA = StaticValueItem(id: "valueA", title: "Hello", value: "World")
@@ -169,13 +177,13 @@ class InputViewController : UITableViewController
         
         // Section B
         if showSectionB == true {
-
-            var sectionB = DataSourceSection(i: 3, title: "Section B")
+            
+            var sectionB = DataSourceSectionItem(i: 3, title: "Section B")
             var items: [ComparableItem] = []
             
             let valueItemB = StaticValueItem(id: "valueB", title: "Hello", value: "Karsten")
             items.append(valueItemB)
-
+            
             
             let switchItemB = SwitchItem(id: "expandCell", title: "Expand Cell", value: expandCell) { (value) -> () in
                 self.expandCell = value
@@ -187,14 +195,14 @@ class InputViewController : UITableViewController
             
         }
         
-
+        
         
         if sections.count == 0 {
             sections = newSections
             tableView.reloadData()
         } else {
-            let oldSections = self.sections.map({ $0 as ComparableSection })
-            let newSections = newSections.map({ $0 as ComparableSection })
+            let oldSections = self.sections.map({ $0 as ComparableSectionItem })
+            let newSections = newSections.map({ $0 as ComparableSectionItem })
             dataSourceHandler.queueComparison(oldSections: oldSections, newSections: newSections)
         }
     }
@@ -235,7 +243,6 @@ class InputViewController : UITableViewController
         if let tableViewItem = item as? TableViewItem {
             
             let cell = tableView.dequeueReusableCellWithIdentifier(tableViewItem.reuseIdentifier)!
-            cell.selectionStyle = .None
             
             if let updateableCell = cell as? UpdateableTableViewCell {
                 updateableCell.updateCellWithItem(item, animated: false)
@@ -246,6 +253,7 @@ class InputViewController : UITableViewController
         } else {
             
             let cell = tableView.dequeueReusableCellWithIdentifier("Cell")!
+            cell.selectionStyle = .None
             cell.textLabel?.text = nil
             cell.detailTextLabel?.text = nil
             return cell

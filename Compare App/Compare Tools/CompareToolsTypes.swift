@@ -28,7 +28,7 @@ public protocol ComparableItem {
 
 
 
-public protocol ComparableSection : ComparableItem {
+public protocol ComparableSectionItem : ComparableItem {
     
     var items: [ComparableItem] { get set }
     

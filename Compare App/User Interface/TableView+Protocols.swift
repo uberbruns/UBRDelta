@@ -6,7 +6,7 @@
 //  Copyright © 2015 bruns.me. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 
 protocol TableViewItem {
@@ -20,5 +20,24 @@ protocol TableViewItem {
 protocol UpdateableTableViewCell {
     
     func updateCellWithItem(item: ComparableItem, animated: Bool)
+    
+}
+
+
+protocol UpdateableTableViewHeaderFooterView {
+    
+    func updateViewWithItem(item: ComparableItem, animated: Bool)
+    
+}
+
+
+
+extension UITableViewHeaderFooterView : UpdateableTableViewHeaderFooterView {
+
+    func updateViewWithItem(item: ComparableItem, animated: Bool)
+    {
+        guard let sectionItem = item as? DataSourceSectionItem else { return }
+        textLabel?.text = sectionItem.title
+    }
     
 }

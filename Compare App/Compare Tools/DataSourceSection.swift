@@ -1,5 +1,5 @@
 //
-//  DataSourceSection.swift
+//  DataSourceSectionItem.swift
 //
 //  Created by Karsten Bruns on 28/08/15.
 //  Copyright © 2015 bruns.me. All rights reserved.
@@ -8,7 +8,7 @@
 import Foundation
 
 
-public struct DataSourceSection : ComparableSection
+public struct DataSourceSectionItem : ComparableSectionItem
 {
     public var uniqueIdentifier: Int { return i }
     public var items: [ComparableItem] = []
@@ -24,7 +24,7 @@ public struct DataSourceSection : ComparableSection
     
     public func compareTo(other: ComparableItem) -> ComparisonLevel
     {
-        guard let other = other as? DataSourceSection else { return .Different }
+        guard let other = other as? DataSourceSectionItem else { return .Different }
         
         if other.i == self.i {
             if other.title == self.title {
@@ -40,7 +40,7 @@ public struct DataSourceSection : ComparableSection
 }
 
 
-public func ==(lhs: DataSourceSection, rhs: DataSourceSection) -> Bool
+public func ==(lhs: DataSourceSectionItem, rhs: DataSourceSectionItem) -> Bool
 {
     return lhs.i == rhs.i && lhs.title == rhs.title
 }
