@@ -232,7 +232,6 @@ class InputViewController : UITableViewController
         } else {
             return 44.0
         }
-        
     }
     
     

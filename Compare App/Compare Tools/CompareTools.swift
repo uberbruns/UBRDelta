@@ -38,7 +38,6 @@ public struct ComparisonTool {
         let insertionSet = NSMutableIndexSet()
         let deletionSet = NSMutableIndexSet()
         let reloadSet = NSMutableIndexSet()
-        let sameSet = NSMutableIndexSet()
         var moveSet = [Int:Int]()
         
         
@@ -83,9 +82,6 @@ public struct ComparisonTool {
                 if comparisonLevel == .SameIdentifier {
                     // Reload
                     reloadSet.addIndex(oldIndex)
-                } else if comparisonLevel == .Same && newIndex == oldIndex {
-                    // No Reload
-                    sameSet.addIndex(newIndex)
                 }
                 
             } else if oldIndex == nil {
@@ -125,7 +121,6 @@ public struct ComparisonTool {
             insertionSet: insertionSet,
             deletionSet: deletionSet,
             reloadSet: reloadSet,
-            sameSet: sameSet,
             moveSet: moveSet,
             
             oldItems: oldItems,
