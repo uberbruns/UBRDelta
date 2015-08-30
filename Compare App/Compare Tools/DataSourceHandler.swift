@@ -54,8 +54,8 @@ public class DataSourceHandler {
         
         // Guarding
         if isDiffing == true {
-            // We declare the current result as out of date because
-            // more recent 'newSections' are available
+            // We declare the current result as out-of-date
+            // because more recent 'newSections' are available
             self.resultIsOutOfDate = true
             return
         }
@@ -106,10 +106,10 @@ public class DataSourceHandler {
             let oldSectionAsItems = oldSections.map({ $0 as ComparableItem })
             let newSectionsAsItems = newSections.map({ $0 as ComparableItem })
             
-            // Diffing Sections
+            // Diffing sections
             let sectionDiff = ComparisonTool.diff(old: oldSectionAsItems, new: newSectionsAsItems)
             
-            // Diffin is done
+            // Diffing is done
             // We do the the UI updates on the main thread
             let mainQueue = dispatch_get_main_queue()
             dispatch_async(mainQueue) {
