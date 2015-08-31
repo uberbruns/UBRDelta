@@ -10,21 +10,45 @@ import UIKit
 import CompareTools
 
 
-class InputViewController : DiffTableViewController {
+class InputViewController : TableViewController {
 
     var showSectionA: Bool = false { didSet { updateTableView() } }
     var showSectionB: Bool = false { didSet { updateTableView() } }
     var showSectionsExclusive: Bool = false { didSet { updateTableView() } }
     var toggle: Bool = false { didSet { updateTableView() } }
     var expandCell: Bool = false { didSet { updateTableView() } }
+    var pickedValue: String = "c" { didSet { updateTableView() } }
+    var focusedItem: TableViewItem? = nil
     
     
-    override func generateItems() -> [DiffTableViewSectionItem]
+    override func generateItems() -> [TableViewSectionItem]
     {
-        var sectionItems: [DiffTableViewSectionItem] = []
+        var sectionItems: [TableViewSectionItem] = []
+
+        
+        // Picker Section
+        var pickerSection = TableViewSectionItem(i: 0, title: "Picker")
+        
+        let pickerItem = PickerItem(id: "picker", title: "Pick a Value", values: ["a", "b", "c", "d", "e", "f"], value: pickedValue) { (value) -> () in
+            if let v = value as? String {
+                self.pickedValue = v
+            }
+        }
+        
+        let setToC = SwitchItem(id: "setToC", title: "C?", value: self.pickedValue == "c") { (value) -> () in
+            if value == true {
+                self.pickedValue = "c"
+            } else {
+                self.pickedValue = "a"
+            }
+        }
+
+        pickerSection.items = [pickerItem, setToC]
+        sectionItems.append(pickerSection)
+        
         
         // Input Section
-        var inputSection = DiffTableViewSectionItem(i: 1, title: "Inputs")
+        var inputSection = TableViewSectionItem(i: 1, title: "Inputs")
         var inputItems: [ComparableItem] = []
         
         let switchItemA = SwitchItem(id: "switchA", title: "Show Section A", value: showSectionA) { (value) -> () in
@@ -73,11 +97,15 @@ class InputViewController : DiffTableViewController {
         // Section A
         if showSectionA == true {
             
-            var sectionA = DiffTableViewSectionItem(i: 2, title: "Section A (\(NSDate()))")
+            var sectionA = TableViewSectionItem(i: 2, title: "Section A (\(NSDate()))")
             var items: [ComparableItem] = []
             
-            let valueItemA = StaticValueItem(id: "valueA", title: "Hello", value: "World")
-            items.append(valueItemA)
+            let valueItemB = StaticValueItem(id: "valueA", title: "Hello", value: "Karsten")
+            items.append(valueItemB)
+            
+            let switchItemB = SwitchItem(id: "expandCellA", title: "Expand Cell", value: expandCell) { (value) -> () in
+            }
+            items.append(switchItemB)
             
             sectionA.items = items
             sectionItems.append(sectionA)
@@ -87,12 +115,11 @@ class InputViewController : DiffTableViewController {
         // Section B
         if showSectionB == true {
             
-            var sectionB = DiffTableViewSectionItem(i: 3, title: "Section B")
+            var sectionB = TableViewSectionItem(i: 3, title: "Section B")
             var items: [ComparableItem] = []
             
             let valueItemB = StaticValueItem(id: "valueB", title: "Hello", value: "Karsten")
             items.append(valueItemB)
-            
             
             let switchItemB = SwitchItem(id: "expandCell", title: "Expand Cell", value: expandCell) { (value) -> () in
                 self.expandCell = value
@@ -114,8 +141,26 @@ class InputViewController : DiffTableViewController {
         
         if item.id == "valueB" && expandCell == true {
             return 128.0
+        } else if item.id == "picker" && focusedItem?.id == item.id  {
+            return 250.0
         } else {
             return super.tableView(tableView, heightForRowAtIndexPath: indexPath)
         }
     }
+    
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
+    {
+        guard let item = sections[indexPath.section].items[indexPath.row] as? TableViewItem else { return }
+        tableView.deselectRowAtIndexPath(indexPath, animated: false)
+        if focusedItem?.id != item.id {
+            self.focusedItem = item
+        } else {
+            self.focusedItem = nil
+        }
+        updateTableView()
+    }
 }
+
+
+

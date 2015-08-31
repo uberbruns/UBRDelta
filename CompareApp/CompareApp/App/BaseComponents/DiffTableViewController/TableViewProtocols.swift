@@ -18,6 +18,7 @@ protocol TableViewItem {
 }
 
 
+
 protocol UpdateableTableViewCell {
     
     func updateCellWithItem(item: ComparableItem, animated: Bool)

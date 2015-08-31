@@ -1,5 +1,5 @@
 //
-//  DiffTableViewController.swift
+//  TableViewController.swift
 //  CompareApp
 //
 //  Created by Karsten Bruns on 30/08/15.
@@ -9,9 +9,9 @@
 import UIKit
 import CompareTools
 
-class DiffTableViewController: UITableViewController {
+class TableViewController: UITableViewController {
 
-    var sections: [DiffTableViewSectionItem] = []
+    var sections: [TableViewSectionItem] = []
     let dataSourceHandler = DataSourceHandler()
     
     // MARK: - View -
@@ -64,28 +64,28 @@ class DiffTableViewController: UITableViewController {
         
         dataSourceHandler.sectionUpdate = { (sections, insertIndexSet, reloadIndexSet, deleteIndexSet) in
             // All section animations look broken
-            UIView.setAnimationsEnabled(false)
+            // UIView.setAnimationsEnabled(false)
             
-            self.sections = sections.flatMap({ $0 as? DiffTableViewSectionItem })
+            self.sections = sections.flatMap({ $0 as? TableViewSectionItem })
             self.tableView.beginUpdates()
             
+            self.tableView.insertSections(insertIndexSet, withRowAnimation: .None)
             self.tableView.deleteSections(deleteIndexSet, withRowAnimation: .None)
             
             for sectionIndex in reloadIndexSet {
                 if let headerView = self.tableView.headerViewForSection(sectionIndex) as? UpdateableTableViewHeaderFooterView {
                     let sectionItem = sections[sectionIndex]
                     headerView.updateViewWithItem(sectionItem, animated: true)
+                } else {
+                    self.tableView.reloadSections(NSIndexSet(index: sectionIndex), withRowAnimation: .None)
                 }
             }
-            
-            self.tableView.reloadSections(reloadIndexSet, withRowAnimation: .None)
-            self.tableView.insertSections(insertIndexSet, withRowAnimation: .None)
             
             self.tableView.endUpdates()
         }
         
         dataSourceHandler.sectionReorder = { (sections, reorderMap) in
-            self.sections = sections.flatMap({ $0 as? DiffTableViewSectionItem })
+            self.sections = sections.flatMap({ $0 as? TableViewSectionItem })
             if reorderMap.count > 0 {
                 self.tableView.beginUpdates()
                 for (from, to) in reorderMap {
@@ -93,8 +93,7 @@ class DiffTableViewController: UITableViewController {
                 }
                 self.tableView.endUpdates()
             }
-            UIView.setAnimationsEnabled(true)
-            
+            // UIView.setAnimationsEnabled(true)
         }
         
         dataSourceHandler.completion = {}
@@ -104,20 +103,20 @@ class DiffTableViewController: UITableViewController {
     
     func updateTableView()
     {
-        let newSections: [DiffTableViewSectionItem] = generateItems()
+        let newSections: [TableViewSectionItem] = generateItems()
         
         if sections.count == 0 {
             sections = newSections
             tableView.reloadData()
         } else {
-            let oldSections = self.sections.map({ $0 as ComparableSectionItem })
+            let oldSections = sections.map({ $0 as ComparableSectionItem })
             let newSections = newSections.map({ $0 as ComparableSectionItem })
             dataSourceHandler.queueComparison(oldSections: oldSections, newSections: newSections)
         }
     }
     
     
-    func generateItems() -> [DiffTableViewSectionItem]
+    func generateItems() -> [TableViewSectionItem]
     {
         return []
     }

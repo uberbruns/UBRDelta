@@ -1,5 +1,5 @@
 //
-//  DiffTableViewSectionItem.swift
+//  TableViewSectionItem.swift
 //
 //  Created by Karsten Bruns on 28/08/15.
 //  Copyright © 2015 bruns.me. All rights reserved.
@@ -9,7 +9,7 @@ import Foundation
 import CompareTools
 
 
-public struct DiffTableViewSectionItem : ComparableSectionItem
+public struct TableViewSectionItem : ComparableSectionItem
 {
     public var uniqueIdentifier: Int { return i }
     public var items: [ComparableItem] = []
@@ -25,7 +25,7 @@ public struct DiffTableViewSectionItem : ComparableSectionItem
     
     public func compareTo(other: ComparableItem) -> ComparisonLevel
     {
-        guard let other = other as? DiffTableViewSectionItem else { return .Different }
+        guard let other = other as? TableViewSectionItem else { return .Different }
         
         if other.i == self.i {
             if other.title == self.title {
@@ -41,7 +41,7 @@ public struct DiffTableViewSectionItem : ComparableSectionItem
 }
 
 
-public func ==(lhs: DiffTableViewSectionItem, rhs: DiffTableViewSectionItem) -> Bool
+public func ==(lhs: TableViewSectionItem, rhs: TableViewSectionItem) -> Bool
 {
     return lhs.i == rhs.i && lhs.title == rhs.title
 }

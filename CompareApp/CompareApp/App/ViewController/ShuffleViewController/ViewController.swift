@@ -13,7 +13,7 @@ class ViewController: UITableViewController {
     
     var lastIdentity = 0
     var sections: [ComparableSectionItem] = []
-    var latestData: [DiffTableViewSectionItem] = []
+    var latestData: [TableViewSectionItem] = []
     var timer: NSTimer? = nil
     
     let dataSourceHandler = DataSourceHandler()
@@ -28,7 +28,7 @@ class ViewController: UITableViewController {
         setupDataSourceHandler()
         
         sections = (0..<5).map({ num in self.newSection() })
-        latestData = sections.flatMap({ $0 as? DiffTableViewSectionItem })
+        latestData = sections.flatMap({ $0 as? TableViewSectionItem })
         
         let shufflebutton = UIBarButtonItem(title: "Shuffle", style: .Plain, target: self, action: Selector("shuffleAction:"))
         navigationItem.rightBarButtonItem = shufflebutton
@@ -69,7 +69,7 @@ class ViewController: UITableViewController {
         }
         
         dataSourceHandler.sectionUpdate = { (sections, insertIndexPaths, reloadIndexPaths, deleteIndexPaths) in
-            self.sections = sections.flatMap({ $0 as? DiffTableViewSectionItem })
+            self.sections = sections.flatMap({ $0 as? TableViewSectionItem })
             self.tableView.beginUpdates()
             self.tableView.deleteSections(deleteIndexPaths, withRowAnimation: .Middle)
             self.tableView.reloadSections(reloadIndexPaths, withRowAnimation: .None)
@@ -78,7 +78,7 @@ class ViewController: UITableViewController {
         }
         
         dataSourceHandler.sectionReorder = { (sections, reorderMap) in
-            self.sections = sections.flatMap({ $0 as? DiffTableViewSectionItem })
+            self.sections = sections.flatMap({ $0 as? TableViewSectionItem })
             self.tableView.beginUpdates()
             for (from, to) in reorderMap {
                 self.tableView.moveSection(from, toSection: to)
@@ -93,7 +93,7 @@ class ViewController: UITableViewController {
     }
     
     
-    func updateTableView(sections: [DiffTableViewSectionItem])
+    func updateTableView(sections: [TableViewSectionItem])
     {
         let oldSections = latestData.map({ $0 as ComparableSectionItem })
         let newSections = sections.map({ $0 as ComparableSectionItem })
@@ -185,7 +185,7 @@ class ViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String?
     {
-        if let section = sections[section] as? DiffTableViewSectionItem {
+        if let section = sections[section] as? TableViewSectionItem {
             return section.title
         } else {
             return nil
@@ -203,11 +203,11 @@ class ViewController: UITableViewController {
     }
     
     
-    func newSection() -> DiffTableViewSectionItem {
+    func newSection() -> TableViewSectionItem {
         let c = (0..<3).map({ num in self.newItem() })
         
         lastIdentity += 1
-        var result = DiffTableViewSectionItem(i: lastIdentity, title: "Section \(lastIdentity)")
+        var result = TableViewSectionItem(i: lastIdentity, title: "Section \(lastIdentity)")
         result.items = c.map({ $0 as ComparableItem })
         return result
     }
@@ -246,7 +246,7 @@ class ViewController: UITableViewController {
     }
     
     
-    func shuffleSections(sections: [DiffTableViewSectionItem]) -> [DiffTableViewSectionItem]
+    func shuffleSections(sections: [TableViewSectionItem]) -> [TableViewSectionItem]
     {
         var newSections = sections
         
