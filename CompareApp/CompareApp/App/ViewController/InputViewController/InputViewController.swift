@@ -18,6 +18,7 @@ class InputViewController : TableViewController {
     var toggle: Bool = false { didSet { updateTableView() } }
     var expandCell: Bool = false { didSet { updateTableView() } }
     var pickedValue: String = "c" { didSet { updateTableView() } }
+    var pickedNumber: String = "1" { didSet { updateTableView() } }
     var focusedItem: TableViewItem? = nil
     
     
@@ -28,14 +29,23 @@ class InputViewController : TableViewController {
         
         // Picker Section
         var pickerSection = TableViewSectionItem(i: 0, title: "Picker")
+
+        let m = (Int(pickedNumber) ?? 1) * 8
+        var alphabet: [PickerValue] = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"]
+        alphabet = Array(alphabet[0..<m])
         
-        let pickerItem = PickerItem(id: "picker", title: "Pick a Value", values: ["a", "b", "c", "d", "e", "f"], value: pickedValue) { (value) -> () in
-            if let v = value as? String {
+        
+        let values: [[PickerValue]] = [["1","2","3"], alphabet]
+        let pickerItem = PickerItem(id: "picker", title: "Pick a value", displayedValue: "\(pickedValue)", selectedValues: [pickedNumber,pickedValue], values: values) { vs in
+            if let v = vs[0] as? String {
+                self.pickedNumber = v
+            }
+            if let v = vs[1] as? String {
                 self.pickedValue = v
             }
         }
         
-        let setToC = SwitchItem(id: "setToC", title: "C?", value: self.pickedValue == "c") { (value) -> () in
+        let setToC = SwitchItem(id: "setToC", title: "C?", value: pickedValue == "c") { (value) -> () in
             if value == true {
                 self.pickedValue = "c"
             } else {

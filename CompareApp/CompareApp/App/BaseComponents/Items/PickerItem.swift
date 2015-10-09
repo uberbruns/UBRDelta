@@ -40,23 +40,25 @@ extension String : PickerValue {
 
 struct PickerItem: TableViewItem  {
     
-    typealias ValueHandler = (value: PickerValue) -> ()
+    typealias ValueHandler = (selectedValues: [PickerValue]) -> ()
     
     let id: String
     let reuseIdentifier = "PickerRow"
     
     let title: String
-    let values: [PickerValue]
-    let selectedValue: PickerValue
+    let displayedValue: String
+    let components: [[PickerValue]]
+    let selectedValues: [PickerValue]
     let valueHandler: ValueHandler
     
-    init(id: String, title: String, values: [PickerValue], value: PickerValue, valueHandler: ValueHandler)
+    init(id: String, title: String, displayedValue: String, selectedValues: [PickerValue], values: [[PickerValue]], valueHandler: ValueHandler)
     {
         self.id = id
         self.title = title
-        self.values = values
+        self.displayedValue = displayedValue
+        self.components = values
         self.valueHandler = valueHandler
-        self.selectedValue = value
+        self.selectedValues = selectedValues
     }
     
 }
@@ -71,17 +73,40 @@ extension PickerItem : ComparableItem {
     {
         guard other.uniqueIdentifier == self.uniqueIdentifier else { return .Different }
         guard let otherItem = other as? PickerItem else { return .Different }
-        guard self.values.count == otherItem.values.count else { return .Different }
+        guard self.components.count == otherItem.components.count else { return .Different }
+        guard self.selectedValues.count == otherItem.selectedValues.count else { return .Different }
 
-        let equalValues = Array(zip(self.values, otherItem.values)).indexOf{ !$0.0.isEqualTo($0.1) } == nil
+        var equalComponents = true
         
-        if equalValues &&
+        //
+        for var i = 0; i < components.count; i++ {
+            
+            let componentOfSelf = self.components[i]
+            let componentOfOther = otherItem.components[i]
+            
+            if componentOfSelf.count != componentOfOther.count {
+                equalComponents = false
+                break
+            }
+            
+            equalComponents = Array(zip(componentOfSelf, componentOfOther)).indexOf{ !$0.0.isEqualTo($0.1) } == nil
+
+            if equalComponents == false {
+                break
+            }
+        }
+        
+        
+        let equalSelectedValues = Array(zip(self.selectedValues, otherItem.selectedValues)).indexOf{ !$0.0.isEqualTo($0.1) } == nil
+        
+        if equalComponents &&
+            equalSelectedValues &&
             self.title == otherItem.title &&
-            self.selectedValue.isEqualTo(otherItem.selectedValue) &&
+            self.displayedValue == otherItem.displayedValue &&
             self.id == otherItem.id {
             return .Same
         } else {
-            return .SameIdentifier
+            return .Changed(["components": !equalComponents])
         }
     }
     

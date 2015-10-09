@@ -10,9 +10,9 @@ import Foundation
 
 public class DataSourceHandler {
     
-    public typealias ItemUpdateHandler = (items: [ComparableItem], section: Int, insertIndexPaths: [NSIndexPath], reloadIndexPaths: [NSIndexPath], deleteIndexPaths: [NSIndexPath]) -> ()
+    public typealias ItemUpdateHandler = (items: [ComparableItem], section: Int, insertIndexPaths: [Int], reloadIndexPaths: [Int:Int], deleteIndexPaths: [Int]) -> ()
     public typealias ItemReorderHandler = (items: [ComparableItem], section: Int, reorderMap: [Int:Int]) -> ()
-    public typealias SectionUpdateHandler = (sections: [ComparableSectionItem], insertIndexSet: NSIndexSet, reloadIndexSet: NSIndexSet, deleteIndexSet: NSIndexSet) -> ()
+    public typealias SectionUpdateHandler = (sections: [ComparableSectionItem], insertIndexSet: [Int], reloadIndexSet: [Int:Int], deleteIndexSet: [Int]) -> ()
     public typealias SectionReorderHandler = (sections: [ComparableSectionItem], reorderMap: [Int:Int]) -> ()
     public typealias StartHandler = () -> ()
     public typealias CompletionHandler = () -> ()
@@ -151,14 +151,15 @@ public class DataSourceHandler {
                 // are not moved yet
                 for (oldSectionIndex, itemDiff) in itemDiffs.sort({ $0.0 < $1.0 }) {
                     
-                    // Create index paths
-                    let insertIndexPaths = itemDiff.insertionSet.map({ index in NSIndexPath(forRow: index, inSection: oldSectionIndex)})
-                    let reloadIndexPaths = itemDiff.reloadSet.map({ index in NSIndexPath(forRow: index, inSection: oldSectionIndex)})
-                    let deleteIndexPaths = itemDiff.deletionSet.map({ index in NSIndexPath(forRow: index, inSection: oldSectionIndex)})
-                    
                     // Call item handler functions
-                    self.itemUpdate?(items: itemDiff.unmovedItems, section: oldSectionIndex, insertIndexPaths: insertIndexPaths, reloadIndexPaths: reloadIndexPaths, deleteIndexPaths: deleteIndexPaths)
-                    self.itemReorder?(items: itemDiff.newItems, section: oldSectionIndex, reorderMap: itemDiff.moveSet)
+                    self.itemUpdate?(
+                        items: itemDiff.unmovedItems,
+                        section: oldSectionIndex,
+                        insertIndexPaths: itemDiff.insertionIndexes,
+                        reloadIndexPaths: itemDiff.reloadIndexMap,
+                        deleteIndexPaths: itemDiff.deletionIndexes
+                    )
+                    self.itemReorder?(items: itemDiff.newItems, section: oldSectionIndex, reorderMap: itemDiff.moveIndexMap)
                     
                 }
                 
@@ -169,8 +170,8 @@ public class DataSourceHandler {
                 let reorderItems = sectionDiff.newItems.map({ $0 as! ComparableSectionItem })
                 
                 // Call section handler functions
-                self.sectionUpdate?(sections: updateItems, insertIndexSet: sectionDiff.insertionSet, reloadIndexSet: sectionDiff.reloadSet, deleteIndexSet: sectionDiff.deletionSet)
-                self.sectionReorder?(sections: reorderItems, reorderMap: sectionDiff.moveSet)
+                self.sectionUpdate?(sections: updateItems, insertIndexSet: sectionDiff.insertionIndexes, reloadIndexSet: sectionDiff.reloadIndexMap, deleteIndexSet: sectionDiff.deletionIndexes)
+                self.sectionReorder?(sections: reorderItems, reorderMap: sectionDiff.moveIndexMap)
                 
                 // Call completion block
                 self.completion?()
@@ -204,7 +205,7 @@ public class DataSourceHandler {
         let when = dispatch_time(DISPATCH_TIME_NOW, nanoSeconds)
         dispatch_after(when, dispatch_get_main_queue(), {
             action()
-        });
+        })
     }
     
 }

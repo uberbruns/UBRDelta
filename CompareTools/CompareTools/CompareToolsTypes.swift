@@ -8,12 +8,23 @@
 import Foundation
 
 
+public typealias ComparisonChanges = [String:Bool]
+
+
 public enum ComparisonLevel {
     
-    case Different, Same, SameIdentifier
+    case Different, Same, Changed(ComparisonChanges)
     
     public var hasSameIdentifier: Bool {
-        return self == .Same || self == .SameIdentifier
+        
+        switch self {
+        case .Different :
+            return false
+        case .Same :
+            return true
+        case .Changed(_) :
+            return true
+        }
     }
 }
 
@@ -38,21 +49,21 @@ public protocol ComparableSectionItem : ComparableItem {
 
 public struct ComparisonResult {
     
-    public let insertionSet: NSIndexSet
-    public let deletionSet: NSIndexSet
-    public let reloadSet: NSIndexSet
-    public let moveSet: [Int:Int]
+    public let insertionIndexes: [Int]
+    public let deletionIndexes: [Int]
+    public let reloadIndexMap: [Int:Int]
+    public let moveIndexMap: [Int:Int]
 
     public let oldItems: [ComparableItem]
     public let unmovedItems: [ComparableItem]
     public let newItems: [ComparableItem]
     
-    public init(insertionSet: NSIndexSet, deletionSet: NSIndexSet, reloadSet: NSIndexSet, moveSet: [Int:Int], oldItems: [ComparableItem], unmovedItems: [ComparableItem], newItems: [ComparableItem])
+    public init(insertionIndexes: [Int], deletionIndexes: [Int], reloadIndexMap: [Int:Int], moveIndexMap: [Int:Int], oldItems: [ComparableItem], unmovedItems: [ComparableItem], newItems: [ComparableItem])
     {
-        self.insertionSet = insertionSet
-        self.deletionSet = deletionSet
-        self.reloadSet = reloadSet
-        self.moveSet = moveSet
+        self.insertionIndexes = insertionIndexes
+        self.deletionIndexes = deletionIndexes
+        self.reloadIndexMap = reloadIndexMap
+        self.moveIndexMap = moveIndexMap
         
         self.oldItems = oldItems
         self.unmovedItems = unmovedItems

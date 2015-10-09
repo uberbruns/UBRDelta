@@ -30,7 +30,7 @@ struct Dummy : ComparableItem
             if other.v == self.v {
                 return .Same
             } else {
-                return .SameIdentifier
+                return .Changed([:])
             }
         } else {
             return .Different

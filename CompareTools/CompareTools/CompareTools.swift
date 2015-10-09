@@ -35,10 +35,10 @@ public struct ComparisonTool {
         
         
         // Init vars
-        let insertionSet = NSMutableIndexSet()
-        let deletionSet = NSMutableIndexSet()
-        let reloadSet = NSMutableIndexSet()
-        var moveSet = [Int:Int]()
+        var insertionIndexes = [Int]()
+        var deletionIndexes = [Int]()
+        var reloadIndexMap = [Int:Int]()
+        var moveIndexMap = [Int:Int]()
         
         
         // Table views require that Insert/Delete/Update are done sperately from moving
@@ -61,7 +61,7 @@ public struct ComparisonTool {
                 unmovedItems.append(newItems[newIndex])
             } else {
                 // Delete
-                deletionSet.addIndex(oldIndex)
+                deletionIndexes.append(oldIndex)
             }
             
         }
@@ -79,15 +79,17 @@ public struct ComparisonTool {
             
             if let oldIndex = oldIndex {
                 
-                if comparisonLevel == .SameIdentifier {
-                    // Reload
-                    reloadSet.addIndex(oldIndex)
+                switch comparisonLevel {
+                case .Changed(_) :
+                    reloadIndexMap[oldIndex] = newIndex
+                default :
+                    break
                 }
                 
             } else if oldIndex == nil {
                 
                 // Insert
-                insertionSet.addIndex(newIndex)
+                insertionIndexes.append(newIndex)
                 
                 if newIndex < unmovedItems.count {
                     unmovedItems.insert(newItem, atIndex: newIndex)
@@ -99,30 +101,49 @@ public struct ComparisonTool {
             
         }
         
+
+        // Our reload index needs to be based on the unmove items indexes
+        // because reloading is part of the first step. But currently
+        // its referencing newIndex
+        // We can do this in the next step, but the next step iterates
+        // over newIndex and the reloadIndexMap is [oldIndex:newIndex].
+        // So we flip it
+        let flippedReloadIndexMap = reloadIndexMap.reduce([Int:Int]()) { (var dict, element: (Int, Int)) -> [Int:Int] in
+            dict[element.1] = element.0
+            return dict
+        }
+        
         
         // Iterating over 'newItems' and 'unmovedItems'
         // to determine the movement of items
         for (newIndex, newItem) in newItems.enumerate() {
             
-            let intIndex = unmovedItems.indexOf({ unmItem -> Bool in
+            let unmovedIndex = unmovedItems.indexOf({ unmItem -> Bool in
                 let comparisonLevel = compareItems(oldItem: unmItem, newItem: newItem)
                 return comparisonLevel.hasSameIdentifier
             })
             
-            if let intIndex = intIndex where newIndex != intIndex {
-                // Move
-                moveSet[intIndex] = newIndex
+            
+            // Move
+            if let unmovedIndex = unmovedIndex where newIndex != unmovedIndex {
+                moveIndexMap[unmovedIndex] = newIndex
+            }
+            
+            // We use the flipped index to swap  newIndex against unmovedIndex
+            if let oldIndex = flippedReloadIndexMap[newIndex] {
+                reloadIndexMap[oldIndex] = unmovedIndex
             }
         }
         
         
+
+        
         // Bundle result
         let diffResult = ComparisonResult(
-            insertionSet: insertionSet,
-            deletionSet: deletionSet,
-            reloadSet: reloadSet,
-            moveSet: moveSet,
-            
+            insertionIndexes: insertionIndexes,
+            deletionIndexes: deletionIndexes,
+            reloadIndexMap: reloadIndexMap,
+            moveIndexMap: moveIndexMap,
             oldItems: oldItems,
             unmovedItems: unmovedItems,
             newItems: newItems

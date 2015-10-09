@@ -31,7 +31,7 @@ public struct TableViewSectionItem : ComparableSectionItem
             if other.title == self.title {
                 return .Same
             } else {
-                return .SameIdentifier
+                return .Changed([:])
             }
         } else {
             return .Different

@@ -40,7 +40,7 @@ extension StaticValueItem : ComparableItem {
         if otherRow.title == self.title && otherRow.value == self.value && otherRow.id == self.id {
             return .Same
         } else {
-            return .SameIdentifier
+            return .Changed([:])
         }
     }
     
