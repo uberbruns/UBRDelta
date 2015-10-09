@@ -48,7 +48,7 @@ class iOS_ProjectTests: XCTestCase {
         
         let itemDiff = ComparisonTool.diff(old: old, new: new)
         
-        let expectedCount = itemDiff.oldItems.count + itemDiff.insertionSet.count - itemDiff.deletionSet.count
+        let expectedCount = itemDiff.oldItems.count + itemDiff.insertionIndexes.count - itemDiff.deletionIndexes.count
         let newCount = itemDiff.newItems.count
 
         print("Old", itemDiff.oldItems.map({ $0.uniqueIdentifier }))

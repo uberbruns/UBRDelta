@@ -46,50 +46,88 @@ class ViewController: UITableViewController {
     
     // MARK: Setup & Update
     
-    func setupDataSourceHandler()
-    {
-        dataSourceHandler.itemUpdate = { (items, section, insertIndexPaths, reloadIndexPaths, deleteIndexPaths) in
-            self.sections[section].items = items
-            self.tableView.beginUpdates()
-            self.tableView.deleteRowsAtIndexPaths(deleteIndexPaths, withRowAnimation: .Middle)
-            self.tableView.reloadRowsAtIndexPaths(reloadIndexPaths, withRowAnimation: .None)
-            self.tableView.insertRowsAtIndexPaths(insertIndexPaths, withRowAnimation: .Middle)
-            self.tableView.endUpdates()
+    func setupDataSourceHandler() {
+        
+        dataSourceHandler.userInterfaceUpdateTime = 0.16667
+        
+        dataSourceHandler.start = { }
+        
+        dataSourceHandler.itemUpdate = { [weak self] (items, section, insertIndexes, reloadIndexMap, deleteIndexes) in
+            guard let weakSelf = self else { return }
+            weakSelf.sections[section].items = items
+            weakSelf.tableView.beginUpdates()
+            
+            for (before, after) in reloadIndexMap {
+                let indexPathBefore = NSIndexPath(forRow: before, inSection: section)
+                if let updateableCell = weakSelf.tableView.cellForRowAtIndexPath(indexPathBefore) as? UpdateableTableViewCell {
+                    let item: ComparableItem = items[after]
+                    updateableCell.updateCellWithItem(item, animated: true)
+                } else {
+                    weakSelf.tableView.reloadRowsAtIndexPaths([indexPathBefore], withRowAnimation: .None)
+                }
+            }
+            
+            weakSelf.tableView.deleteRowsAtIndexPaths(deleteIndexes.map({ NSIndexPath(forRow: $0, inSection: section) }), withRowAnimation: .Fade)
+            weakSelf.tableView.insertRowsAtIndexPaths(insertIndexes.map({ NSIndexPath(forRow: $0, inSection: section) }), withRowAnimation: .Fade)
+            weakSelf.tableView.endUpdates()
         }
         
-        dataSourceHandler.itemReorder = { (items, section, reorderMap) in
-            self.sections[section].items = items
-            self.tableView.beginUpdates()
+        dataSourceHandler.itemReorder = { [weak self] (items, section, reorderMap) in
+            guard let weakSelf = self else { return }
+            weakSelf.sections[section].items = items
+            weakSelf.tableView.beginUpdates()
             for (from, to) in reorderMap {
                 let fromIndexPath = NSIndexPath(forRow: from, inSection: section)
                 let toIndexPath = NSIndexPath(forRow: to, inSection: section)
-                self.tableView.moveRowAtIndexPath(fromIndexPath, toIndexPath: toIndexPath)
+                weakSelf.tableView.moveRowAtIndexPath(fromIndexPath, toIndexPath: toIndexPath)
             }
-            self.tableView.endUpdates()
+            weakSelf.tableView.endUpdates()
         }
         
-        dataSourceHandler.sectionUpdate = { (sections, insertIndexPaths, reloadIndexPaths, deleteIndexPaths) in
-            self.sections = sections.flatMap({ $0 as? TableViewSectionItem })
-            self.tableView.beginUpdates()
-            self.tableView.deleteSections(deleteIndexPaths, withRowAnimation: .Middle)
-            self.tableView.reloadSections(reloadIndexPaths, withRowAnimation: .None)
-            self.tableView.insertSections(insertIndexPaths, withRowAnimation: .Middle)
-            self.tableView.endUpdates()
-        }
-        
-        dataSourceHandler.sectionReorder = { (sections, reorderMap) in
-            self.sections = sections.flatMap({ $0 as? TableViewSectionItem })
-            self.tableView.beginUpdates()
-            for (from, to) in reorderMap {
-                self.tableView.moveSection(from, toSection: to)
+        dataSourceHandler.sectionUpdate = { [weak self] (sections, insertIndexes, reloadIndexMap, deleteIndexes) in
+            
+            guard let weakSelf = self else { return }
+            weakSelf.sections = sections.flatMap({ $0 as? TableViewSectionItem })
+            weakSelf.tableView.beginUpdates()
+            
+            let insertSet = NSMutableIndexSet()
+            insertIndexes.forEach({ insertSet.addIndex($0) })
+            
+            let deleteSet = NSMutableIndexSet()
+            deleteIndexes.forEach({ deleteSet.addIndex($0) })
+            
+            weakSelf.tableView.insertSections(insertSet, withRowAnimation: .None)
+            weakSelf.tableView.deleteSections(deleteSet, withRowAnimation: .None)
+            
+            for (sectionIndexBefore, sectionIndexAfter) in reloadIndexMap {
+                if let headerView = weakSelf.tableView.headerViewForSection(sectionIndexBefore) as? UpdateableTableViewHeaderFooterView {
+                    let sectionItem = sections[sectionIndexAfter]
+                    headerView.updateViewWithItem(sectionItem, animated: true)
+                } else {
+                    weakSelf.tableView.reloadSections(NSIndexSet(index: sectionIndexBefore), withRowAnimation: .None)
+                }
             }
-            self.tableView.endUpdates()
+            
+            weakSelf.tableView.endUpdates()
         }
         
-        dataSourceHandler.completion = {
-            self.testAction(self)
+        dataSourceHandler.sectionReorder = { [weak self] (sections, reorderMap) in
+            guard let weakSelf = self else { return }
+            weakSelf.sections = sections.flatMap({ $0 as? TableViewSectionItem })
+            if reorderMap.count > 0 {
+                weakSelf.tableView.beginUpdates()
+                for (from, to) in reorderMap {
+                    weakSelf.tableView.moveSection(from, toSection: to)
+                }
+                weakSelf.tableView.endUpdates()
+            }
+            // UIView.setAnimationsEnabled(true)
         }
         
+        dataSourceHandler.completion = { [weak self] in
+            guard let weakSelf = self else { return }
+            weakSelf.testAction(weakSelf)
+        }
     }
     
     

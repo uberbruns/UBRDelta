@@ -30,74 +30,82 @@ class TableViewController: UITableViewController {
     
     func setupDataSourceHandler()
     {
-        dataSourceHandler.start = {
-        }
         
-        dataSourceHandler.itemUpdate = { (items, section, insertIndexPaths, reloadIndexPaths, deleteIndexPaths) in
-            self.sections[section].items = items
-            self.tableView.beginUpdates()
-            self.tableView.deleteRowsAtIndexPaths(deleteIndexPaths, withRowAnimation: .Top)
+        dataSourceHandler.start = { }
+        
+        dataSourceHandler.itemUpdate = { [weak self] (items, section, insertIndexes, reloadIndexMap, deleteIndexes) in
+            guard let weakSelf = self else { return }
+            weakSelf.sections[section].items = items
+            weakSelf.tableView.beginUpdates()
             
-            for indexPath in reloadIndexPaths {
-                if let updateableCell = self.tableView.cellForRowAtIndexPath(indexPath) as? UpdateableTableViewCell {
-                    let item: ComparableItem = items[indexPath.row]
+            for (before, after) in reloadIndexMap {
+                let indexPathBefore = NSIndexPath(forRow: before, inSection: section)
+                if let updateableCell = weakSelf.tableView.cellForRowAtIndexPath(indexPathBefore) as? UpdateableTableViewCell {
+                    let item: ComparableItem = items[after]
                     updateableCell.updateCellWithItem(item, animated: true)
                 } else {
-                    self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .None)
+                    weakSelf.tableView.reloadRowsAtIndexPaths([indexPathBefore], withRowAnimation: .None)
                 }
             }
             
-            self.tableView.insertRowsAtIndexPaths(insertIndexPaths, withRowAnimation: .Top)
-            self.tableView.endUpdates()
+            weakSelf.tableView.deleteRowsAtIndexPaths(deleteIndexes.map({ NSIndexPath(forRow: $0, inSection: section) }), withRowAnimation: .Fade)
+            weakSelf.tableView.insertRowsAtIndexPaths(insertIndexes.map({ NSIndexPath(forRow: $0, inSection: section) }), withRowAnimation: .Fade)
+            weakSelf.tableView.endUpdates()
         }
         
-        dataSourceHandler.itemReorder = { (items, section, reorderMap) in
-            self.sections[section].items = items
-            self.tableView.beginUpdates()
+        dataSourceHandler.itemReorder = { [weak self] (items, section, reorderMap) in
+            guard let weakSelf = self else { return }
+            weakSelf.sections[section].items = items
+            weakSelf.tableView.beginUpdates()
             for (from, to) in reorderMap {
                 let fromIndexPath = NSIndexPath(forRow: from, inSection: section)
                 let toIndexPath = NSIndexPath(forRow: to, inSection: section)
-                self.tableView.moveRowAtIndexPath(fromIndexPath, toIndexPath: toIndexPath)
+                weakSelf.tableView.moveRowAtIndexPath(fromIndexPath, toIndexPath: toIndexPath)
             }
-            self.tableView.endUpdates()
+            weakSelf.tableView.endUpdates()
         }
         
-        dataSourceHandler.sectionUpdate = { (sections, insertIndexSet, reloadIndexSet, deleteIndexSet) in
-            // All section animations look broken
-            // UIView.setAnimationsEnabled(false)
+        dataSourceHandler.sectionUpdate = { [weak self] (sections, insertIndexes, reloadIndexMap, deleteIndexes) in
             
-            self.sections = sections.flatMap({ $0 as? TableViewSectionItem })
-            self.tableView.beginUpdates()
+            guard let weakSelf = self else { return }
+            weakSelf.sections = sections.flatMap({ $0 as? TableViewSectionItem })
+            weakSelf.tableView.beginUpdates()
             
-            self.tableView.insertSections(insertIndexSet, withRowAnimation: .None)
-            self.tableView.deleteSections(deleteIndexSet, withRowAnimation: .None)
+            let insertSet = NSMutableIndexSet()
+            insertIndexes.forEach({ insertSet.addIndex($0) })
             
-            for sectionIndex in reloadIndexSet {
-                if let headerView = self.tableView.headerViewForSection(sectionIndex) as? UpdateableTableViewHeaderFooterView {
-                    let sectionItem = sections[sectionIndex]
+            let deleteSet = NSMutableIndexSet()
+            deleteIndexes.forEach({ deleteSet.addIndex($0) })
+            
+            weakSelf.tableView.insertSections(insertSet, withRowAnimation: .None)
+            weakSelf.tableView.deleteSections(deleteSet, withRowAnimation: .None)
+            
+            for (sectionIndexBefore, sectionIndexAfter) in reloadIndexMap {
+                if let headerView = weakSelf.tableView.headerViewForSection(sectionIndexBefore) as? UpdateableTableViewHeaderFooterView {
+                    let sectionItem = sections[sectionIndexAfter]
                     headerView.updateViewWithItem(sectionItem, animated: true)
                 } else {
-                    self.tableView.reloadSections(NSIndexSet(index: sectionIndex), withRowAnimation: .None)
+                    weakSelf.tableView.reloadSections(NSIndexSet(index: sectionIndexBefore), withRowAnimation: .None)
                 }
             }
             
-            self.tableView.endUpdates()
+            weakSelf.tableView.endUpdates()
         }
         
-        dataSourceHandler.sectionReorder = { (sections, reorderMap) in
-            self.sections = sections.flatMap({ $0 as? TableViewSectionItem })
+        dataSourceHandler.sectionReorder = { [weak self] (sections, reorderMap) in
+            guard let weakSelf = self else { return }
+            weakSelf.sections = sections.flatMap({ $0 as? TableViewSectionItem })
             if reorderMap.count > 0 {
-                self.tableView.beginUpdates()
+                weakSelf.tableView.beginUpdates()
                 for (from, to) in reorderMap {
-                    self.tableView.moveSection(from, toSection: to)
+                    weakSelf.tableView.moveSection(from, toSection: to)
                 }
-                self.tableView.endUpdates()
+                weakSelf.tableView.endUpdates()
             }
             // UIView.setAnimationsEnabled(true)
         }
         
-        dataSourceHandler.completion = {}
-        
+        dataSourceHandler.completion = { }
     }
     
     
