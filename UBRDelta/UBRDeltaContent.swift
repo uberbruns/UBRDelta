@@ -1,5 +1,5 @@
 //
-//  DataSourceHandler.swift
+//  UBRDeltaContent.swift
 //
 //  Created by Karsten Bruns on 27/08/15.
 //  Copyright © 2015 bruns.me. All rights reserved.
@@ -8,7 +8,7 @@
 import Foundation
 
 
-public class DataSourceHandler {
+public class UBRDeltaContent {
     
     public typealias ItemUpdateHandler = (items: [ComparableItem], section: Int, insertIndexPaths: [Int], reloadIndexPaths: [Int:Int], deleteIndexPaths: [Int]) -> ()
     public typealias ItemReorderHandler = (items: [ComparableItem], section: Int, reorderMap: [Int:Int]) -> ()
@@ -28,11 +28,11 @@ public class DataSourceHandler {
     public var start: StartHandler? = nil
     public var completion: CompletionHandler? = nil
     
-    // State vars to mind the background operation
+    // State vars for background operations
     private var isDiffing: Bool = false
     private var resultIsOutOfDate: Bool = false
     
-    // State var to mind the UI update
+    // State vars to throttle UI update
     private var timeLockEnabled: Bool = false
     private var lastUpdateTime: NSDate = NSDate(timeIntervalSince1970: 0)
     
@@ -48,7 +48,8 @@ public class DataSourceHandler {
     {
         // Set Sections
         if self.oldSections == nil {
-            // Old section should change only when diff(completes)
+            // Old section should change only when a diff completes
+            // and it got nilled
             self.oldSections = oldSections
         }
         
@@ -73,13 +74,11 @@ public class DataSourceHandler {
         guard let oldSections = self.oldSections else { return }
         guard let newSections = self.newSections else { return }
         
-        // Set State
+        // Define State
         self.isDiffing = true
-        
-        // From now on the diff function considers 'newSections' not out-of-date
         self.resultIsOutOfDate = false
 
-        // We do the diffing on a background thread
+        // Do the diffing on a background thread
         let backgroundQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)
 
         dispatch_async(backgroundQueue) {
@@ -97,28 +96,24 @@ public class DataSourceHandler {
                     // Diffing
                     let oldItems = oldSection.items
                     let newItems = newSections[newIndex].items
-                    let itemDiff = ComparisonTool.diff(old: oldItems, new: newItems)
+                    let itemDiff = UBRDelta.diff(old: oldItems, new: newItems)
                     itemDiffs[oldSectionIndex] = itemDiff
                 }
                 
             }
             
-            // "Changing" type to 'ComparableItem'
-            // Like 'as' suggest this change in type always succeeds
-            // We do it to satisfy the argument requirements of ComparisonTool.diff()
+            // Satisfy argument requirements of UBRDelta.diff()
             let oldSectionAsItems = oldSections.map({ $0 as ComparableItem })
             let newSectionsAsItems = newSections.map({ $0 as ComparableItem })
             
             // Diffing sections
-            let sectionDiff = ComparisonTool.diff(old: oldSectionAsItems, new: newSectionsAsItems)
+            let sectionDiff = UBRDelta.diff(old: oldSectionAsItems, new: newSectionsAsItems)
             
-            // Diffing is done
-            // We do the the UI updates on the main thread
+            // Diffing is done - doing UI updates on the main thread
             let mainQueue = dispatch_get_main_queue()
             dispatch_async(mainQueue) {
                 
-                // A few guards...
-                
+                // Guardings
                 if self.resultIsOutOfDate == true {
                     // In the meantime 'newResults' came in, this means
                     // a new diff() and we are stopping the update
@@ -137,17 +132,17 @@ public class DataSourceHandler {
                     // updateAllowedIn > 0 means the allowed update time is in the future
                     // so we schedule a new diff() for this point in time
                     self.timeLockEnabled = true
-                    DataSourceHandler.executeDelayed(updateAllowedIn) {
+                    UBRDeltaContent.executeDelayed(updateAllowedIn) {
                         self.timeLockEnabled = false
                         self.diff()
                     }
                     return
                 }
                 
-                // Okay, we are passed the guards lets start by calling the start handler function
+                // Calling the handler functions
                 self.start?()
                 
-                // We do the item update for the old section order, because the sections
+                // Item update for the old section order, because the sections
                 // are not moved yet
                 for (oldSectionIndex, itemDiff) in itemDiffs.sort({ $0.0 < $1.0 }) {
                     
@@ -164,8 +159,7 @@ public class DataSourceHandler {
                 }
                 
                 // Change type from ComparableItem to ComparableSectionItem.
-                // Since this is expected to succeed and we could not recover,
-                // so a force unwrap is justified
+                // Since this is expected to succeed a force unwrap is justified
                 let updateItems = sectionDiff.unmovedItems.map({ $0 as! ComparableSectionItem })
                 let reorderItems = sectionDiff.newItems.map({ $0 as! ComparableSectionItem })
                 

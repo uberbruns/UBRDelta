@@ -1,5 +1,5 @@
 //
-//  CompareToolsTypes.swift
+//  UBRDelta+Types.swift
 //
 //  Created by Karsten Bruns on 27/08/15.
 //  Copyright © 2015 bruns.me. All rights reserved.
@@ -29,29 +29,11 @@ public enum ComparisonLevel {
 }
 
 
-
-public protocol ComparableItem {
-    
-    var uniqueIdentifier: Int { get }
-    func compareTo(other: ComparableItem) -> ComparisonLevel
-    
-}
-
-
-
-public protocol ComparableSectionItem : ComparableItem {
-    
-    var items: [ComparableItem] { get set }
-    
-}
-
-
-
 public struct ComparisonResult {
     
     public let insertionIndexes: [Int]
     public let deletionIndexes: [Int]
-    public let reloadIndexMap: [Int:Int]
+    public let reloadIndexMap: [Int:Int] // Old Index, New INdex
     public let moveIndexMap: [Int:Int]
 
     public let oldItems: [ComparableItem]

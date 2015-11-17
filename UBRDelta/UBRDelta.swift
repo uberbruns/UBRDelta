@@ -8,7 +8,8 @@
 import Foundation
 
 
-public struct ComparisonTool {
+public struct UBRDelta {
+    
 
     private static func twoIntHash(a:Int, _ b:Int) -> UInt64
     {
@@ -23,7 +24,7 @@ public struct ComparisonTool {
         // Comparison Cache
         var compareCache = [UInt64:ComparisonLevel]()
         func compareItems(oldItem oldItem: ComparableItem, newItem: ComparableItem) -> ComparisonLevel {
-            let hash = ComparisonTool.twoIntHash(oldItem.uniqueIdentifier, newItem.uniqueIdentifier)
+            let hash = UBRDelta.twoIntHash(oldItem.uniqueIdentifier, newItem.uniqueIdentifier)
             if let cachedResult = compareCache[hash] {
                 return cachedResult
             } else {
@@ -80,7 +81,7 @@ public struct ComparisonTool {
             if let oldIndex = oldIndex {
                 
                 switch comparisonLevel {
-                case .Changed(_) :
+                case .Changed :
                     reloadIndexMap[oldIndex] = newIndex
                 default :
                     break
@@ -102,7 +103,7 @@ public struct ComparisonTool {
         }
         
 
-        // Our reload index needs to be based on the unmove items indexes
+        // The reload index needs to be based on the unmoved items indexes
         // because reloading is part of the first step. But currently
         // its referencing newIndex
         // We can do this in the next step, but the next step iterates
@@ -135,8 +136,6 @@ public struct ComparisonTool {
             }
         }
         
-        
-
         
         // Bundle result
         let diffResult = ComparisonResult(

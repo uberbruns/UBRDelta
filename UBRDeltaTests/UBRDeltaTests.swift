@@ -1,15 +1,15 @@
 //
-//  CompareToolsTests.swift
-//  CompareToolsTests
+//  UBRDeltaTests.swift
+//  UBRDeltaTests
 //
-//  Created by Karsten Bruns on 30/08/15.
+//  Created by Karsten Bruns on 10/11/15.
 //  Copyright © 2015 bruns.me. All rights reserved.
 //
 
 import XCTest
-@testable import CompareTools
+@testable import UBRDelta
 
-class CompareToolsTests: XCTestCase {
+class UBRDeltaTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
