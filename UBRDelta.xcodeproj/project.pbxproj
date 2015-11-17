@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9B90987C1BFBAC4600B3D4F1 /* UBRDelta.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE032F91BF29231006B7F82 /* UBRDelta.swift */; };
+		9B90987D1BFBAC4600B3D4F1 /* UBRDelta+Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE032FA1BF29231006B7F82 /* UBRDelta+Types.swift */; };
+		9B90987E1BFBAC4600B3D4F1 /* UBRDeltaContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE032FB1BF29231006B7F82 /* UBRDeltaContent.swift */; };
+		9B90987F1BFBAC4600B3D4F1 /* UBRDeltaContent+Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE0331B1BF2978A006B7F82 /* UBRDeltaContent+Protocols.swift */; };
+		9B9098811BFBACBA00B3D4F1 /* UBRDeltaTests+Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9098801BFBACBA00B3D4F1 /* UBRDeltaTests+Types.swift */; };
+		9B9098831BFBAD2100B3D4F1 /* UBRDelta+Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9098821BFBAD2100B3D4F1 /* UBRDelta+Protocols.swift */; };
+		9B9098841BFBCC5500B3D4F1 /* UBRDelta+Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9098821BFBAD2100B3D4F1 /* UBRDelta+Protocols.swift */; };
+		9B9098851BFBCC5A00B3D4F1 /* UBRDelta+Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B9098821BFBAD2100B3D4F1 /* UBRDelta+Protocols.swift */; };
 		9BE032E31BF291E6006B7F82 /* UBRDelta.h in Headers */ = {isa = PBXBuildFile; fileRef = 9BE032E21BF291E6006B7F82 /* UBRDelta.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9BE032EA1BF291E6006B7F82 /* UBRDelta.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BE032DF1BF291E6006B7F82 /* UBRDelta.framework */; };
 		9BE032EF1BF291E6006B7F82 /* UBRDeltaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE032EE1BF291E6006B7F82 /* UBRDeltaTests.swift */; };
@@ -16,7 +24,7 @@
 		9BE033071BF29245006B7F82 /* UBRDeltaWatchOS.h in Headers */ = {isa = PBXBuildFile; fileRef = 9BE033061BF29245006B7F82 /* UBRDeltaWatchOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9BE0330C1BF29286006B7F82 /* UBRDelta.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE032F91BF29231006B7F82 /* UBRDelta.swift */; };
 		9BE0330D1BF29286006B7F82 /* UBRDelta+Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE032FA1BF29231006B7F82 /* UBRDelta+Types.swift */; };
-		9BE0331C1BF2978A006B7F82 /* UBRDeltaContent+Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE0331B1BF2978A006B7F82 /* UBRDeltaContent+Types.swift */; };
+		9BE0331C1BF2978A006B7F82 /* UBRDeltaContent+Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE0331B1BF2978A006B7F82 /* UBRDeltaContent+Protocols.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,6 +38,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9B9098801BFBACBA00B3D4F1 /* UBRDeltaTests+Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UBRDeltaTests+Types.swift"; sourceTree = "<group>"; };
+		9B9098821BFBAD2100B3D4F1 /* UBRDelta+Protocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UBRDelta+Protocols.swift"; sourceTree = "<group>"; };
 		9BE032DF1BF291E6006B7F82 /* UBRDelta.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = UBRDelta.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9BE032E21BF291E6006B7F82 /* UBRDelta.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UBRDelta.h; sourceTree = "<group>"; };
 		9BE032E41BF291E6006B7F82 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -42,7 +52,7 @@
 		9BE033041BF29245006B7F82 /* UBRDeltaWatchOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = UBRDeltaWatchOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9BE033061BF29245006B7F82 /* UBRDeltaWatchOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UBRDeltaWatchOS.h; sourceTree = "<group>"; };
 		9BE033081BF29245006B7F82 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9BE0331B1BF2978A006B7F82 /* UBRDeltaContent+Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UBRDeltaContent+Types.swift"; sourceTree = "<group>"; };
+		9BE0331B1BF2978A006B7F82 /* UBRDeltaContent+Protocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UBRDeltaContent+Protocols.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,9 +107,10 @@
 				9BE032E41BF291E6006B7F82 /* Info.plist */,
 				9BE032E21BF291E6006B7F82 /* UBRDelta.h */,
 				9BE032F91BF29231006B7F82 /* UBRDelta.swift */,
+				9B9098821BFBAD2100B3D4F1 /* UBRDelta+Protocols.swift */,
 				9BE032FA1BF29231006B7F82 /* UBRDelta+Types.swift */,
 				9BE032FB1BF29231006B7F82 /* UBRDeltaContent.swift */,
-				9BE0331B1BF2978A006B7F82 /* UBRDeltaContent+Types.swift */,
+				9BE0331B1BF2978A006B7F82 /* UBRDeltaContent+Protocols.swift */,
 			);
 			path = UBRDelta;
 			sourceTree = "<group>";
@@ -107,8 +118,9 @@
 		9BE032ED1BF291E6006B7F82 /* UBRDeltaTests */ = {
 			isa = PBXGroup;
 			children = (
-				9BE032EE1BF291E6006B7F82 /* UBRDeltaTests.swift */,
 				9BE032F01BF291E6006B7F82 /* Info.plist */,
+				9BE032EE1BF291E6006B7F82 /* UBRDeltaTests.swift */,
+				9B9098801BFBACBA00B3D4F1 /* UBRDeltaTests+Types.swift */,
 			);
 			path = UBRDeltaTests;
 			sourceTree = "<group>";
@@ -267,8 +279,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9BE0331C1BF2978A006B7F82 /* UBRDeltaContent+Types.swift in Sources */,
+				9BE0331C1BF2978A006B7F82 /* UBRDeltaContent+Protocols.swift in Sources */,
 				9BE032FD1BF29231006B7F82 /* UBRDelta+Types.swift in Sources */,
+				9B9098831BFBAD2100B3D4F1 /* UBRDelta+Protocols.swift in Sources */,
 				9BE032FC1BF29231006B7F82 /* UBRDelta.swift in Sources */,
 				9BE032FE1BF29231006B7F82 /* UBRDeltaContent.swift in Sources */,
 			);
@@ -278,7 +291,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9B90987C1BFBAC4600B3D4F1 /* UBRDelta.swift in Sources */,
+				9B90987D1BFBAC4600B3D4F1 /* UBRDelta+Types.swift in Sources */,
+				9B9098811BFBACBA00B3D4F1 /* UBRDeltaTests+Types.swift in Sources */,
+				9B9098841BFBCC5500B3D4F1 /* UBRDelta+Protocols.swift in Sources */,
+				9B90987E1BFBAC4600B3D4F1 /* UBRDeltaContent.swift in Sources */,
 				9BE032EF1BF291E6006B7F82 /* UBRDeltaTests.swift in Sources */,
+				9B90987F1BFBAC4600B3D4F1 /* UBRDeltaContent+Protocols.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -286,6 +305,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9B9098851BFBCC5A00B3D4F1 /* UBRDelta+Protocols.swift in Sources */,
 				9BE0330D1BF29286006B7F82 /* UBRDelta+Types.swift in Sources */,
 				9BE0330C1BF29286006B7F82 /* UBRDelta.swift in Sources */,
 			);
@@ -339,7 +359,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -381,7 +401,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -403,7 +423,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = UBRDelta/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = me.bruns.UBRDelta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -424,7 +444,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = UBRDelta/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = me.bruns.UBRDelta;
 				PRODUCT_NAME = "$(TARGET_NAME)";

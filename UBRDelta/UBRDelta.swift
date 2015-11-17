@@ -117,6 +117,9 @@ public struct UBRDelta {
         
         // Iterating over 'newItems' and 'unmovedItems'
         // to determine the movement of items
+        
+        // TODO: Better Implementation https://en.wikipedia.org/wiki/Longest_common_subsequence_problem
+        
         for (newIndex, newItem) in newItems.enumerate() {
             
             let unmovedIndex = unmovedItems.indexOf({ unmItem -> Bool in
