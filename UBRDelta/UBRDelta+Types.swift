@@ -29,11 +29,27 @@ public enum ComparisonLevel {
 }
 
 
+extension ComparisonLevel : Equatable { }
+
+public func ==(lhs: ComparisonLevel, rhs: ComparisonLevel) -> Bool {
+    switch (lhs, rhs) {
+    case (.Different, .Different) :
+        return true
+    case (.Same, .Same) :
+        return true
+    case (.Changed(let a), .Changed(let b)) :
+        return a == b
+    default :
+        return false
+    }
+}
+
+
 public struct ComparisonResult {
     
     public let insertionIndexes: [Int]
     public let deletionIndexes: [Int]
-    public let reloadIndexMap: [Int:Int] // Old Index, New INdex
+    public let reloadIndexMap: [Int:Int] // Old Index, New Index
     public let moveIndexMap: [Int:Int]
 
     public let oldItems: [ComparableItem]

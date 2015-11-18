@@ -25,6 +25,14 @@ class UBRDeltaTests: XCTestCase {
         super.tearDown()
     }
    
+    func testNothingItem() {
+        do {
+            let result = diff(old: [kirk, picard, sisko, janeway], new: [kirk, picard, sisko, janeway])
+            XCTAssertEqual(result.insertionIndexes, [], "Nothing Inserted")
+            XCTAssertEqual(result.deletionIndexes, [], "Nothing Deleted")
+        }
+    }
+    
     
     func testInsertOneItem() {
         do {
@@ -93,17 +101,59 @@ class UBRDeltaTests: XCTestCase {
             let result = diff(old: [kirk, picard, sisko, janeway], new: [picard, sisko])
             XCTAssertEqual(result.deletionIndexes, [0,3], "Delete two items at index 0 and 3")
         }
+        do {
+            let result = diff(old: [kirk, picard, sisko, janeway], new: [])
+            XCTAssertEqual(result.deletionIndexes, [0,1,2,3], "Delete all")
+        }
+    }
+    
+    
+    func testInsertAndDeleteMultipleItem() {
+        do {
+            let result = diff(old: [kirk, picard, sisko], new: [kirk, sisko, janeway])
+            XCTAssertEqual(result.deletionIndexes, [1], "Delete one item at index 1")
+            XCTAssertEqual(result.insertionIndexes, [2], "Insert one item at index 2")
+        }
+        do {
+            let result = diff(old: [kirk, picard], new: [sisko, janeway])
+            XCTAssertEqual(result.deletionIndexes, [0,1], "Delete one item at index 1")
+            XCTAssertEqual(result.insertionIndexes, [0,1], "Insert one item at index 2")
+        }
+    }
+
+    
+    func testUnmovedArray() {
+        do {
+            let result = diff(old: [kirk, picard, sisko, janeway], new: [sisko, picard, kirk, janeway])
+            XCTAssertEqual(result.unmovedItems.flatMap({ $0 as? Captain }), [kirk, picard, sisko, janeway], "Not Moving")
+        }
+        do {
+            let result = diff(old: [kirk, picard, sisko, janeway], new: [picard, kirk, janeway])
+            XCTAssertEqual(result.unmovedItems.flatMap({ $0 as? Captain }), [kirk, picard, janeway], "Not Moving with Deletion")
+        }
+        do {
+            let result = diff(old: [kirk, picard, janeway], new: [sisko, picard, kirk, janeway])
+            XCTAssertEqual(result.unmovedItems.flatMap({ $0 as? Captain }), [sisko, kirk, picard, janeway], "Not moving with insertion")
+        }
+        do {
+            let result = diff(old: [kirk, janeway, picard], new: [sisko, janeway, kirk])
+            XCTAssertEqual(result.unmovedItems.flatMap({ $0 as? Captain }), [sisko, kirk, janeway], "Not Moving with Insertion and deletion")
+        }
     }
 
     
     func testMoveOneItem() {
         do {
             let result = diff(old: [kirk, picard, sisko, janeway], new: [picard, kirk, sisko, janeway])
-            XCTAssertEqual(result.moveIndexMap, [1:0, 0:1], "Move one item from index 0 to index 1")
+            XCTAssertEqual(result.moveIndexMap, [0:1], "Move one item from index 0 to index 1")
         }
         do {
             let result = diff(old: [kirk, picard, sisko, janeway], new: [picard, sisko, janeway, kirk])
-            XCTAssertEqual(result.moveIndexMap, [0:3, 1:0, 2:1, 3:2], "Move one item from index 0 to index 1")
+            XCTAssertEqual(result.moveIndexMap, [0:3], "Move one item from index 0 to index 3")
+        }
+        do {
+            let result = diff(old: [kirk, picard, sisko, janeway], new: [janeway, sisko, picard, kirk])
+            XCTAssertEqual(result.moveIndexMap, [0:3, 1:2, 2:1], "Flip")
         }
     }
 

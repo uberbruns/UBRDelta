@@ -46,3 +46,10 @@ extension Captain : ComparableItem {
     }
     
 }
+
+
+extension Captain : Equatable { }
+
+func ==(lhs: Captain, rhs: Captain) -> Bool {
+    return lhs.compareTo(rhs) == ComparisonLevel.Same
+}

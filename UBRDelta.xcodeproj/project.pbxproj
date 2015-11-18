@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9B162E3A1BFCFABD008C0EB1 /* Dwifft.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B162E391BFCFABD008C0EB1 /* Dwifft.swift */; };
+		9B162E3C1BFCFABD008C0EB1 /* Dwifft.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B162E391BFCFABD008C0EB1 /* Dwifft.swift */; };
+		9B162E3D1BFCFCEE008C0EB1 /* Dwifft.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B162E391BFCFABD008C0EB1 /* Dwifft.swift */; };
 		9B90987C1BFBAC4600B3D4F1 /* UBRDelta.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE032F91BF29231006B7F82 /* UBRDelta.swift */; };
 		9B90987D1BFBAC4600B3D4F1 /* UBRDelta+Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE032FA1BF29231006B7F82 /* UBRDelta+Types.swift */; };
 		9B90987E1BFBAC4600B3D4F1 /* UBRDeltaContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BE032FB1BF29231006B7F82 /* UBRDeltaContent.swift */; };
@@ -38,6 +41,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9B162E391BFCFABD008C0EB1 /* Dwifft.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dwifft.swift; sourceTree = "<group>"; };
 		9B9098801BFBACBA00B3D4F1 /* UBRDeltaTests+Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UBRDeltaTests+Types.swift"; sourceTree = "<group>"; };
 		9B9098821BFBAD2100B3D4F1 /* UBRDelta+Protocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UBRDelta+Protocols.swift"; sourceTree = "<group>"; };
 		9BE032DF1BF291E6006B7F82 /* UBRDelta.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = UBRDelta.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -81,6 +85,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9B162E381BFCFAA7008C0EB1 /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				9B162E391BFCFABD008C0EB1 /* Dwifft.swift */,
+			);
+			name = Libraries;
+			sourceTree = "<group>";
+		};
 		9BE032D51BF291E6006B7F82 = {
 			isa = PBXGroup;
 			children = (
@@ -104,6 +116,7 @@
 		9BE032E11BF291E6006B7F82 /* UBRDelta */ = {
 			isa = PBXGroup;
 			children = (
+				9B162E381BFCFAA7008C0EB1 /* Libraries */,
 				9BE032E41BF291E6006B7F82 /* Info.plist */,
 				9BE032E21BF291E6006B7F82 /* UBRDelta.h */,
 				9BE032F91BF29231006B7F82 /* UBRDelta.swift */,
@@ -280,6 +293,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9BE0331C1BF2978A006B7F82 /* UBRDeltaContent+Protocols.swift in Sources */,
+				9B162E3A1BFCFABD008C0EB1 /* Dwifft.swift in Sources */,
 				9BE032FD1BF29231006B7F82 /* UBRDelta+Types.swift in Sources */,
 				9B9098831BFBAD2100B3D4F1 /* UBRDelta+Protocols.swift in Sources */,
 				9BE032FC1BF29231006B7F82 /* UBRDelta.swift in Sources */,
@@ -294,6 +308,7 @@
 				9B90987C1BFBAC4600B3D4F1 /* UBRDelta.swift in Sources */,
 				9B90987D1BFBAC4600B3D4F1 /* UBRDelta+Types.swift in Sources */,
 				9B9098811BFBACBA00B3D4F1 /* UBRDeltaTests+Types.swift in Sources */,
+				9B162E3D1BFCFCEE008C0EB1 /* Dwifft.swift in Sources */,
 				9B9098841BFBCC5500B3D4F1 /* UBRDelta+Protocols.swift in Sources */,
 				9B90987E1BFBAC4600B3D4F1 /* UBRDeltaContent.swift in Sources */,
 				9BE032EF1BF291E6006B7F82 /* UBRDeltaTests.swift in Sources */,
@@ -308,6 +323,7 @@
 				9B9098851BFBCC5A00B3D4F1 /* UBRDelta+Protocols.swift in Sources */,
 				9BE0330D1BF29286006B7F82 /* UBRDelta+Types.swift in Sources */,
 				9BE0330C1BF29286006B7F82 /* UBRDelta.swift in Sources */,
+				9B162E3C1BFCFABD008C0EB1 /* Dwifft.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
