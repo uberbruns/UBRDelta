@@ -172,4 +172,18 @@ class UBRDeltaTests: XCTestCase {
     }
 
     
+    func testMixed() {
+        var janeway2 = janeway
+        janeway2.ships.append("Delta Flyer")
+        do {
+            let result = diff(old: [picard, sisko, janeway], new: [kirk, janeway2, picard])
+            XCTAssertEqual(result.reloadIndexMap, [2:1], "Reload one item")
+            XCTAssertEqual(result.insertionIndexes, [0], "Insert one item")
+            XCTAssertEqual(result.deletionIndexes, [1], "Insert one item")
+            XCTAssertEqual(result.unmovedItems.flatMap({ $0 as? Captain }), [kirk, picard, janeway2], "Unmoved state")
+            XCTAssertEqual(result.moveIndexMap, [1:2], "Move one item")
+        }
+    }
+
+    
 }

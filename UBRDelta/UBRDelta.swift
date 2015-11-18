@@ -18,7 +18,8 @@ public struct UBRDelta {
         var reloadIndexMap = [Int:Int]()
         var moveIndexMap = [Int:Int]()
         
-        // Diffing Vars
+        
+        // Diffing
         var oldIDs = [Int]()
         var newIDs = [Int]()
         var oldIDMap = [Int:Int]()
