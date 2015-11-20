@@ -10,7 +10,7 @@ import XCTest
 @testable import UBRDelta
 
 class UBRDeltaTests: XCTestCase {
-
+    
     let diff = UBRDelta.diff
     let kirk = Captain(name: "James T. Kirk", ships: ["USS Enterprise", "USS Enterprise-A"], fistFights: Int.max)
     let picard = Captain(name: "Jean-Luc Picard", ships: ["USS Stargazer", "USS Enterprise-D", "USS Enterprise-E"], fistFights: 8)
@@ -24,12 +24,12 @@ class UBRDeltaTests: XCTestCase {
     override func tearDown() {
         super.tearDown()
     }
-   
+    
     func testNothingItem() {
         do {
             let result = diff(old: [kirk, picard, sisko, janeway], new: [kirk, picard, sisko, janeway])
             XCTAssertEqual(result.insertionIndexes, [], "Nothing Inserted")
-            XCTAssertEqual(result.deletionIndexes, [], "Nothing Deleted")
+            XCTAssertEqual(result.insertionIndexes, [], "Nothing Deleted")
         }
     }
     
@@ -39,7 +39,7 @@ class UBRDeltaTests: XCTestCase {
             let result = diff(old: [kirk, picard], new: [sisko, kirk, picard])
             XCTAssertEqual(result.insertionIndexes, [0], "Insert one item at index 0")
         }
-
+        
         do {
             let result = diff(old: [kirk, picard], new: [kirk, sisko, picard])
             XCTAssertEqual(result.insertionIndexes, [1], "Insert one item at index 1")
@@ -50,7 +50,7 @@ class UBRDeltaTests: XCTestCase {
             XCTAssertEqual(result.insertionIndexes, [2], "Insert one item at index 2")
         }
     }
-
+    
     
     func testInsertMultipleItem() {
         do {
@@ -66,7 +66,7 @@ class UBRDeltaTests: XCTestCase {
             XCTAssertEqual(result.insertionIndexes, [0,2], "Insert two items at index 0 and 1")
         }
     }
-
+    
     
     func testDeleteOneItem() {
         do {
@@ -82,7 +82,7 @@ class UBRDeltaTests: XCTestCase {
             XCTAssertEqual(result.deletionIndexes, [3], "Delete one item at index 3")
         }
     }
-
+    
     
     func testDeleteMultipleItem() {
         do {
@@ -120,7 +120,7 @@ class UBRDeltaTests: XCTestCase {
             XCTAssertEqual(result.insertionIndexes, [0,1], "Insert one item at index 2")
         }
     }
-
+    
     
     func testUnmovedArray() {
         do {
@@ -140,7 +140,7 @@ class UBRDeltaTests: XCTestCase {
             XCTAssertEqual(result.unmovedItems.flatMap({ $0 as? Captain }), [sisko, kirk, janeway], "Not Moving with Insertion and deletion")
         }
     }
-
+    
     
     func testMoveOneItem() {
         do {
@@ -156,8 +156,8 @@ class UBRDeltaTests: XCTestCase {
             XCTAssertEqual(result.moveIndexMap, [0:3, 1:2, 2:1], "Flip")
         }
     }
-
-
+    
+    
     func testReloadItems() {
         var janeway2 = janeway
         janeway2.ships.append("Delta Flyer")
@@ -170,7 +170,7 @@ class UBRDeltaTests: XCTestCase {
             XCTAssertEqual(result.reloadIndexMap, [3:1], "Reload one item at index 3 that ends up being at index 1")
         }
     }
-
+    
     
     func testMixed() {
         var janeway2 = janeway
@@ -180,10 +180,96 @@ class UBRDeltaTests: XCTestCase {
             XCTAssertEqual(result.reloadIndexMap, [2:1], "Reload one item")
             XCTAssertEqual(result.insertionIndexes, [0], "Insert one item")
             XCTAssertEqual(result.deletionIndexes, [1], "Insert one item")
-            XCTAssertEqual(result.unmovedItems.flatMap({ $0 as? Captain }), [kirk, picard, janeway2], "Unmoved state")
+            XCTAssertEqual(result.unmovedItems.flatMap({ $0 as? Captain }).map({ $0.name }), [kirk, picard, janeway2].map({ $0.name }), "Unmoved state")
             XCTAssertEqual(result.moveIndexMap, [1:2], "Move one item")
         }
     }
+    
+    
+    func testDynamic() {
+        
+        for _ in 0..<64 {
+            
+            // Create Original Array
+            let oldCaptains = (0..<256).map { num in Captain(name: "\(num+10)", ships: ["USS Enterprise-\(num)"], fistFights: num) }
+            
+            // Create Changed Array
+            var newCaptains = [Captain]()
+            var moving = [Captain]()
+            
+            for (index, captain) in oldCaptains.enumerate() {
+                if arc4random_uniform(8) == 0 {
+                    // Delete
+                } else if arc4random_uniform(8) == 0 {
+                    let num = oldCaptains.count + index
+                    let newCaptian = Captain(name: "name\(num)", ships: ["USS Enterprise-\(num)"], fistFights: num)
+                    newCaptains.append(newCaptian)
+                    newCaptains.append(captain)
+                } else if arc4random_uniform(8) == 0 {
+                    var newCaptian = captain
+                    newCaptian.fistFights += 1
+                    newCaptains.append(newCaptian)
+                } else if arc4random_uniform(8) == 0 {
+                    moving.append(captain)
+                } else {
+                    newCaptains.append(captain)
+                }
+            }
+            
+            // Move
+            for captain in moving {
+                let randIndex = Int(arc4random_uniform(UInt32(newCaptains.count)))
+                newCaptains.insert(captain, atIndex: randIndex)
+            }
+            
+            
+            // Diff Captains
+            var result: ComparisonResult? = nil
+            result = self.diff(old: oldCaptains.map({ $0 as ComparableItem }), new: newCaptains.map({ $0 as ComparableItem }))
+            
+            
+            // Apply comparisen result to oldCaptians
+            // Expectation is that the changed oldCaptains in the end equals newCaptians
+            var unmovedCaptainsRef = [Captain]()
+            
+            if let result = result {
+                
+                // Apply Deletes and Reloads
+                let deletionSet = Set(result.deletionIndexes)
+                for (index, captain) in oldCaptains.enumerate() where !deletionSet.contains(index) {
+                    if let newIndex = result.reloadIndexMap[index] {
+                        unmovedCaptainsRef.append(newCaptains[newIndex])
+                    } else  {
+                        unmovedCaptainsRef.append(captain)
+                    }
+                }
+                
+                // Apply Inserts
+                for index in result.insertionIndexes.sort(<) {
+                    unmovedCaptainsRef.insert(newCaptains[index], atIndex: index)
+                }
 
+                // Move Items
+                var newCaptainsRef = [Captain]()
+                for (oldIndex, captain) in unmovedCaptainsRef.enumerate() {
+                    if result.moveIndexMap[oldIndex] == nil {
+                        newCaptainsRef.append(captain)
+                    }
+                }
+                
+                for (_, to) in result.moveIndexMap.sort({ $0.1 < $1.1 }) {
+                    let item = newCaptains[to]
+                    newCaptainsRef.insert(item, atIndex: min(to, newCaptainsRef.count))
+                }
+                
+                // Test
+                let unmovedCaptians = result.unmovedItems.flatMap({ $0 as? Captain })
+                XCTAssertEqual(unmovedCaptians, unmovedCaptainsRef, "Dynamic test of unmoved items")
+                XCTAssertEqual(newCaptains, newCaptainsRef, "Dynamic test of final items")
+            }
+            
+        }
+
+    }
     
 }

@@ -1,5 +1,5 @@
 //
-//  CompareTools.swift
+//  UBRDelta.swift
 //
 //  Created by Karsten Bruns on 26/08/15.
 //  Copyright © 2015 bruns.me. All rights reserved.
@@ -17,11 +17,12 @@ public struct UBRDelta {
         var deletionIndexes = [Int]()
         var reloadIndexMap = [Int:Int]()
         var moveIndexMap = [Int:Int]()
-        
+        var unmovedItems = [ComparableItem]()
         
         // Diffing
         var oldIDs = [Int]()
         var newIDs = [Int]()
+        var unmIDs = [Int]()
         var oldIDMap = [Int:Int]()
         var newIDMap = [Int:Int]()
         var unmIDMap = [Int:Int]()
@@ -33,14 +34,32 @@ public struct UBRDelta {
             oldIDs.append(id)
             oldIDMap[id] = oldIndex
         }
-        
+
         for (newIndex, newItem) in newItems.enumerate() {
-            let id = newItem.uniqueIdentifier
-            newIDs.append(id)
-            newIDMap[id] = newIndex
+            let newId = newItem.uniqueIdentifier
+            newIDs.append(newId)
+            newIDMap[newId] = newIndex
+        }
+        
+        
+        for oldID in oldIDs where newIDMap[oldID] == nil {
+            let oldIndex = oldIDMap[oldID]!
+            deletionIndexes.append(oldIndex)
+        }
+        
+        unmovedItems = newItems.filter({ oldIDMap[$0.uniqueIdentifier] != nil }).sort({ a, b in
+            let indexA = oldIDMap[a.uniqueIdentifier]!
+            let indexB = oldIDMap[b.uniqueIdentifier]!
+            return indexA < indexB
+        })
+        
+        for newId in newIDs {
+            
+            let newIndex = newIDMap[newId]!
+            let newItem = newItems[newIndex]
             
             // Looking for Changes
-            if let oldIndex = oldIDMap[id] {
+            if let oldIndex = oldIDMap[newId] {
                 let oldItem = oldItems[oldIndex]
                 switch oldItem.compareTo(newItem) {
                 case .Changed(_) :
@@ -48,43 +67,40 @@ public struct UBRDelta {
                 default:
                     break
                 }
+            } else {
+                insertionIndexes.append(newIndex)
+                unmovedItems.insert(newItem, atIndex: newIndex)
             }
+            
         }
         
+
         
-        // Unmoved Items: New items on old positions
-        let unmovedItems = newItems.sort({ a, b in
-            let indexA = oldIDMap[a.uniqueIdentifier] ?? newIDMap[a.uniqueIdentifier]
-            let indexB = oldIDMap[b.uniqueIdentifier] ?? newIDMap[b.uniqueIdentifier]
-            return indexA < indexB
-        })
         
-        for (index, movedItem) in unmovedItems.enumerate() {
-            let id = movedItem.uniqueIdentifier
-            unmIDMap[id] = index
+
+        
+        for (unmIndex, unmItem) in unmovedItems.enumerate() {
+            let id = unmItem.uniqueIdentifier
+            unmIDs.append(id)
+            unmIDMap[id] = unmIndex
         }
+
+
         
-        
-        // Diff
-        let diffResult = DiffArray<Int>.diff(oldIDs, newIDs)
+        // Move
+        let diffResult = DiffArray<Int>.diff(unmIDs, newIDs)
         for diffStep in diffResult.results.sort({ $0.index < $1.index }) {
             switch diffStep {
-            case .Insert(let index, let id) :
-                if oldIDMap[id] == nil {
-                    insertionIndexes.append(index)
-                } else {
-                    let unmIndex = unmIDMap[id]!
-                    let newIndex = newIDMap[id]!
-                    moveIndexMap[unmIndex] = newIndex
-                }
-            case .Delete(let index, let id) :
-                if newIDMap[id] == nil {
-                    deletionIndexes.append(index)
-                }
+            case .Delete(_, let id) :
+                let unmIndex = unmIDMap[id]!
+                let newIndex = newIDMap[id]!
+                moveIndexMap[unmIndex] = newIndex
+            default :
+                break
             }
         }
-        
-        
+
+
         // Bundle result
         let comparisonResult = ComparisonResult(
             insertionIndexes: insertionIndexes,
