@@ -52,6 +52,7 @@ public struct UBRDelta {
                 let oldItem = oldItems[oldIndex]
                 if oldItem.compareTo(newItem).isChanged {
                     // Found change
+                    // FIXME: Reload Index needs to be [unmovedIndex:newIndex]
                     reloadIndexMap[oldIndex] = newIndex
                 }
             } else {

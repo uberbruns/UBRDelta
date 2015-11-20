@@ -198,18 +198,19 @@ class UBRDeltaTests: XCTestCase {
             var moving = [Captain]()
             
             for (index, captain) in oldCaptains.enumerate() {
-                if arc4random_uniform(8) == 0 {
+                let rand = arc4random_uniform(8)
+                if rand == 0 {
                     // Delete
-                } else if arc4random_uniform(8) == 0 {
+                } else if rand == 1 {
                     let num = oldCaptains.count + index
                     let newCaptian = Captain(name: "name\(num)", ships: ["USS Enterprise-\(num)"], fistFights: num)
                     newCaptains.append(newCaptian)
                     newCaptains.append(captain)
-                } else if arc4random_uniform(8) == 0 {
+                } else if rand == 2 {
                     var newCaptian = captain
                     newCaptian.fistFights += 1
                     newCaptains.append(newCaptian)
-                } else if arc4random_uniform(8) == 0 {
+                } else if rand == 3 {
                     moving.append(captain)
                 } else {
                     newCaptains.append(captain)
@@ -235,16 +236,19 @@ class UBRDeltaTests: XCTestCase {
                 // Apply Deletes and Reloads
                 let deletionSet = Set(result.deletionIndexes)
                 for (index, captain) in oldCaptains.enumerate() where !deletionSet.contains(index) {
-                    if let newIndex = result.reloadIndexMap[index] {
-                        unmovedCaptainsRef.append(newCaptains[newIndex])
-                    } else  {
-                        unmovedCaptainsRef.append(captain)
-                    }
+                    unmovedCaptainsRef.append(captain)
                 }
                 
                 // Apply Inserts
                 for index in result.insertionIndexes {
                     unmovedCaptainsRef.insert(newCaptains[index], atIndex: index)
+                }
+                
+                for (unmIndex, newIndex) in result.reloadIndexMap {
+                    let a = unmovedCaptainsRef[unmIndex]
+                    let b = newCaptains[newIndex]
+                    unmovedCaptainsRef[unmIndex] = b
+                    XCTAssertEqual(a.uniqueIdentifier, b.uniqueIdentifier, "Reloading same item")
                 }
                 
                 // Move Items
