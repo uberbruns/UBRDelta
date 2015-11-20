@@ -222,14 +222,12 @@ class UBRDeltaTests: XCTestCase {
                 newCaptains.insert(captain, atIndex: randIndex)
             }
             
-            
             // Diff Captains
             var result: ComparisonResult? = nil
             result = self.diff(old: oldCaptains.map({ $0 as ComparableItem }), new: newCaptains.map({ $0 as ComparableItem }))
             
-            
-            // Apply comparisen result to oldCaptians
-            // Expectation is that the changed oldCaptains in the end equals newCaptians
+            // Apply comparison result to oldCaptians
+            // Expectation is that the changed `oldCaptains` in the end equals `newCaptians`
             var unmovedCaptainsRef = [Captain]()
             
             if let result = result {
@@ -245,7 +243,7 @@ class UBRDeltaTests: XCTestCase {
                 }
                 
                 // Apply Inserts
-                for index in result.insertionIndexes.sort(<) {
+                for index in result.insertionIndexes {
                     unmovedCaptainsRef.insert(newCaptains[index], atIndex: index)
                 }
 
@@ -259,7 +257,7 @@ class UBRDeltaTests: XCTestCase {
                 
                 for (_, to) in result.moveIndexMap.sort({ $0.1 < $1.1 }) {
                     let item = newCaptains[to]
-                    newCaptainsRef.insert(item, atIndex: min(to, newCaptainsRef.count))
+                    newCaptainsRef.insert(item, atIndex: to)
                 }
                 
                 // Test

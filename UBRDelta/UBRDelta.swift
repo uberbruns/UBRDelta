@@ -20,7 +20,6 @@ public struct UBRDelta {
         var unmovedItems = [ComparableItem]()
         
         // Diffing
-        var oldIDs = [Int]()
         var newIDs = [Int]()
         var oldIDMap = [Int:Int]()
         var newIDMap = [Int:Int]()
@@ -37,7 +36,6 @@ public struct UBRDelta {
         // - Search for deletions
         for (oldIndex, oldItem) in oldItems.enumerate() {
             let oldId = oldItem.uniqueIdentifier
-            oldIDs.append(oldId)
             oldIDMap[oldId] = oldIndex
             if let newIndex = newIDMap[oldId] {
                 let newItem = newItems[newIndex]
@@ -48,11 +46,9 @@ public struct UBRDelta {
         }
         
         // Search for insertions and updates
-        for newId in newIDs {
-            let newIndex = newIDMap[newId]!
-            let newItem = newItems[newIndex]
+        for (newIndex, newItem) in newItems.enumerate() {
             // Looking for changes
-            if let oldIndex = oldIDMap[newId] {
+            if let oldIndex = oldIDMap[newItem.uniqueIdentifier] {
                 let oldItem = oldItems[oldIndex]
                 if oldItem.compareTo(newItem).isChanged {
                     // Found change
@@ -68,7 +64,7 @@ public struct UBRDelta {
         
         // Detect moving items
         let diffResult = DiffArray<Int>.diff(unmovedItems.map({ $0.uniqueIdentifier }), newIDs)
-        for diffStep in diffResult.results.sort({ $0.index < $1.index }) {
+        for diffStep in diffResult.results {
             switch diffStep {
             case .Delete(let unmIndex, let id) :
                 let newIndex = newIDMap[id]!
