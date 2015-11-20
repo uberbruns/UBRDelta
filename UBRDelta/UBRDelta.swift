@@ -12,7 +12,7 @@ public struct UBRDelta {
     
     public static func diff(old oldItems: [ComparableItem], new newItems: [ComparableItem]) -> ComparisonResult
     {
-        // Return Vars
+        // Init return vars
         var insertionIndexes = [Int]()
         var deletionIndexes = [Int]()
         var reloadIndexMap = [Int:Int]()
@@ -22,85 +22,62 @@ public struct UBRDelta {
         // Diffing
         var oldIDs = [Int]()
         var newIDs = [Int]()
-        var unmIDs = [Int]()
         var oldIDMap = [Int:Int]()
         var newIDMap = [Int:Int]()
-        var unmIDMap = [Int:Int]()
         
-        
-        // Prepare
-        for (oldIndex, oldItem) in oldItems.enumerate() {
-            let id = oldItem.uniqueIdentifier
-            oldIDs.append(id)
-            oldIDMap[id] = oldIndex
-        }
-
+        // Prepare mapping vars for new items
         for (newIndex, newItem) in newItems.enumerate() {
             let newId = newItem.uniqueIdentifier
             newIDs.append(newId)
             newIDMap[newId] = newIndex
         }
         
-        
-        for oldID in oldIDs where newIDMap[oldID] == nil {
-            let oldIndex = oldIDMap[oldID]!
-            deletionIndexes.append(oldIndex)
+        // - Prepare mapping vars for old items
+        // - Create the unmoved array
+        // - Search for deletions
+        for (oldIndex, oldItem) in oldItems.enumerate() {
+            let oldId = oldItem.uniqueIdentifier
+            oldIDs.append(oldId)
+            oldIDMap[oldId] = oldIndex
+            if let newIndex = newIDMap[oldId] {
+                let newItem = newItems[newIndex]
+                unmovedItems.append(newItem)
+            } else {
+                deletionIndexes.append(oldIndex)
+            }
         }
         
-        unmovedItems = newItems.filter({ oldIDMap[$0.uniqueIdentifier] != nil }).sort({ a, b in
-            let indexA = oldIDMap[a.uniqueIdentifier]!
-            let indexB = oldIDMap[b.uniqueIdentifier]!
-            return indexA < indexB
-        })
-        
+        // Search for insertions and updates
         for newId in newIDs {
-            
             let newIndex = newIDMap[newId]!
             let newItem = newItems[newIndex]
-            
-            // Looking for Changes
+            // Looking for changes
             if let oldIndex = oldIDMap[newId] {
                 let oldItem = oldItems[oldIndex]
-                switch oldItem.compareTo(newItem) {
-                case .Changed(_) :
+                if oldItem.compareTo(newItem).isChanged {
+                    // Found change
                     reloadIndexMap[oldIndex] = newIndex
-                default:
-                    break
                 }
             } else {
+                // Found insertion
                 insertionIndexes.append(newIndex)
                 unmovedItems.insert(newItem, atIndex: newIndex)
             }
             
         }
         
-
-        
-        
-
-        
-        for (unmIndex, unmItem) in unmovedItems.enumerate() {
-            let id = unmItem.uniqueIdentifier
-            unmIDs.append(id)
-            unmIDMap[id] = unmIndex
-        }
-
-
-        
-        // Move
-        let diffResult = DiffArray<Int>.diff(unmIDs, newIDs)
+        // Detect moving items
+        let diffResult = DiffArray<Int>.diff(unmovedItems.map({ $0.uniqueIdentifier }), newIDs)
         for diffStep in diffResult.results.sort({ $0.index < $1.index }) {
             switch diffStep {
-            case .Delete(_, let id) :
-                let unmIndex = unmIDMap[id]!
+            case .Delete(let unmIndex, let id) :
                 let newIndex = newIDMap[id]!
                 moveIndexMap[unmIndex] = newIndex
             default :
                 break
             }
         }
-
-
+        
         // Bundle result
         let comparisonResult = ComparisonResult(
             insertionIndexes: insertionIndexes,

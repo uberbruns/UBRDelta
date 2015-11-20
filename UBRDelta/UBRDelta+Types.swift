@@ -13,15 +13,25 @@ public typealias ComparisonChanges = [String:Bool]
 
 public enum ComparisonLevel {
     
-    case Different, Same, Changed(ComparisonChanges)
+    case Same, Different, Changed(ComparisonChanges)
     
     public var hasSameIdentifier: Bool {
-        
         switch self {
-        case .Different :
-            return false
         case .Same :
             return true
+        case .Different :
+            return false
+        case .Changed(_) :
+            return true
+        }
+    }
+    
+    public var isChanged: Bool {
+        switch self {
+        case .Same :
+            return false
+        case .Different :
+            return false
         case .Changed(_) :
             return true
         }
