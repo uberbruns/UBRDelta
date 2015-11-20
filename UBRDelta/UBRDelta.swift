@@ -59,7 +59,6 @@ public struct UBRDelta {
                 insertionIndexes.append(newIndex)
                 unmovedItems.insert(newItem, atIndex: newIndex)
             }
-            
         }
         
         // Detect moving items
