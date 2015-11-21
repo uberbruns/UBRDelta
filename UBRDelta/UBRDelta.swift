@@ -70,9 +70,8 @@ public struct UBRDelta {
         for (unmIndex, unmItem) in unmovedItems.enumerate() {
             let id = unmItem.uniqueIdentifier
             if reloadIDs.contains(id) {
-                if let oldIndex = oldIDMap[id] {
-                    reloadIndexMap[oldIndex] = unmIndex
-                }
+                let oldIndex = oldIDMap[id]!
+                reloadIndexMap[oldIndex] = unmIndex
             }
         }
         

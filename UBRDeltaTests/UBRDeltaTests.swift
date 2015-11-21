@@ -188,28 +188,34 @@ class UBRDeltaTests: XCTestCase {
     
     func testDynamic() {
         
-        for _ in 0..<64 {
+        for _ in 0..<256 {
             
             // Create Original Array
-            let oldCaptains = (0..<256).map { num in Captain(name: "\(num+10)", ships: ["USS Enterprise-\(num)"], fistFights: num) }
+            let oldCaptains = (0..<512).map { num in Captain(name: "\(num+10)", ships: ["USS Enterprise-\(num)"], fistFights: num) }
             
             // Create Changed Array
             var newCaptains = [Captain]()
             var moving = [Captain]()
             
+            var deletions = 0
+            var insertions = 0
+            var changes = 0
+            
             for (index, captain) in oldCaptains.enumerate() {
                 let rand = arc4random_uniform(8)
                 if rand == 0 {
-                    // Delete
+                    deletions++
                 } else if rand == 1 {
                     let num = oldCaptains.count + index
                     let newCaptian = Captain(name: "name\(num)", ships: ["USS Enterprise-\(num)"], fistFights: num)
                     newCaptains.append(newCaptian)
                     newCaptains.append(captain)
+                    insertions++
                 } else if rand == 2 {
                     var newCaptian = captain
                     newCaptian.fistFights += 1
                     newCaptains.append(newCaptian)
+                    changes++
                 } else if rand == 3 {
                     moving.append(captain)
                 } else {
@@ -224,52 +230,51 @@ class UBRDeltaTests: XCTestCase {
             }
             
             // Diff Captains
-            var result: ComparisonResult? = nil
-            result = self.diff(old: oldCaptains.map({ $0 as ComparableItem }), new: newCaptains.map({ $0 as ComparableItem }))
+            let result = self.diff(old: oldCaptains.map({ $0 as ComparableItem }), new: newCaptains.map({ $0 as ComparableItem }))
             
             // Apply comparison result to oldCaptians
             // Expectation is that the changed `oldCaptains` in the end equals `newCaptians`
             var unmovedCaptainsRef = [Captain]()
             
-            if let result = result {
-                
-                // Apply Deletes and Reloads
-                let deletionSet = Set(result.deletionIndexes)
-                for (index, captain) in oldCaptains.enumerate() where !deletionSet.contains(index) {
-                    unmovedCaptainsRef.append(captain)
-                }
-                
-                // Apply Inserts
-                for index in result.insertionIndexes {
-                    unmovedCaptainsRef.insert(newCaptains[index], atIndex: index)
-                }
-                
-                // Apply Reloads
-                for (oldIndex, unmIndex) in result.reloadIndexMap {
-                    let a = oldCaptains[oldIndex]
-                    let b = result.unmovedItems[unmIndex] as! Captain
-                    unmovedCaptainsRef[unmIndex] = b
-                    XCTAssertEqual(a.uniqueIdentifier, b.uniqueIdentifier, "Reloading same item")
-                }
-                
-                // Move Items
-                var newCaptainsRef = [Captain]()
-                for (oldIndex, captain) in unmovedCaptainsRef.enumerate() {
-                    if result.moveIndexMap[oldIndex] == nil {
-                        newCaptainsRef.append(captain)
-                    }
-                }
-                
-                for (_, to) in result.moveIndexMap.sort({ $0.1 < $1.1 }) {
-                    let item = newCaptains[to]
-                    newCaptainsRef.insert(item, atIndex: to)
-                }
-                
-                // Test
-                let unmovedCaptians = result.unmovedItems.flatMap({ $0 as? Captain })
-                XCTAssertEqual(unmovedCaptians, unmovedCaptainsRef, "Dynamic test of unmoved items")
-                XCTAssertEqual(newCaptains, newCaptainsRef, "Dynamic test of final items")
+            // Apply Deletes and Reloads
+            let deletionSet = Set(result.deletionIndexes)
+            for (index, captain) in oldCaptains.enumerate() where !deletionSet.contains(index) {
+                unmovedCaptainsRef.append(captain)
             }
+            
+            // Apply Inserts
+            for index in result.insertionIndexes {
+                unmovedCaptainsRef.insert(newCaptains[index], atIndex: index)
+            }
+            
+            // Apply Reloads
+            for (oldIndex, unmIndex) in result.reloadIndexMap {
+                let a = oldCaptains[oldIndex]
+                let b = result.unmovedItems[unmIndex] as! Captain
+                unmovedCaptainsRef[unmIndex] = b
+                XCTAssertEqual(a.uniqueIdentifier, b.uniqueIdentifier, "Reloading same item")
+            }
+            
+            // Move Items
+            var newCaptainsRef = [Captain]()
+            for (oldIndex, captain) in unmovedCaptainsRef.enumerate() {
+                if result.moveIndexMap[oldIndex] == nil {
+                    newCaptainsRef.append(captain)
+                }
+            }
+            
+            for (_, to) in result.moveIndexMap.sort({ $0.1 < $1.1 }) {
+                let item = newCaptains[to]
+                newCaptainsRef.insert(item, atIndex: to)
+            }
+            
+            // Test
+            let unmovedCaptians = result.unmovedItems.flatMap({ $0 as? Captain })
+            XCTAssertEqual(insertions, result.insertionIndexes.count, "Insertions")
+            XCTAssertEqual(deletions, result.deletionIndexes.count, "Deletions")
+            XCTAssertEqual(changes, result.reloadIndexMap.count, "Changes")
+            XCTAssertEqual(unmovedCaptians, unmovedCaptainsRef, "Dynamic test of unmoved items")
+            XCTAssertEqual(newCaptains, newCaptainsRef, "Dynamic test of final items")
             
         }
         
@@ -279,7 +284,7 @@ class UBRDeltaTests: XCTestCase {
     func testMeasure() {
         
         // Create Original Array
-        let oldCaptains = (0..<512).map { num in Captain(name: "\(num+10)", ships: ["USS Enterprise-\(num)"], fistFights: num) }
+        let oldCaptains = (0..<192).map { num in Captain(name: "\(num+10)", ships: ["USS Enterprise-\(num)"], fistFights: num) }
         
         // Create Changed Array
         var newCaptains = [Captain]()
