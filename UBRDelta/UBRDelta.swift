@@ -21,6 +21,8 @@ public struct UBRDelta {
         
         // Diffing
         var newIDs = [Int]()
+        var unmIDs = [Int]()
+        var reloadIDs = Set<Int>()
         var oldIDMap = [Int:Int]()
         var newIDMap = [Int:Int]()
         
@@ -35,11 +37,12 @@ public struct UBRDelta {
         // - Create the unmoved array
         // - Search for deletions
         for (oldIndex, oldItem) in oldItems.enumerate() {
-            let oldId = oldItem.uniqueIdentifier
-            oldIDMap[oldId] = oldIndex
-            if let newIndex = newIDMap[oldId] {
+            let id = oldItem.uniqueIdentifier
+            oldIDMap[id] = oldIndex
+            if let newIndex = newIDMap[id] {
                 let newItem = newItems[newIndex]
                 unmovedItems.append(newItem)
+                unmIDs.append(id)
             } else {
                 deletionIndexes.append(oldIndex)
             }
@@ -48,22 +51,33 @@ public struct UBRDelta {
         // Search for insertions and updates
         for (newIndex, newItem) in newItems.enumerate() {
             // Looking for changes
-            if let oldIndex = oldIDMap[newItem.uniqueIdentifier] {
+            let id = newItem.uniqueIdentifier
+            if let oldIndex = oldIDMap[id] {
                 let oldItem = oldItems[oldIndex]
                 if oldItem.compareTo(newItem).isChanged {
                     // Found change
-                    // FIXME: Reload Index needs to be [unmovedIndex:newIndex]
-                    reloadIndexMap[oldIndex] = newIndex
+                    reloadIDs.insert(id)
                 }
             } else {
                 // Found insertion
                 insertionIndexes.append(newIndex)
                 unmovedItems.insert(newItem, atIndex: newIndex)
+                unmIDs.insert(id, atIndex: newIndex)
+            }
+        }
+        
+        // Reload
+        for (unmIndex, unmItem) in unmovedItems.enumerate() {
+            let id = unmItem.uniqueIdentifier
+            if reloadIDs.contains(id) {
+                if let oldIndex = oldIDMap[id] {
+                    reloadIndexMap[oldIndex] = unmIndex
+                }
             }
         }
         
         // Detect moving items
-        let diffResult = DiffArray<Int>.diff(unmovedItems.map({ $0.uniqueIdentifier }), newIDs)
+        let diffResult = DiffArray<Int>.diff(unmIDs, newIDs)
         for diffStep in diffResult.results {
             switch diffStep {
             case .Delete(let unmIndex, let id) :
