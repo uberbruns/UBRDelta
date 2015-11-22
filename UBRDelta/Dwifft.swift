@@ -42,15 +42,7 @@ internal func +<T> (left: Diff<T>, right: DiffStep<T>) -> Diff<T> {
 internal enum DiffStep<T> : CustomDebugStringConvertible {
     case Insert(Int, T)
     case Delete(Int, T)
-    var isInsertion: Bool {
-        switch(self) {
-        case .Insert:
-            return true
-        case .Delete:
-            return false
-        }
-    }
-    internal var debugDescription: String {
+    var debugDescription: String {
         switch(self) {
         case .Insert(let i, let j):
             return "+\(j)@\(i)"
@@ -58,29 +50,13 @@ internal enum DiffStep<T> : CustomDebugStringConvertible {
             return "-\(j)@\(i)"
         }
     }
-    var index: Int {
-        switch(self) {
-        case .Insert(let i, _):
-            return i
-        case .Delete(let i, _):
-            return i
-        }
-    }
-    var value: T {
-        switch(self) {
-        case .Insert(let j):
-            return j.1
-        case .Delete(let j):
-            return j.1
-        }
-    }
 }
 
 internal struct DiffArray<Element: Equatable> {
     
     /// Returns the sequence of ArrayDiffResults required to transform one array into another.
-    internal static func diff(arrayA: [Element], _ arrayB: [Element]) -> Diff<Element> {
-        let table = MemoizedSequenceComparison.buildTable(arrayA, arrayB, arrayA.count, arrayB.count)
+    static func diff(arrayA: [Element], _ arrayB: [Element]) -> Diff<Element> {
+        let table = DiffArray.buildTable(arrayA, arrayB, arrayA.count, arrayB.count)
         return DiffArray.diffFromIndices(table, arrayA, arrayB, arrayA.count, arrayB.count)
     }
     
@@ -100,11 +76,8 @@ internal struct DiffArray<Element: Equatable> {
             return diffFromIndices(table, x, y, i-1, j-1)
         }
     }
-        
-}
-
-internal struct MemoizedSequenceComparison<T: Equatable> {
-    static func buildTable(x: [T], _ y: [T], _ n: Int, _ m: Int) -> [[Int]] {
+    
+    private static func buildTable(x: [Element], _ y: [Element], _ n: Int, _ m: Int) -> [[Int]] {
         var table = Array(count: n + 1, repeatedValue: Array(count: m + 1, repeatedValue: 0))
         for i in 0...n {
             for j in 0...m {

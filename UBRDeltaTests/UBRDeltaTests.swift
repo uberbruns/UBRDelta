@@ -188,10 +188,10 @@ class UBRDeltaTests: XCTestCase {
     
     func testDynamic() {
         
-        for _ in 0..<256 {
+        for _ in 0..<32 {
             
             // Create Original Array
-            let oldCaptains = (0..<512).map { num in Captain(name: "\(num+10)", ships: ["USS Enterprise-\(num)"], fistFights: num) }
+            let oldCaptains = (0..<256).map { num in Captain(name: "\(num+10)", ships: ["USS Enterprise-\(num)"], fistFights: num) }
             
             // Create Changed Array
             var newCaptains = [Captain]()
@@ -284,7 +284,7 @@ class UBRDeltaTests: XCTestCase {
     func testMeasure() {
         
         // Create Original Array
-        let oldCaptains = (0..<192).map { num in Captain(name: "\(num+10)", ships: ["USS Enterprise-\(num)"], fistFights: num) }
+        let oldCaptains = (0..<216).map { num in Captain(name: "\(num+10)", ships: ["USS Enterprise-\(num)"], fistFights: num) }
         
         // Create Changed Array
         var newCaptains = [Captain]()
