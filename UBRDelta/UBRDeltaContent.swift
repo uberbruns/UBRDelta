@@ -89,7 +89,7 @@ public class UBRDeltaContent {
                 
                 let newIndex = newSections.indexOf({ newSection -> Bool in
                     let comparisonLevel = newSection.compareTo(oldSection)
-                    return comparisonLevel.hasSameIdentifier
+                    return comparisonLevel.isSame
                 })
                 
                 if let newIndex = newIndex {

@@ -15,7 +15,7 @@ public enum ComparisonLevel {
     
     case Same, Different, Changed(ComparisonChanges)
     
-    public var hasSameIdentifier: Bool {
+    public var isSame: Bool {
         switch self {
         case .Same :
             return true
