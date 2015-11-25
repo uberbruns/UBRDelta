@@ -24,6 +24,8 @@
 		9B72F0A41C05D1A0008819CF /* UBRDelta.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B72F0A31C05D1A0008819CF /* UBRDelta.framework */; };
 		9B72F0A51C05D1A0008819CF /* UBRDelta.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9B72F0A31C05D1A0008819CF /* UBRDelta.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9B72F0A91C05D1C6008819CF /* AppStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B72F0A81C05D1C6008819CF /* AppStyle.swift */; };
+		9BF54F691C06407F00C472EF /* SwitchItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF54F671C06407F00C472EF /* SwitchItem.swift */; };
+		9BF54F6A1C06407F00C472EF /* SwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BF54F681C06407F00C472EF /* SwitchTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -59,6 +61,8 @@
 		9B72F0841C05D099008819CF /* UITableViewHeaderFooterView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableViewHeaderFooterView+Extensions.swift"; sourceTree = "<group>"; };
 		9B72F0A31C05D1A0008819CF /* UBRDelta.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = UBRDelta.framework; path = "/Users/karstenbruns/Library/Developer/Xcode/DerivedData/UBRDelta-bbrndczabvqiygflnpgxoxaxpxqt/Build/Products/Debug-iphoneos/UBRDelta.framework"; sourceTree = "<absolute>"; };
 		9B72F0A81C05D1C6008819CF /* AppStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppStyle.swift; sourceTree = "<group>"; };
+		9BF54F671C06407F00C472EF /* SwitchItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwitchItem.swift; sourceTree = "<group>"; };
+		9BF54F681C06407F00C472EF /* SwitchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwitchTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +132,8 @@
 				9B453D351C05ED8C00C57B9D /* ColorTableViewCell.swift */,
 				9B453D3A1C06333D00C57B9D /* StaticValueItem.swift */,
 				9B453D3C1C06334F00C57B9D /* StaticValueTableViewCell.swift */,
+				9BF54F671C06407F00C472EF /* SwitchItem.swift */,
+				9BF54F681C06407F00C472EF /* SwitchTableViewCell.swift */,
 			);
 			path = Items;
 			sourceTree = "<group>";
@@ -250,6 +256,7 @@
 			files = (
 				9B0827BB1C04975300414E35 /* CameraView.swift in Sources */,
 				9B453D381C05ED9800C57B9D /* ColorItem.swift in Sources */,
+				9BF54F6A1C06407F00C472EF /* SwitchTableViewCell.swift in Sources */,
 				9B453D361C05ED8C00C57B9D /* ColorTableViewCell.swift in Sources */,
 				9B72F09E1C05D099008819CF /* UITableViewHeaderFooterView+Extensions.swift in Sources */,
 				9B453D3B1C06333D00C57B9D /* StaticValueItem.swift in Sources */,
@@ -258,6 +265,7 @@
 				9B4B29ED1C03B7CE00E609CD /* ColorListViewController.swift in Sources */,
 				9B453D3D1C06334F00C57B9D /* StaticValueTableViewCell.swift in Sources */,
 				9B4B29EB1C03B7CE00E609CD /* AppDelegate.swift in Sources */,
+				9BF54F691C06407F00C472EF /* SwitchItem.swift in Sources */,
 				9B72F0A91C05D1C6008819CF /* AppStyle.swift in Sources */,
 				9B72F09C1C05D099008819CF /* TableViewProtocols.swift in Sources */,
 				9B72F09B1C05D099008819CF /* TableViewController.swift in Sources */,

@@ -20,7 +20,7 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
     let contentDiffer = UBRDeltaContent()
     private var animateViews = true
     
-    let tableView = UITableView()
+    let tableView = UITableView(frame: CGRectZero, style: .Grouped)
     
     
     // MARK: - View -
@@ -71,9 +71,9 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
     func updateAppearance() {
         switch tableView.style {
         case .Grouped :
-            self.view.backgroundColor = UIColor(white: 0.96, alpha: 1.0)
+            tableView.backgroundColor = UIColor(white: 0.96, alpha: 1.0)
         default :
-            self.view.backgroundColor = UIColor(white: 1, alpha: 1.0)
+            tableView.backgroundColor = UIColor(white: 1, alpha: 1.0)
         }
     }
     
@@ -224,6 +224,7 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
     
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
         let item = sections[indexPath.section].items[indexPath.row]
         
         if let tableViewItem = item as? TableViewItem {
@@ -236,6 +237,10 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
             
             if let manipulatingCell = cell as? ManipulatingTableViewCell {
                 manipulatingCell.tableView = tableView
+            }
+            
+            if let selectableItem = item as? SelectableTableViewItem {
+                cell.selectionStyle = selectableItem.selectionHandler != nil ? .Default : .None
             }
 
             return cell
@@ -267,10 +272,13 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
     // MARK: UITableViewDelegate
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
         let item = sections[indexPath.section].items[indexPath.row]
+        
         if let selectableItem = item as? SelectableTableViewItem {
             selectableItem.selectionHandler?()
         }
+        
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
     }
 

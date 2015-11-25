@@ -17,8 +17,9 @@ class StaticValueTableViewCell: UITableViewCell, UpdateableTableViewCell {
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        selectionStyle = .None
         addSubviews()
-        addViewContstraints()
+        addViewConstraints()
     }
     
     
@@ -29,7 +30,6 @@ class StaticValueTableViewCell: UITableViewCell, UpdateableTableViewCell {
     
     func addSubviews() {
         // Title View
-        titleView.backgroundColor = UIColor.blackColor()
         titleView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(titleView)
         
@@ -40,7 +40,7 @@ class StaticValueTableViewCell: UITableViewCell, UpdateableTableViewCell {
     }
     
     
-    func addViewContstraints() {
+    func addViewConstraints() {
         let views = ["titleView": titleView, "valueView": valueView]
         let h = NSLayoutConstraint.constraintsWithVisualFormat("H:|-[titleView]-[valueView]-|", options: [], metrics: nil, views: views)
         let vColorView = NSLayoutConstraint.constraintsWithVisualFormat("V:|-[titleView]-|", options: [], metrics: nil, views: views)

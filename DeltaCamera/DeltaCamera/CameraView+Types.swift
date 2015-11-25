@@ -11,7 +11,7 @@ import UIKit
 
 struct CVColor : Equatable {
     
-    private static let colorReduction: UInt16 = 48
+    private static let colorReduction: UInt16 = 32
     
     let raw: UInt16
     var count: Int = 1

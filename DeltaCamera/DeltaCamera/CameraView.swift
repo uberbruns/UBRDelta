@@ -44,7 +44,7 @@ class CameraView : UIView, AVCaptureVideoDataOutputSampleBufferDelegate {
         let devices: [AVCaptureDevice] = AVCaptureDevice.devices() as! [AVCaptureDevice]
         
         for device in devices {
-            guard device.hasMediaType(AVMediaTypeVideo) && device.supportsAVCaptureSessionPreset(AVCaptureSessionPresetMedium) else { continue }
+            guard device.hasMediaType(AVMediaTypeVideo) && device.supportsAVCaptureSessionPreset(AVCaptureSessionPresetLow) else { continue }
             guard let input = try? AVCaptureDeviceInput(device: device) else { continue }
             guard session.canAddInput(input) else { continue }
             session.addInput(input)
@@ -94,7 +94,7 @@ class CameraView : UIView, AVCaptureVideoDataOutputSampleBufferDelegate {
         var stepLength = (endAddress - sampleAddress) / 8192
         stepLength -= stepLength%kBytesPerPixel
         
-        while sampleAddress < endAddress {
+        while sampleAddress < (endAddress - stepLength) {
             let red = (sampleAddress + 2).memory
             let green = (sampleAddress + 1).memory
             let blue = sampleAddress.memory
@@ -111,7 +111,7 @@ class CameraView : UIView, AVCaptureVideoDataOutputSampleBufferDelegate {
             sampleAddress += stepLength
         }
         
-        let result = colors.filter({ $0.count > 16 }).sort({ $0.count > $1.count })
+        let result = colors.filter({ $0.count > 4 }).sort({ $0.count > $1.count })
         
         let mainQueue = dispatch_get_main_queue()
         dispatch_async(mainQueue) {

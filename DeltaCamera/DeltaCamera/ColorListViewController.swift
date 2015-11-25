@@ -15,6 +15,11 @@ class ColorListViewController: TableViewController, CameraViewDelegate {
 
     let cameraView = CameraView()
     var colors = [CVColor]()
+    var enableColorSampling = false {
+        didSet {
+            cameraView.delegate = enableColorSampling ? self : nil
+        }
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -41,7 +46,6 @@ class ColorListViewController: TableViewController, CameraViewDelegate {
     func addCameraView() {
         cameraView.backgroundColor = UIColor.blackColor()
         cameraView.translatesAutoresizingMaskIntoConstraints = false
-        cameraView.delegate = self
         view.addSubview(cameraView)
 
         let viewsDictionary: [String: AnyObject] = ["cameraView" : cameraView]
@@ -56,16 +60,45 @@ class ColorListViewController: TableViewController, CameraViewDelegate {
     override func prepareReusableTableViewCells() {
         self.reusableCellClasses["Color"] = ColorTableViewCell.self
         self.reusableCellClasses["StaticValue"] = StaticValueTableViewCell.self
+        self.reusableCellClasses["Switch"] = SwitchTableViewCell.self
     }
     
     
     override func generateItems() -> [TableViewSectionItem] {
-        var colorSection = TableViewSectionItem(id: "colorSection", title: nil)
-        colorSection.items = colors.map({ color -> ComparableItem in
-            let item = ColorItem(id: "\(color.raw)", color: color)
-            return item as ComparableItem
+        
+        var sections = [TableViewSectionItem]()
+
+        // Info Section
+        var infoSection = TableViewSectionItem(id: "infoSection", title: "Info")
+        var infoItems = [ComparableItem]()
+        
+        // Enable Color Sampling Switch
+        let switchItem = SwitchItem(id: "sampleColors", title: "Sample Colors", value: enableColorSampling, valueHandler: { (value) -> () in
+            self.enableColorSampling = value
+            self.updateTableView()
         })
-        return [colorSection]
+        infoItems.append(switchItem)
+        
+        // Count Item
+        if enableColorSampling {
+            let countItem = StaticValueItem(id: "count", title: "Color Count", value: "\(colors.count)")
+            infoItems.append(countItem)
+        }
+        
+        infoSection.items = infoItems
+        sections.append(infoSection)
+        
+        // Color Samples
+        if enableColorSampling {
+            var colorSection = TableViewSectionItem(id: "colorSection", title: "Colors")
+            colorSection.items = colors.map({ color -> ComparableItem in
+                let item = ColorItem(id: "\(color.raw)", color: color)
+                return item as ComparableItem
+            })
+            sections.append(colorSection)
+        }
+        
+        return sections
     }
 
     

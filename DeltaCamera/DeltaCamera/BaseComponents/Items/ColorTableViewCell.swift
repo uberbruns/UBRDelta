@@ -18,8 +18,10 @@ class ColorTableViewCell: UITableViewCell, UpdateableTableViewCell {
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        userInteractionEnabled = false
+        selectionStyle = .None
         addSubviews()
-        addViewContstraints()
+        addViewConstraints()
     }
     
     
@@ -41,7 +43,7 @@ class ColorTableViewCell: UITableViewCell, UpdateableTableViewCell {
     }
 
     
-    func addViewContstraints() {
+    func addViewConstraints() {
         let views = ["colorView": colorView, "counterView": counterView]
         let h = NSLayoutConstraint.constraintsWithVisualFormat("H:|-[colorView(40)]-[counterView]-|", options: [], metrics: nil, views: views)
         let vColorView = NSLayoutConstraint.constraintsWithVisualFormat("V:|-[colorView]-|", options: [], metrics: nil, views: views)
