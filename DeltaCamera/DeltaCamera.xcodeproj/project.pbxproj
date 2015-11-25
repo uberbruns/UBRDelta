@@ -1,0 +1,408 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		9B0827BB1C04975300414E35 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0827BA1C04975300414E35 /* CameraView.swift */; };
+		9B453D361C05ED8C00C57B9D /* ColorTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B453D351C05ED8C00C57B9D /* ColorTableViewCell.swift */; };
+		9B453D381C05ED9800C57B9D /* ColorItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B453D371C05ED9800C57B9D /* ColorItem.swift */; };
+		9B453D3B1C06333D00C57B9D /* StaticValueItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B453D3A1C06333D00C57B9D /* StaticValueItem.swift */; };
+		9B453D3D1C06334F00C57B9D /* StaticValueTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B453D3C1C06334F00C57B9D /* StaticValueTableViewCell.swift */; };
+		9B4B29EB1C03B7CE00E609CD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B4B29EA1C03B7CE00E609CD /* AppDelegate.swift */; };
+		9B4B29ED1C03B7CE00E609CD /* ColorListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B4B29EC1C03B7CE00E609CD /* ColorListViewController.swift */; };
+		9B4B29F21C03B7CE00E609CD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9B4B29F11C03B7CE00E609CD /* Assets.xcassets */; };
+		9B4B29F51C03B7CE00E609CD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9B4B29F31C03B7CE00E609CD /* LaunchScreen.storyboard */; };
+		9B72F06A1C05CBA3008819CF /* CameraView+Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B72F0691C05CBA3008819CF /* CameraView+Types.swift */; };
+		9B72F09B1C05D099008819CF /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B72F0811C05D099008819CF /* TableViewController.swift */; };
+		9B72F09C1C05D099008819CF /* TableViewProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B72F0821C05D099008819CF /* TableViewProtocols.swift */; };
+		9B72F09D1C05D099008819CF /* TableViewSectionItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B72F0831C05D099008819CF /* TableViewSectionItem.swift */; };
+		9B72F09E1C05D099008819CF /* UITableViewHeaderFooterView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B72F0841C05D099008819CF /* UITableViewHeaderFooterView+Extensions.swift */; };
+		9B72F0A41C05D1A0008819CF /* UBRDelta.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B72F0A31C05D1A0008819CF /* UBRDelta.framework */; };
+		9B72F0A51C05D1A0008819CF /* UBRDelta.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9B72F0A31C05D1A0008819CF /* UBRDelta.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9B72F0A91C05D1C6008819CF /* AppStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B72F0A81C05D1C6008819CF /* AppStyle.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		9B72F0A61C05D1A0008819CF /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				9B72F0A51C05D1A0008819CF /* UBRDelta.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		9B0827BA1C04975300414E35 /* CameraView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
+		9B453D351C05ED8C00C57B9D /* ColorTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorTableViewCell.swift; sourceTree = "<group>"; };
+		9B453D371C05ED9800C57B9D /* ColorItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorItem.swift; sourceTree = "<group>"; };
+		9B453D3A1C06333D00C57B9D /* StaticValueItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StaticValueItem.swift; sourceTree = "<group>"; };
+		9B453D3C1C06334F00C57B9D /* StaticValueTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StaticValueTableViewCell.swift; sourceTree = "<group>"; };
+		9B4B29E71C03B7CE00E609CD /* DeltaCamera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DeltaCamera.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9B4B29EA1C03B7CE00E609CD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		9B4B29EC1C03B7CE00E609CD /* ColorListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorListViewController.swift; sourceTree = "<group>"; };
+		9B4B29F11C03B7CE00E609CD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		9B4B29F41C03B7CE00E609CD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		9B4B29F61C03B7CE00E609CD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9B72F0691C05CBA3008819CF /* CameraView+Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CameraView+Types.swift"; sourceTree = "<group>"; };
+		9B72F0811C05D099008819CF /* TableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
+		9B72F0821C05D099008819CF /* TableViewProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewProtocols.swift; sourceTree = "<group>"; };
+		9B72F0831C05D099008819CF /* TableViewSectionItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TableViewSectionItem.swift; sourceTree = "<group>"; };
+		9B72F0841C05D099008819CF /* UITableViewHeaderFooterView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UITableViewHeaderFooterView+Extensions.swift"; sourceTree = "<group>"; };
+		9B72F0A31C05D1A0008819CF /* UBRDelta.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = UBRDelta.framework; path = "/Users/karstenbruns/Library/Developer/Xcode/DerivedData/UBRDelta-bbrndczabvqiygflnpgxoxaxpxqt/Build/Products/Debug-iphoneos/UBRDelta.framework"; sourceTree = "<absolute>"; };
+		9B72F0A81C05D1C6008819CF /* AppStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppStyle.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9B4B29E41C03B7CE00E609CD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9B72F0A41C05D1A0008819CF /* UBRDelta.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		9B453D391C05FDD100C57B9D /* CameraView */ = {
+			isa = PBXGroup;
+			children = (
+				9B0827BA1C04975300414E35 /* CameraView.swift */,
+				9B72F0691C05CBA3008819CF /* CameraView+Types.swift */,
+			);
+			name = CameraView;
+			sourceTree = "<group>";
+		};
+		9B4B29DE1C03B7CE00E609CD = {
+			isa = PBXGroup;
+			children = (
+				9B4B29E91C03B7CE00E609CD /* DeltaCamera */,
+				9B72F0A71C05D1A6008819CF /* Frameworks */,
+				9B4B29E81C03B7CE00E609CD /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		9B4B29E81C03B7CE00E609CD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9B4B29E71C03B7CE00E609CD /* DeltaCamera.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9B4B29E91C03B7CE00E609CD /* DeltaCamera */ = {
+			isa = PBXGroup;
+			children = (
+				9B72F06F1C05D099008819CF /* BaseComponents */,
+				9B72F0AC1C05E39C008819CF /* Ressources */,
+				9B72F0AB1C05E393008819CF /* Views */,
+				9B72F0AA1C05E389008819CF /* ViewController */,
+				9B4B29EA1C03B7CE00E609CD /* AppDelegate.swift */,
+				9B72F0A81C05D1C6008819CF /* AppStyle.swift */,
+			);
+			path = DeltaCamera;
+			sourceTree = "<group>";
+		};
+		9B72F06F1C05D099008819CF /* BaseComponents */ = {
+			isa = PBXGroup;
+			children = (
+				9B72F0701C05D099008819CF /* Items */,
+				9B72F0801C05D099008819CF /* TableViewController */,
+			);
+			path = BaseComponents;
+			sourceTree = "<group>";
+		};
+		9B72F0701C05D099008819CF /* Items */ = {
+			isa = PBXGroup;
+			children = (
+				9B453D371C05ED9800C57B9D /* ColorItem.swift */,
+				9B453D351C05ED8C00C57B9D /* ColorTableViewCell.swift */,
+				9B453D3A1C06333D00C57B9D /* StaticValueItem.swift */,
+				9B453D3C1C06334F00C57B9D /* StaticValueTableViewCell.swift */,
+			);
+			path = Items;
+			sourceTree = "<group>";
+		};
+		9B72F0801C05D099008819CF /* TableViewController */ = {
+			isa = PBXGroup;
+			children = (
+				9B72F0811C05D099008819CF /* TableViewController.swift */,
+				9B72F0821C05D099008819CF /* TableViewProtocols.swift */,
+				9B72F0831C05D099008819CF /* TableViewSectionItem.swift */,
+				9B72F0841C05D099008819CF /* UITableViewHeaderFooterView+Extensions.swift */,
+			);
+			path = TableViewController;
+			sourceTree = "<group>";
+		};
+		9B72F0A71C05D1A6008819CF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9B72F0A31C05D1A0008819CF /* UBRDelta.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9B72F0AA1C05E389008819CF /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				9B4B29EC1C03B7CE00E609CD /* ColorListViewController.swift */,
+			);
+			name = ViewController;
+			sourceTree = "<group>";
+		};
+		9B72F0AB1C05E393008819CF /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				9B453D391C05FDD100C57B9D /* CameraView */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		9B72F0AC1C05E39C008819CF /* Ressources */ = {
+			isa = PBXGroup;
+			children = (
+				9B4B29F11C03B7CE00E609CD /* Assets.xcassets */,
+				9B4B29F61C03B7CE00E609CD /* Info.plist */,
+				9B4B29F31C03B7CE00E609CD /* LaunchScreen.storyboard */,
+			);
+			name = Ressources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		9B4B29E61C03B7CE00E609CD /* DeltaCamera */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9B4B2A041C03B7CE00E609CD /* Build configuration list for PBXNativeTarget "DeltaCamera" */;
+			buildPhases = (
+				9B4B29E31C03B7CE00E609CD /* Sources */,
+				9B4B29E41C03B7CE00E609CD /* Frameworks */,
+				9B4B29E51C03B7CE00E609CD /* Resources */,
+				9B72F0A61C05D1A0008819CF /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DeltaCamera;
+			productName = DeltaCamera;
+			productReference = 9B4B29E71C03B7CE00E609CD /* DeltaCamera.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		9B4B29DF1C03B7CE00E609CD /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0710;
+				LastUpgradeCheck = 0710;
+				ORGANIZATIONNAME = bruns.me;
+				TargetAttributes = {
+					9B4B29E61C03B7CE00E609CD = {
+						CreatedOnToolsVersion = 7.1.1;
+					};
+				};
+			};
+			buildConfigurationList = 9B4B29E21C03B7CE00E609CD /* Build configuration list for PBXProject "DeltaCamera" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 9B4B29DE1C03B7CE00E609CD;
+			productRefGroup = 9B4B29E81C03B7CE00E609CD /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				9B4B29E61C03B7CE00E609CD /* DeltaCamera */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		9B4B29E51C03B7CE00E609CD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9B4B29F51C03B7CE00E609CD /* LaunchScreen.storyboard in Resources */,
+				9B4B29F21C03B7CE00E609CD /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		9B4B29E31C03B7CE00E609CD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9B0827BB1C04975300414E35 /* CameraView.swift in Sources */,
+				9B453D381C05ED9800C57B9D /* ColorItem.swift in Sources */,
+				9B453D361C05ED8C00C57B9D /* ColorTableViewCell.swift in Sources */,
+				9B72F09E1C05D099008819CF /* UITableViewHeaderFooterView+Extensions.swift in Sources */,
+				9B453D3B1C06333D00C57B9D /* StaticValueItem.swift in Sources */,
+				9B72F06A1C05CBA3008819CF /* CameraView+Types.swift in Sources */,
+				9B72F09D1C05D099008819CF /* TableViewSectionItem.swift in Sources */,
+				9B4B29ED1C03B7CE00E609CD /* ColorListViewController.swift in Sources */,
+				9B453D3D1C06334F00C57B9D /* StaticValueTableViewCell.swift in Sources */,
+				9B4B29EB1C03B7CE00E609CD /* AppDelegate.swift in Sources */,
+				9B72F0A91C05D1C6008819CF /* AppStyle.swift in Sources */,
+				9B72F09C1C05D099008819CF /* TableViewProtocols.swift in Sources */,
+				9B72F09B1C05D099008819CF /* TableViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		9B4B29F31C03B7CE00E609CD /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9B4B29F41C03B7CE00E609CD /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		9B4B2A021C03B7CE00E609CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		9B4B2A031C03B7CE00E609CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		9B4B2A051C03B7CE00E609CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = DeltaCamera/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = me.bruns.DeltaCamera;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		9B4B2A061C03B7CE00E609CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = DeltaCamera/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = me.bruns.DeltaCamera;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		9B4B29E21C03B7CE00E609CD /* Build configuration list for PBXProject "DeltaCamera" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9B4B2A021C03B7CE00E609CD /* Debug */,
+				9B4B2A031C03B7CE00E609CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9B4B2A041C03B7CE00E609CD /* Build configuration list for PBXNativeTarget "DeltaCamera" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9B4B2A051C03B7CE00E609CD /* Debug */,
+				9B4B2A061C03B7CE00E609CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 9B4B29DF1C03B7CE00E609CD /* Project object */;
+}
