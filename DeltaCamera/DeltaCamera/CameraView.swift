@@ -10,6 +10,7 @@ import UIKit
 import AVFoundation
 import AVKit
 import QuartzCore
+import Accelerate
 
 
 class CameraView : UIView, AVCaptureVideoDataOutputSampleBufferDelegate {
@@ -47,7 +48,14 @@ class CameraView : UIView, AVCaptureVideoDataOutputSampleBufferDelegate {
             guard device.hasMediaType(AVMediaTypeVideo) && device.supportsAVCaptureSessionPreset(AVCaptureSessionPresetLow) else { continue }
             guard let input = try? AVCaptureDeviceInput(device: device) else { continue }
             guard session.canAddInput(input) else { continue }
-            session.addInput(input)
+            do {
+                try device.lockForConfiguration()
+                device.whiteBalanceMode = AVCaptureWhiteBalanceMode.Locked
+                device.exposureMode = AVCaptureExposureMode.Locked
+                session.addInput(input)
+                device.unlockForConfiguration()
+            }
+            catch {}
             break
         }
         
@@ -76,30 +84,44 @@ class CameraView : UIView, AVCaptureVideoDataOutputSampleBufferDelegate {
         guard let delegate = delegate else { return }
         frameCounter = frameCounter &+ 1
         guard frameCounter%10 == 0 else { return }
-        
+
         typealias UnsafeIntegerPointer = UnsafeMutablePointer<UInt8>
-        let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
+        
+        let cameraBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)!
+        CVPixelBufferLockBaseAddress(cameraBuffer,0)
+        
+        // Source
+        let sourceBaseAddress = UnsafeIntegerPointer(CVPixelBufferGetBaseAddress(cameraBuffer))
+        let sourceBytesPerRow = CVPixelBufferGetBytesPerRow(cameraBuffer);
+        let sourceWidth = UInt(CVPixelBufferGetWidth(cameraBuffer))
+        let sourceHeight = UInt(CVPixelBufferGetHeight(cameraBuffer))
+        var sourceBuffer = vImage_Buffer(data: sourceBaseAddress, height: sourceHeight, width: sourceWidth, rowBytes: sourceBytesPerRow)
+
+        // Desitination
+        let bytesPerPixel = 4
+        let destWidth = sourceWidth / 32
+        let destHeight = sourceHeight / 32
+        let destBytesPerRow = destWidth * UInt(bytesPerPixel)
+        let destByteCount = Int(destHeight * destBytesPerRow)
+        let destData = UnsafeMutablePointer<UInt8>.alloc(destByteCount)
+        defer { destData.dealloc(destByteCount) }
+        var destBuffer = vImage_Buffer(data: destData, height: vImagePixelCount(destHeight), width: vImagePixelCount(destWidth), rowBytes: Int(destBytesPerRow))
+        
+        // scale the image
+        let error = vImageScale_ARGB8888(&sourceBuffer, &destBuffer, nil, 0)
+        guard error == kvImageNoError else { return }
+
+        // Sample colors
         var colors = [CVColor]()
+        var sampleAddress = destData
+        let endAddress = destData + destByteCount
         
-        CVPixelBufferLockBaseAddress(pixelBuffer, 0)
 
-        let kBytesPerPixel: Int = 4
-        let width = CVPixelBufferGetWidth(pixelBuffer)
-        let height = CVPixelBufferGetHeight(pixelBuffer)
-        let pixelCount = width * height
-        let baseAddress = UnsafeIntegerPointer(CVPixelBufferGetBaseAddress(pixelBuffer))
-        let endAddress = baseAddress + (pixelCount * kBytesPerPixel)
-
-        var sampleAddress = baseAddress
-        var stepLength = (endAddress - sampleAddress) / 8192
-        stepLength -= stepLength%kBytesPerPixel
-        
-        while sampleAddress < (endAddress - stepLength) {
+        while sampleAddress < endAddress {
             let red = (sampleAddress + 2).memory
             let green = (sampleAddress + 1).memory
             let blue = sampleAddress.memory
             let color = CVColor(red: red, green: green, blue: blue)
-
             if let index = colors.indexOf({ $0.raw == color.raw }) {
                 var updateColor = colors[index]
                 updateColor.count++
@@ -107,18 +129,19 @@ class CameraView : UIView, AVCaptureVideoDataOutputSampleBufferDelegate {
             } else {
                 colors.append(color)
             }
-            
-            sampleAddress += stepLength
+            sampleAddress += bytesPerPixel
         }
         
-        let result = colors.filter({ $0.count > 4 }).sort({ $0.count > $1.count })
+        
+        let result = colors.sort({ $0.count > $1.count })
         
         let mainQueue = dispatch_get_main_queue()
         dispatch_async(mainQueue) {
             delegate.cameraView(self, didSampleColors: result)
         }
         
-        CVPixelBufferUnlockBaseAddress(pixelBuffer, 0)
+        CVPixelBufferUnlockBaseAddress(cameraBuffer, 0)
+
     }
 
 }

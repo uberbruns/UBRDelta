@@ -118,7 +118,8 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
             
             for (itemIndexBefore, itemIndexAfter) in reloadIndexMap {
                 let indexPathBefore = NSIndexPath(forRow: itemIndexBefore, inSection: section)
-                if let updateableCell = weakSelf.tableView.cellForRowAtIndexPath(indexPathBefore) as? UpdateableTableViewCell {
+                guard let cell = weakSelf.tableView.cellForRowAtIndexPath(indexPathBefore) else { continue }
+                if let updateableCell = cell as? UpdateableTableViewCell {
                     let item: ComparableItem = items[itemIndexAfter]
                     updateableCell.updateCellWithItem(item, animated: true)
                 } else {
@@ -126,8 +127,8 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
                 }
             }
             
-            weakSelf.tableView.deleteRowsAtIndexPaths(deleteIndexes.map({ NSIndexPath(forRow: $0, inSection: section) }), withRowAnimation: .Automatic)
-            weakSelf.tableView.insertRowsAtIndexPaths(insertIndexes.map({ NSIndexPath(forRow: $0, inSection: section) }), withRowAnimation: .Automatic)
+            weakSelf.tableView.deleteRowsAtIndexPaths(deleteIndexes.map({ NSIndexPath(forRow: $0, inSection: section) }), withRowAnimation: .Top)
+            weakSelf.tableView.insertRowsAtIndexPaths(insertIndexes.map({ NSIndexPath(forRow: $0, inSection: section) }), withRowAnimation: .Top)
             weakSelf.tableView.endUpdates()
         }
         
