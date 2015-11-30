@@ -49,14 +49,14 @@ deltaContent.itemUpdate = { (items, section, insertIndexes, reloadIndexMap, dele
     // tableView.endUpdates()
 }
 
-contentDiffer.itemReorder = { (items, section, reorderMap) in
+deltaContent.itemReorder = { (items, section, reorderMap) in
     // Update items for section, then update table view rows
     // tableView.beginUpdates()
     // tableView.moveRowAtIndexPath(..., toIndexPath: ...)
     // tableView.endUpdates()
 }
 
-contentDiffer.sectionUpdate = { (sections, insertIndexes, reloadIndexMap, deleteIndexes) in
+deltaContent.sectionUpdate = { (sections, insertIndexes, reloadIndexMap, deleteIndexes) in
     // Update section, then update table view
     // self.sections = sections
     // tableView.beginUpdates()
@@ -64,17 +64,17 @@ contentDiffer.sectionUpdate = { (sections, insertIndexes, reloadIndexMap, delete
     // tableView.endUpdates()
 }
 
-contentDiffer.sectionReorder = { (sections, reorderMap) in
+deltaContent.sectionReorder = { (sections, reorderMap) in
     // self.sections = sections
     // tableView.beginUpdates()
     // tableView.moveSection(..., toSection: ...)
     // tableView.endUpdates()
 }
 
-contentDiffer.completion = { }
+deltaContent.completion = { }
 
 // Perform UI update
-contentDiffer.queueComparison(oldSections: ..., newSections: ...)
+deltaContent.queueComparison(oldSections: ..., newSections: ...)
 
 ```
 
