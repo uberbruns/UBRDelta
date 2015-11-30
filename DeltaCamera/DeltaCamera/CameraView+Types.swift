@@ -11,7 +11,7 @@ import UIKit
 
 struct CVColor : Equatable {
     
-    private static let colorReduction: UInt16 = 64
+    private static let colorReduction: UInt16 = 32
     
     let raw: UInt16
     var count: Int = 1
@@ -43,4 +43,19 @@ func ==(lhs: CVColor, rhs: CVColor) -> Bool {
 
 protocol CameraViewDelegate : class {
     func cameraView(cameraView: CameraView, didSampleColors colors: [CVColor])
+}
+
+
+struct RGBColor {
+
+    let r: UInt8
+    let g: UInt8
+    let b: UInt8
+    
+    init(red: UInt8, green: UInt8, blue: UInt8) {
+        self.r = red
+        self.g = green
+        self.b = blue
+    }
+    
 }
