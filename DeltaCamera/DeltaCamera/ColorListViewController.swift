@@ -17,7 +17,7 @@ class ColorListViewController: TableViewController, CameraViewDelegate {
     var colors = [CVColor]()
     var enableColorSampling = false {
         didSet {
-            cameraView.delegate = enableColorSampling ? self : nil
+            // cameraView.delegate = enableColorSampling ? self : nil
         }
     }
     
@@ -73,9 +73,10 @@ class ColorListViewController: TableViewController, CameraViewDelegate {
         var infoItems = [ComparableItem]()
         
         // Enable Color Sampling Switch
-        let switchItem = SwitchItem(id: "sampleColors", title: "Sample Colors", value: enableColorSampling, valueHandler: { (value) -> () in
-            self.enableColorSampling = value
-            self.updateTableView()
+        let switchItem = SwitchItem(id: "sampleColors", title: "Sample Colors", value: enableColorSampling, valueHandler: { [weak self] (value) -> () in
+            guard let weakSelf = self else { return }
+            weakSelf.enableColorSampling = value
+            weakSelf.updateTableView()
         })
         infoItems.append(switchItem)
         
